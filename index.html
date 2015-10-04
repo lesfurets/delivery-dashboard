@@ -1,0 +1,55 @@
+<html lang="en">
+  <head>
+    <title>Traffic Team Dashboard</title>
+
+    <meta charset="utf-8"> 
+    <!-- proper rendering and touch zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="traffic-dashboard-style.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="traffic-graphs.js"></script>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+
+      <div class="card">
+        <div class="row">
+          <h2 class="col-md-12">Cumulative Flow</h2>
+          <div id="raw_data_cumulative_flow_dashboard_div"  class="col-md-12 card-block">
+            <div id="raw_data_cumulative_flow_area_chart_div"></div>
+            <div id="raw_data_cumulative_flow_chart_range_filter_div"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <h2 class="col-md-12">Tasks Duration</h2>
+          <div id="raw_data_duration_dashboard_div" class="col-md-12 card-block">
+            <div class="row">
+              <div class="col-md-7 text-center card-block">
+                <div id="raw_data_duration_date_range_filter_div"></div>
+                <div id="raw_data_duration_table_div"></div>
+              </div>
+              <div class="col-md-5 text-center card-block">
+                <div id="raw_data_duration_project_filter_div"></div>
+                <div id="raw_data_duration_effort_filter_div"></div>
+                <div id="raw_data_duration_value_filter_div"></div>
+              </div>
+            </div>
+            <div class="row card-block">
+              <div id="raw_data_duration_column_chart_div"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+</html>
