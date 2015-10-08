@@ -2,8 +2,14 @@
 google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
 
 var eventData;
-var cumulativFlowDashboard;
 var durationData;
+
+var extractData;
+
+
+
+var extract_dashboard;
+var cumulativFlowDashboard;
 var tasksDurationTable;
 var tasksDurationColumnChart;
 var tasksDurationDashboard;
@@ -20,6 +26,7 @@ function loadWidgets() {
   tasksDurationTable = buildTasksDurationTable();
   tasksDurationColumnChart = buildTasksDurationColumnChart();
   tasksDurationDashboard = buildTasksDurationDashboard(tasksDurationColumnChart, updateTable);
+  extract_dashboard = buildExtractDashboard();
 }
 
 function loadRawData() {
@@ -31,6 +38,9 @@ function handleQueryRawDataQueryResponse(response) {
   var inputData = response.getDataTable();
   eventData = computeEventData(inputData);
   durationData = computeDurationData(inputData);
+  extractData = filterLastMonth(inputData);
+  initExtractHeader(extractData);
+  initDurationsStats(extractData);
   drawCharts();
   window.onload = drawCharts;
   window.onresize = drawCharts;
@@ -44,6 +54,76 @@ function drawCharts() {
     tasksDurationDashboard.draw(durationData);
     updateTableWithData(durationData);
   }
+  if (extractData != null) {
+    extract_dashboard.setDataTable(computeEventData(extractData));
+    extract_dashboard.draw();
+    var table = new google.visualization.Table(document.getElementById('extract_ticket_list'));
+
+    google.visualization.events.addListener(table, 'select', function () {
+      var rowNumber = table.getSelection()[0].row;
+      window.open('http://jira.lan.courtanet.net/browse/' + extractData.getValue(rowNumber, 0) + '-' + extractData.getValue(rowNumber, 1), '_blank');
+    });
+
+    table.draw(extractData, {showRowNumber: true});
+  }
+}
+
+Date.prototype.getWeek = function() {
+  var onejan = new Date(this.getFullYear(), 0, 1);
+  return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+} 
+
+function initExtractHeader(inputData){
+  $("#week_count").text(new Date().getWeek());
+  var ticketsNb = inputData.getNumberOfRows()
+  var units =  ticketsNb > 1 ? "s" : "";
+  $("#tickets_count").text(ticketsNb + " ticket" + units);
+}
+
+function initDurationsStats(inputData){
+  var durations = computeDurationGroupedData(computeDurationData(inputData),1);
+  var table = new google.visualization.Table(document.getElementById('export_duration_details_table'));
+  table.draw(durations, {showRowNumber: false, width: '100%', height: '100%'});
+}
+
+/***************************
+ * ExtractDashboard
+ **************************/
+
+function buildExtractDashboard() {
+  var ref_date_max = new Date();
+  var ref_date_min = new Date(ref_date_max.getTime());
+  ref_date_min.setMonth(ref_date_min.getMonth() - 1);
+  ref_date_max = addDays(ref_date_max, -  9);
+
+  var dashboard = new google.visualization.ChartWrapper({
+    'chartType': 'AreaChart',
+    'view': {'columns': [0, 1, 2, 3, 4]},
+    'options': {
+      'chartArea': {
+        'width': '90%',
+        'height': '100%'
+      },
+      'hAxis': {
+        'textPosition': 'in',
+         'viewWindow': {
+            'min': ref_date_min,
+            'max': ref_date_max
+          }
+      },
+      'vAxis': {
+        'title': 'Number of tasks',
+        'textPosition': 'in',
+        'gridlines': {count: 4}
+      },
+      'legend': {
+        'position': 'in'
+      }
+    }
+  });
+  dashboard.setContainerId('extract_cumulativ_chart');
+  dashboard.setOption('height',624);
+  return dashboard;
 }
 
 /***************************
@@ -191,147 +271,11 @@ function buildTasksDurationColumnChart(){
   });
 }
 
-
-
 function updateTable() {
   updateTableWithData(tasksDurationColumnChart.getDataTable())
 };
 
 function updateTableWithData(inputData) {
-  tasksDurationTable.setDataTable(computeDurationGroupedData(inputData));
+  tasksDurationTable.setDataTable(computeDurationGroupedData(inputData,10));
   tasksDurationTable.draw();
 };
-
-/***************************
- *       ComputeData
- **************************/
-
-var RAW_DATA = {
-  PROJECT: 0,
-  REF: 1,
-  EFFORT: 2,
-  VALUE: 3,
-  CREATION: 4,
-  ANALYSIS: 5,
-  DEVELOPMENT: 6,
-  RELEASE: 7
-}
-
-function computeEventData(inputData) {
-  var data = builtEventDataStructure(inputData);
-  for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-    data.addRow([inputData.getValue(i, RAW_DATA.CREATION), 1, 0, 0, 0]);
-    data.addRow([inputData.getValue(i, RAW_DATA.ANALYSIS), 0, 1, 0, 0]);
-    data.addRow([inputData.getValue(i, RAW_DATA.DEVELOPMENT), 0, 0, 1, 0]);
-    data.addRow([inputData.getValue(i, RAW_DATA.RELEASE), 0, 0, 0, 1]);
-  }
-  var eventData = google.visualization.data.group(data, [{
-    column: 0,
-    type: 'date'
-  }], [{
-    column: 1,
-    aggregation: google.visualization.data.sum,
-    type: 'number'
-  }, {
-    column: 2,
-    aggregation: google.visualization.data.sum,
-    type: 'number'
-  }, {
-    column: 3,
-    aggregation: google.visualization.data.sum,
-    type: 'number'
-  }, {
-    column: 4,
-    aggregation: google.visualization.data.sum,
-    type: 'number'
-  }]);
-  var cumulativEventData = builtEventDataStructure(inputData);
-  for (var i = 0; i < eventData.getNumberOfRows(); i++) {
-    cumulativEventData.addRow([eventData.getValue(i, 0),
-      cumputeCumulativeValue(i, 1, eventData, cumulativEventData),
-      cumputeCumulativeValue(i, 2, eventData, cumulativEventData),
-      cumputeCumulativeValue(i, 3, eventData, cumulativEventData),
-      cumputeCumulativeValue(i, 4, eventData, cumulativEventData)]);
-  }
-  return cumulativEventData;
-}
-
-function builtEventDataStructure(inputData) {
-  var data = new google.visualization.DataTable();
-  data.addColumn('date', "EventDate");
-  data.addColumn('number', inputData.getColumnLabel(RAW_DATA.CREATION));
-  data.addColumn('number', inputData.getColumnLabel(RAW_DATA.ANALYSIS));
-  data.addColumn('number', inputData.getColumnLabel(RAW_DATA.DEVELOPMENT));
-  data.addColumn('number', inputData.getColumnLabel(RAW_DATA.RELEASE));
-  return data;
-}
-
-function cumputeCumulativeValue(rowIndex, columnIndex, inputData, cumulativData) {
-  return (rowIndex == 0) ? inputData.getValue(rowIndex, columnIndex) : inputData.getValue(rowIndex, columnIndex) + cumulativData.getValue(rowIndex - 1, columnIndex);
-}
-
-function computeDurationData(inputData) {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', "Tasks");
-    data.addColumn('string', "Project");
-    data.addColumn('date', 'Release');
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA.EFFORT));
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA.VALUE));
-    data.addColumn('number', "Backlog");
-    data.addColumn('number', "Analysis");
-    data.addColumn('number', "Development");
-    data.addColumn('number', "Total");
-    data.addColumn('number', "Tasks");
-    data.addColumn('string', "");
-    for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var backlogDuration = duration(inputData, i, RAW_DATA.CREATION, RAW_DATA.ANALYSIS);
-        var analysisDuration = (duration(inputData, i, RAW_DATA.ANALYSIS, RAW_DATA.DEVELOPMENT) + 0.5);
-        var developmentDuration = (duration(inputData, i, RAW_DATA.DEVELOPMENT, RAW_DATA.RELEASE) + 0.5);
-        data.addRow([inputData.getValue(i, RAW_DATA.PROJECT) + '-' + inputData.getValue(i, RAW_DATA.REF),
-            inputData.getValue(i, RAW_DATA.PROJECT),
-            inputData.getValue(i, RAW_DATA.RELEASE),
-            inputData.getValue(i, RAW_DATA.EFFORT),
-            inputData.getValue(i, RAW_DATA.VALUE),
-            backlogDuration,
-            analysisDuration,
-            developmentDuration,
-            backlogDuration + analysisDuration + developmentDuration,
-            1,
-            'Selection']);
-    }
-    return data;
-}
-
-function computeDurationGroupedData(inputData){
-    var data = google.visualization.data.group(inputData, [10], [{
-          column: 9,
-          aggregation: google.visualization.data.sum,
-          type: 'number'
-      },{
-          column: 5,
-          aggregation: google.visualization.data.avg,
-          type: 'number'
-      }, {
-          column: 6,
-          aggregation: google.visualization.data.avg,
-          type: 'number'
-      }, {
-          column: 7,
-          aggregation: google.visualization.data.avg,
-          type: 'number'
-      }, {
-          column: 8,
-          aggregation: google.visualization.data.avg,
-          type: 'number'
-      }]);
-    var formatter = new google.visualization.NumberFormat({suffix: ' day(s)'});
-    formatter.format(data, 2);
-    formatter.format(data, 3);
-    formatter.format(data, 4);
-    formatter.format(data, 5);
-    return data
-}
-
-function duration(data, row, from, to) {
-  return (data.getValue(row, to) - data.getValue(row, from)) / (1000 * 60 * 60 * 24);
-}
