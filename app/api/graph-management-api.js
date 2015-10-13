@@ -1,100 +1,15 @@
-// Load the Visualization API and the piechart package.
-google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
-
-var eventData;
-var durationData;
-
-var extractData;
-
-
-
-var extract_dashboard;
-var cumulativFlowDashboard;
-var tasksDurationTable;
-var tasksDurationColumnChart;
-var tasksDurationDashboard;
-
-// Set a callback to run when the Google Visualization API is loaded.
-google.setOnLoadCallback(loadWidgets);
-google.setOnLoadCallback(loadRawData);
-
-// Callback that creates and populates a data table,
-// instantiates the pie chart, passes in the data and
-// draws it.
-function loadWidgets() {
-  cumulativFlowDashboard = buildCumulativFlowDashboard();
-  tasksDurationTable = buildTasksDurationTable();
-  tasksDurationColumnChart = buildTasksDurationColumnChart();
-  tasksDurationDashboard = buildTasksDurationDashboard(tasksDurationColumnChart, updateTable);
-  extract_dashboard = buildExtractDashboard();
-}
-
-function loadRawData() {
-  var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA/gviz/tq?sheet=RawData&headers=1");
-  query.send(handleQueryRawDataQueryResponse);
-}
-
-function handleQueryRawDataQueryResponse(response) {
-  var inputData = response.getDataTable();
-  eventData = computeEventData(inputData);
-  durationData = computeDurationData(inputData);
-  extractData = filterLastMonth(inputData);
-  initExtractHeader(extractData);
-  initDurationsStats(extractData);
-  drawCharts();
-  window.onload = drawCharts;
-  window.onresize = drawCharts;
-}
-
-function drawCharts() {
-  if (eventData != null) {
-    cumulativFlowDashboard.draw(eventData);
-  }
-  if (durationData != null) {
-    tasksDurationDashboard.draw(durationData);
-    updateTableWithData(durationData);
-  }
-  if (extractData != null) {
-    extract_dashboard.setDataTable(computeEventData(extractData));
-    extract_dashboard.draw();
-    var table = new google.visualization.Table(document.getElementById('extract_ticket_list'));
-
-    google.visualization.events.addListener(table, 'select', function () {
-      var rowNumber = table.getSelection()[0].row;
-      window.open('http://jira.lan.courtanet.net/browse/' + extractData.getValue(rowNumber, 0) + '-' + extractData.getValue(rowNumber, 1), '_blank');
-    });
-
-    table.draw(extractData, {showRowNumber: true});
-  }
-}
-
-Date.prototype.getWeek = function() {
-  var onejan = new Date(this.getFullYear(), 0, 1);
-  return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-} 
-
-function initExtractHeader(inputData){
-  $("#week_count").text(new Date().getWeek());
-  var ticketsNb = inputData.getNumberOfRows()
-  var units =  ticketsNb > 1 ? "s" : "";
-  $("#tickets_count").text(ticketsNb + " ticket" + units);
-}
-
-function initDurationsStats(inputData){
-  var durations = computeDurationGroupedData(computeDurationData(inputData),1);
-  var table = new google.visualization.Table(document.getElementById('export_duration_details_table'));
-  table.draw(durations, {showRowNumber: false, width: '100%', height: '100%'});
-}
 
 /***************************
  * ExtractDashboard
  **************************/
 
-function buildExtractDashboard() {
+function buildExtractDashboard(config) {
   var ref_date_max = new Date();
   var ref_date_min = new Date(ref_date_max.getTime());
   ref_date_min.setMonth(ref_date_min.getMonth() - 1);
   ref_date_max = addDays(ref_date_max, -  9);
+  //ref_date_min = new Date(2015,8,1);
+  //ref_date_max = new Date(2015,8,29);
 
   var dashboard = new google.visualization.ChartWrapper({
     'chartType': 'AreaChart',
@@ -107,8 +22,8 @@ function buildExtractDashboard() {
       'hAxis': {
         'textPosition': 'in',
          'viewWindow': {
-            'min': ref_date_min,
-            'max': ref_date_max
+           'min': config.date.start,
+           'max': config.date.end
           }
       },
       'vAxis': {
@@ -121,11 +36,23 @@ function buildExtractDashboard() {
       }
     }
   });
-  dashboard.setContainerId('extract_cumulativ_chart');
+  dashboard.setContainerId(config.cumulativeChart);
   dashboard.setOption('height',624);
   return dashboard;
 }
 
+function buildDataTable(elementId) {
+  return new google.visualization.Table(document.getElementById(elementId));
+}
+
+function buildTicketsTable(elementId) {
+  var table = buildDataTable(elementId);
+  google.visualization.events.addListener(table, 'select', function () {
+    var rowNumber = table.getSelection()[0].row;
+    window.open('http://jira.lan.courtanet.net/browse/' + rawData.getValue(rowNumber, 0) + '-' + rawData.getValue(rowNumber, 1), '_blank');
+  });
+  return table;
+}
 /***************************
  * CumulativFlowDashboard
  **************************/
@@ -266,16 +193,7 @@ function buildTasksDurationColumnChart(){
       'chartArea': {
         'width': '90%',
         'height': '100%'
-      },
+      }
     }
   });
 }
-
-function updateTable() {
-  updateTableWithData(tasksDurationColumnChart.getDataTable())
-};
-
-function updateTableWithData(inputData) {
-  tasksDurationTable.setDataTable(computeDurationGroupedData(inputData,10));
-  tasksDurationTable.draw();
-};
