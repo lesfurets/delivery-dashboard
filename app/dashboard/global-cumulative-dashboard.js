@@ -1,11 +1,13 @@
-function GlobalCumulativeDashboard() {
+function GlobalCumulativeDashboard(config) {
     var cumulativFlowDashboard;
+    var tasksListTable;
 
     var rawData;
     var eventData;
 
     this.initWidgets = function () {
-        cumulativFlowDashboard = buildCumulativFlowDashboard();
+        cumulativFlowDashboard = buildCumulativFlowDashboard(config);
+        tasksListTable = buildTasksListTable(config.tasksList);
     };
 
     this.loadData = function (data) {
@@ -15,8 +17,19 @@ function GlobalCumulativeDashboard() {
 
     this.refresh = function () {
         if (eventData != null) {
+            setTitleSuffix(rawData.getNumberOfRows());
+
             cumulativFlowDashboard.draw(eventData);
+
+            tasksListTable.setDataTable(rawData)
+            tasksListTable.draw();
         }
     };
+
+    var setTitleSuffix = function (numberOfRows) {
+        var plural = numberOfRows > 1 ? "s" : "";
+        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
+    };
+
 
 }

@@ -1,0 +1,12 @@
+var RAW_DATA_URL = '14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA';
+
+var RAW_DATA_COL = {
+    PROJECT: 0,
+    REF: 1,
+    EFFORT: 3,
+    VALUE: 4,
+    CREATION: 5,
+    ANALYSIS: 6,
+    DEVELOPMENT: 7,
+    RELEASE: 8
+};

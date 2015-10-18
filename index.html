@@ -1,8 +1,8 @@
 <html lang="en">
-  <head>
+<head>
     <title>Traffic Team Dashboard</title>
 
-    <meta charset="utf-8"> 
+    <meta charset="utf-8">
     <!-- proper rendering and touch zooming -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -20,164 +20,205 @@
 
     <script type="text/javascript" src="app/dashboard/global-cumulative-dashboard.js"></script>
     <script type="text/javascript" src="app/dashboard/global-duration-dashboard.js"></script>
-    <script type="text/javascript" src="app/dashboard/monthly-dashboard.js"></script>
+    <script type="text/javascript" src="app/dashboard/time-period-dashboard.js"></script>
 
-    <script type="text/javascript" src="app/config.js"></script>
+    <script type="text/javascript" src="app/config/app-config.js"></script>
+    <script type="text/javascript" src="app/config/dashboard-config.js"></script>
     <script type="text/javascript" src="app/base.js"></script>
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>                        
-          </button>
-          <img class="navbar-brand-logo" src="img/team-traffic.png"/>
-          <span class="navbar-brand">Traffic Dashboard</span>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <img class="navbar-brand-logo" src="img/team-traffic.png"/>
+            <span class="navbar-brand">Traffic Dashboard</span>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav">
-            <li class="active"><a data-toggle="tab" href="#tab-global-view">Global View</a></li>
-            <li><a data-toggle="tab" href="#tab_last_month_view">Last Month Report</a></li>
-            <li><a data-toggle="tab" href="#tab_current_month_view">Current Month Report</a></li>
-            <li><a data-toggle="tab" href="#tab_tasks_manager">Manage Tasks</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Tasks</a></li>
-            <li><a href="#" onclick="reloadRawData()"><span class="glyphicon glyphicon-refresh"></span> Refresh</a></li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li class="active"><a data-toggle="tab" href="#tab-global-view">Global View</a></li>
+                <li><a data-toggle="tab" href="#tab_last_month_view">Last Month Report</a></li>
+                <li><a data-toggle="tab" href="#tab_current_month_view">Current Month Report</a></li>
+                <li><a data-toggle="tab" href="#tab_tasks_manager">Manage Tasks</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-plus"></span></a></li>
+                <li><a href="#" onclick="reloadRawData()"><span class="glyphicon glyphicon-refresh"></span></a></li>
+            </ul>
         </div>
-      </div>
-    </nav>
+    </div>
+</nav>
 
 
-    <div class="container-fluid">
-      <div class="tab-content">
+<div class="container-fluid">
+    <div class="tab-content">
+
+        <!--GLOBAL VIEW PAGE-->
 
         <div id="tab-global-view" class="tab-pane fade in active">
-          <div class="card">
-            <div class="row">
-              <h2 class="col-md-12 card-title">Cumulative Flow</h2>
-            </div>
-            <div class="row">
-              <div id="raw_data_cumulative_flow_dashboard_div"  class="col-md-12 card-block">
-                <div id="raw_data_cumulative_flow_area_chart_div"></div>
-                <div id="raw_data_cumulative_flow_chart_range_filter_div"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="row">
-              <h2 class="col-md-12 card-title">Tasks Duration</h2>
-            </div>
-            <div class="row">
-              <div id="raw_data_duration_dashboard_div" class="col-md-12 card-block">
-                <div class="row card-block">
-                  <div class="col-md-7 text-center">
-                    <div id="raw_data_duration_date_range_filter_div"></div>
-                    <div id="raw_data_duration_table_div"></div>
-                  </div>
-                  <div class="col-md-5 text-center">
-                    <div id="raw_data_duration_project_filter_div"></div>
-                    <div id="raw_data_duration_effort_filter_div"></div>
-                    <div id="raw_data_duration_value_filter_div"></div>
-                  </div>
+            <div class="card">
+                <div class="row">
+                    <h2 class="col-md-12 card-title">Cumulative Flow<span id="global_culumative_flow_title_suffix"></span>
+                        <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#global_cumulative_tasks_list_modal"></span></a>
+                    </h2>
                 </div>
-                <div class="row card-block">
-                  <div id="raw_data_duration_column_chart_div"></div>
+                <div class="row">
+                    <div id="global_cumulative_flow_dashboard_div" class="col-md-12 card-block">
+                        <div id="global_cumulative_flow_area_chart_div"></div>
+                        <div id="global_cumulative_flow_chart_range_filter_div"></div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+
+            <div id="global_cumulative_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Tasks list</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="global_cumulative_flow_tasks_list" class="col-md-12"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="row">
+                    <h2 class="col-md-12 card-title">Tasks Duration<span id="global_duration_title_suffix"></span>
+                        <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#global_duration_tasks_list_modal"></span></a>
+                    </h2>
+                </div>
+                <div class="row">
+                    <div id="global_duration_dashboard_div" class="col-md-12 card-block">
+                        <div class="row card-block">
+                            <div class="col-md-7 text-center">
+                                <div id="global_duration_date_range_filter_div"></div>
+                                <div id="global_duration_table_div"></div>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <div id="global_duration_project_filter_div"></div>
+                                <div id="global_duration_effort_filter_div"></div>
+                                <div id="global_duration_value_filter_div"></div>
+                            </div>
+                        </div>
+                        <div class="row card-block">
+                            <div id="global_duration_column_chart_div"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="global_duration_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Tasks list</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="global_duration_tasks_list" class="col-md-12"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!--LAST MONTH VIEW PAGE-->
 
         <div id="tab_last_month_view" class="tab-pane fade in">
-
-          <div class="card to-print graph">
-            <div class="row">
-              <h2 class="col-md-12 card-title"><img class="print-logo" src="img/team-traffic.png"/> Team Traffic - Cycle
-                time<span id="last_month_title_suffix"></span>
-                <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right"
-                                                       data-toggle="modal"
-                                                       data-target="#last_month_tasks_list_modal"></span></a></h2>
-            </div>
-            <div class="row card-relative-chart">
-              <div id="last_month_extract_cumulative_chart"></div>
-              <div class="card to-print stats">
-                <div id="last_month_duration_stats"></div>
-              </div>
-            </div>
-          </div>
-
-          <div id="last_month_tasks_list_modal" class="modal ticket-list fade" role="dialog">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Tasks list</h4>
+            <div class="card to-print graph">
+                <div class="row">
+                    <h2 class="col-md-12 card-title">
+                        <img class="print-logo" src="img/team-traffic.png"/> Team Traffic - Cycle time<span id="last_month_title_suffix"></span>
+                        <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#last_month_tasks_list_modal"></span></a>
+                    </h2>
                 </div>
-                <div class="modal-body">
-                  <div id="last_month_tasks_list" class="col-md-12"></div>
+                <div class="row card-relative-chart">
+                    <div id="last_month_extract_cumulative_chart"></div>
+                    <div class="card to-print stats">
+                        <div id="last_month_duration_stats"></div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-              </div>
             </div>
-          </div>
 
+            <div id="last_month_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Tasks list</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="last_month_tasks_list" class="col-md-12"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!--CURRENT MONTH VIEW PAGE-->
 
         <div id="tab_current_month_view" class="tab-pane fade in">
-
-          <div class="card to-print graph">
-            <div class="row">
-              <h2 class="col-md-12 card-title"><img class="print-logo" src="img/team-traffic.png"/> Team Traffic - Cycle
-                time<span id="current_month_title_suffix"></span>
-                <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right"
-                                                       data-toggle="modal"
-                                                       data-target="#current_month_tasks_list_modal"></span></a></h2>
-            </div>
-            <div class="row card-relative-chart">
-              <div id="current_month_extract_cumulative_chart"></div>
-              <div class="card to-print stats">
-                <div id="current_month_duration_stats"></div>
-              </div>
-            </div>
-          </div>
-
-          <div id="current_month_tasks_list_modal" class="modal ticket-list fade" role="dialog">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Tasks list</h4>
+            <div class="card to-print graph">
+                <div class="row">
+                    <h2 class="col-md-12 card-title"><img class="print-logo" src="img/team-traffic.png"/> Team Traffic - Cycle time<span id="current_month_title_suffix"></span>
+                        <a class="not-to-print" href="#"> <span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#current_month_tasks_list_modal"></span></a>
+                    </h2>
                 </div>
-                <div class="modal-body">
-                  <div id="current_month_tasks_list" class="col-md-12"></div>
+                <div class="row card-relative-chart">
+                    <div id="current_month_extract_cumulative_chart"></div>
+                    <div class="card to-print stats">
+                        <div id="current_month_duration_stats"></div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-              </div>
             </div>
-          </div>
 
+            <div id="current_month_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Tasks list</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="current_month_tasks_list" class="col-md-12"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!--TASK MANAGEMENT PAGE-->
 
         <div id="tab_tasks_manager" class="tab-pane fade in">
-          <iframe src="" width="100%" height="95%" frameborder="0" marginheight="0" marginwidth="0"
-                  style="padding-top:10px">Chargement en cours...
-          </iframe>
+            <iframe src="" width="100%" height="95%" frameborder="0" marginheight="0" marginwidth="0"
+                    style="padding-top:10px">Chargement en cours...
+            </iframe>
         </div>
-
-      </div>
 
     </div>
 
-  </body>
+</div>
+
+</body>
 </html>

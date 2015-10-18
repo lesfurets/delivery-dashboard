@@ -22,6 +22,8 @@ Date.prototype.getWeek = function () {
 
 
 var today = new Date();
+var oneWeekAgo = new Date(today.getTime());
+oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 var oneMonthAgo = new Date(today.getTime());
 oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
@@ -40,7 +42,10 @@ var lastMonthDashboardConfig = {
         id: 'last_month_title_suffix',
         value: lastMonthFirstDay.getMonthLabel()
     },
-    cumulativeChart: 'last_month_extract_cumulative_chart',
+    cumulativeFlowChart: {
+        id: 'last_month_extract_cumulative_chart',
+        height: 624
+    },
     durationStats: 'last_month_duration_stats',
     tasksList: 'last_month_tasks_list'
 };
@@ -48,13 +53,45 @@ var lastMonthDashboardConfig = {
 var currentMonthDashboardConfig = {
     date: {
         start: oneMonthAgo,
-        end: today,
+        end: oneWeekAgo,
     },
     titleSuffix: {
         id: 'current_month_title_suffix',
-        value: "(" + oneMonthAgo.formatDDMMYYYY() + " - " + today.formatDDMMYYYY() + ")"
+        value: "(" + oneMonthAgo.formatDDMMYYYY() + " - " + oneWeekAgo.formatDDMMYYYY() + ")"
     },
-    cumulativeChart: 'current_month_extract_cumulative_chart',
+    cumulativeFlowChart: {
+        id: 'current_month_extract_cumulative_chart',
+        height: 624
+    },
     durationStats: 'current_month_duration_stats',
     tasksList: 'current_month_tasks_list'
+};
+
+var globalCumulativeFlowDashboardConfig = {
+    titleSuffix: {
+        id: 'global_culumative_flow_title_suffix',
+    },
+    dashboard: 'global_cumulative_flow_dashboard_div',
+    cumulativeFlowChart: {
+        id: 'global_cumulative_flow_area_chart_div',
+        height: 400
+    },
+    rangeFilter: 'global_cumulative_flow_chart_range_filter_div',
+    tasksList: 'global_cumulative_flow_tasks_list'
+};
+
+var globalDurationDashboardConfig = {
+    titleSuffix: {
+        id: 'global_duration_title_suffix'
+    },
+    dashboard: 'global_duration_dashboard_div',
+    durationColumnChart: {
+        id: 'global_duration_column_chart_div'
+    },
+    durationStats: 'global_duration_table_div',
+    projectFilter: 'global_duration_project_filter_div',
+    effortFilter: 'global_duration_effort_filter_div',
+    valueFilter: 'global_duration_value_filter_div',
+    dateRangeFilter: 'global_duration_date_range_filter_div',
+    tasksList: 'global_duration_tasks_list'
 };

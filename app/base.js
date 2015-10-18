@@ -1,8 +1,7 @@
-// Load the Visualization API and the piechart package.
 google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
 
-var globalCumulativeDashboard = new GlobalCumulativeDashboard();
-var globalDurationDashboard = new GlobalDurationDashboard();
+var globalCumulativeDashboard = new GlobalCumulativeDashboard(globalCumulativeFlowDashboardConfig);
+var globalDurationDashboard = new GlobalDurationDashboard(globalDurationDashboardConfig);
 var lastMonthDashboard = new TimePeriodDashboard(lastMonthDashboardConfig);
 var currentMonthDashboard = new TimePeriodDashboard(currentMonthDashboardConfig);
 
@@ -23,7 +22,7 @@ function reloadRawData() {
 }
 
 function loadRawData(dataConsumer) {
-    var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA/gviz/tq?sheet=RawData&headers=1");
+    var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/" + RAW_DATA_URL + "/gviz/tq?sheet=RawData&headers=1");
     var handler = new QueryResponseHandler(dataConsumer);
     query.send(handler.handleResponse);
 }
@@ -65,7 +64,7 @@ $(document).on('ready', function () {
             var iframe = $('iframe');
             if (iframe.attr('src') == "") {
                 iframe.attr('src', function () {
-                    return 'https://docs.google.com/spreadsheets/d/14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA/edit?usp=sharing&single=true&gid=0&range=A1%3AE4&output=html';
+                    return 'https://docs.google.com/spreadsheets/d/' + RAW_DATA_URL + '/edit?usp=sharing&single=true&gid=0&range=A1%3AE4&output=html';
                 });
             }
         }

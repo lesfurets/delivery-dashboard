@@ -77,3 +77,15 @@ body {
 .modal.ticket-list .modal-dialog .modal-body {
     height: 70%;
 }
+
+@media screen and (max-width: 1024px) {
+    .card.to-print.graph {
+        width: 100%;
+    }
+
+    .card.to-print.stats {
+        position: initial;
+        width: 100%;
+        height: 130px
+    }
+}

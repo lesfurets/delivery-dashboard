@@ -1,18 +1,7 @@
-var RAW_DATA = {
-    PROJECT: 0,
-    REF: 1,
-    EFFORT: 3,
-    VALUE: 4,
-    CREATION: 5,
-    ANALYSIS: 6,
-    DEVELOPMENT: 7,
-    RELEASE: 8
-}
-
 function filterLastMonth(inputData, fromDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
-        column: RAW_DATA.RELEASE,
+        column: RAW_DATA_COL.RELEASE,
         minValue: fromDate
     }]));
     return view;
@@ -21,10 +10,10 @@ function filterLastMonth(inputData, fromDate) {
 function computeEventData(inputData) {
     var data = builtEventDataStructure(inputData);
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        data.addRow([inputData.getValue(i, RAW_DATA.CREATION), 1, 0, 0, 0]);
-        data.addRow([inputData.getValue(i, RAW_DATA.ANALYSIS), 0, 1, 0, 0]);
-        data.addRow([inputData.getValue(i, RAW_DATA.DEVELOPMENT), 0, 0, 1, 0]);
-        data.addRow([inputData.getValue(i, RAW_DATA.RELEASE), 0, 0, 0, 1]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.CREATION), 1, 0, 0, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.ANALYSIS), 0, 1, 0, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.DEVELOPMENT), 0, 0, 1, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.RELEASE), 0, 0, 0, 1]);
     }
     var eventData = google.visualization.data.group(data, [{
         column: 0,
@@ -60,10 +49,10 @@ function computeEventData(inputData) {
 function builtEventDataStructure(inputData) {
     var data = new google.visualization.DataTable();
     data.addColumn('date', "EventDate");
-    data.addColumn('number', inputData.getColumnLabel(RAW_DATA.CREATION));
-    data.addColumn('number', inputData.getColumnLabel(RAW_DATA.ANALYSIS));
-    data.addColumn('number', inputData.getColumnLabel(RAW_DATA.DEVELOPMENT));
-    data.addColumn('number', inputData.getColumnLabel(RAW_DATA.RELEASE));
+    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.CREATION));
+    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.ANALYSIS));
+    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.DEVELOPMENT));
+    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.RELEASE));
     return data;
 }
 
@@ -73,11 +62,12 @@ function cumputeCumulativeValue(rowIndex, columnIndex, inputData, cumulativData)
 
 function computeDurationData(inputData) {
     var data = new google.visualization.DataTable();
-    data.addColumn('string', "Tasks");
-    data.addColumn('string', "Project");
+    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.PROJECT));
+    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.REF));
+    data.addColumn('string', 'Jira Ref');
+    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.EFFORT));
+    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.VALUE));
     data.addColumn('date', 'Release');
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA.EFFORT));
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA.VALUE));
     data.addColumn('number', "Backlog");
     data.addColumn('number', "Analysis");
     data.addColumn('number', "Development");
@@ -85,14 +75,15 @@ function computeDurationData(inputData) {
     data.addColumn('number', "Tasks");
     data.addColumn('string', "");
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var backlogDuration = duration(inputData, i, RAW_DATA.CREATION, RAW_DATA.ANALYSIS);
-        var analysisDuration = (duration(inputData, i, RAW_DATA.ANALYSIS, RAW_DATA.DEVELOPMENT) + 0.5);
-        var developmentDuration = (duration(inputData, i, RAW_DATA.DEVELOPMENT, RAW_DATA.RELEASE) + 0.5);
-        data.addRow([inputData.getValue(i, RAW_DATA.PROJECT) + '-' + inputData.getValue(i, RAW_DATA.REF),
-            inputData.getValue(i, RAW_DATA.PROJECT),
-            inputData.getValue(i, RAW_DATA.RELEASE),
-            inputData.getValue(i, RAW_DATA.EFFORT),
-            inputData.getValue(i, RAW_DATA.VALUE),
+        var backlogDuration = duration(inputData, i, RAW_DATA_COL.CREATION, RAW_DATA_COL.ANALYSIS);
+        var analysisDuration = (duration(inputData, i, RAW_DATA_COL.ANALYSIS, RAW_DATA_COL.DEVELOPMENT) + 0.5);
+        var developmentDuration = (duration(inputData, i, RAW_DATA_COL.DEVELOPMENT, RAW_DATA_COL.RELEASE) + 0.5);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.PROJECT),
+            inputData.getValue(i, RAW_DATA_COL.REF),
+            inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF),
+            inputData.getValue(i, RAW_DATA_COL.EFFORT),
+            inputData.getValue(i, RAW_DATA_COL.VALUE),
+            inputData.getValue(i, RAW_DATA_COL.RELEASE),
             backlogDuration,
             analysisDuration,
             developmentDuration,
@@ -105,12 +96,8 @@ function computeDurationData(inputData) {
 
 function computeDurationGroupedData(inputData, groupBy) {
     var data = google.visualization.data.group(inputData, [groupBy], [{
-        column: 9,
+        column: 10,
         aggregation: google.visualization.data.sum,
-        type: 'number'
-    }, {
-        column: 5,
-        aggregation: google.visualization.data.avg,
         type: 'number'
     }, {
         column: 6,
@@ -124,6 +111,10 @@ function computeDurationGroupedData(inputData, groupBy) {
         column: 8,
         aggregation: google.visualization.data.avg,
         type: 'number'
+    }, {
+        column: 9,
+        aggregation: google.visualization.data.avg,
+        type: 'number'
     }]);
     var formatter = new google.visualization.NumberFormat({suffix: ' day(s)'});
     formatter.format(data, 2);
@@ -135,15 +126,4 @@ function computeDurationGroupedData(inputData, groupBy) {
 
 function duration(data, row, from, to) {
     return (data.getValue(row, to) - data.getValue(row, from)) / (1000 * 60 * 60 * 24);
-}
-
-function addDays(startDate, numberOfDays) {
-    var returnDate = new Date(
-        startDate.getFullYear(),
-        startDate.getMonth(),
-        startDate.getDate() + numberOfDays,
-        startDate.getHours(),
-        startDate.getMinutes(),
-        startDate.getSeconds());
-    return returnDate;
 }

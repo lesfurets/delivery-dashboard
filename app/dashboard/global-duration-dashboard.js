@@ -1,15 +1,17 @@
-function GlobalDurationDashboard() {
+function GlobalDurationDashboard(config) {
     var tasksDurationDashboard;
     var tasksDurationColumnChart;
     var tasksDurationStatsTable;
+    var tasksListTable;
 
     var rawData;
     var durationData;
 
     this.initWidgets = function () {
-        tasksDurationStatsTable = buildTasksDurationTable();
-        tasksDurationColumnChart = buildTasksDurationColumnChart();
-        tasksDurationDashboard = buildTasksDurationDashboard(tasksDurationColumnChart, updateTable);
+        tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
+        tasksDurationDashboard = buildTasksDurationDashboard(config, tasksDurationColumnChart, updateTable);
+        tasksDurationStatsTable = buildDataTable(config.durationStats);
+        tasksListTable = buildTasksListTable(config.tasksList);
     };
 
     this.loadData = function (data) {
@@ -20,17 +22,28 @@ function GlobalDurationDashboard() {
     this.refresh = function () {
         if (durationData != null) {
             tasksDurationDashboard.draw(durationData);
-            updateTableWithData(durationData);
+            updateTable();
         }
     };
 
-    updateTable = function () {
-        updateTableWithData(tasksDurationColumnChart.getDataTable())
+    var setTitleSuffix = function (numberOfRows) {
+        var plural = numberOfRows > 1 ? "s" : "";
+        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
     };
 
-    updateTableWithData = function (inputData) {
-        tasksDurationStatsTable.setDataTable(computeDurationGroupedData(inputData, 10));
-        tasksDurationStatsTable.draw();
+    var updateTable = function () {
+        var durationChartData = tasksDurationColumnChart.getDataTable();
+        var dataToDisplay = durationChartData != null ? durationChartData : durationData;
+
+        if (dataToDisplay != null) {
+            setTitleSuffix(dataToDisplay.getNumberOfRows());
+
+            tasksListTable.setDataTable(dataToDisplay);
+            tasksListTable.draw();
+
+            tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, 11));
+            tasksDurationStatsTable.draw();
+        }
     };
 
 }
