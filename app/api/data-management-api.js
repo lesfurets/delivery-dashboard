@@ -10,10 +10,11 @@ function filterLastMonth(inputData, fromDate) {
 function computeEventData(inputData) {
     var data = builtEventDataStructure(inputData);
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        data.addRow([inputData.getValue(i, RAW_DATA_COL.CREATION), 1, 0, 0, 0]);
-        data.addRow([inputData.getValue(i, RAW_DATA_COL.ANALYSIS), 0, 1, 0, 0]);
-        data.addRow([inputData.getValue(i, RAW_DATA_COL.DEVELOPMENT), 0, 0, 1, 0]);
-        data.addRow([inputData.getValue(i, RAW_DATA_COL.RELEASE), 0, 0, 0, 1]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.CREATION), 1, 0, 0, 0, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.ANALYSIS), 0, 1, 0, 0, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.DEVELOPMENT), 0, 0, 1, 0, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.VALIDATION), 0, 0, 0, 1, 0]);
+        data.addRow([inputData.getValue(i, RAW_DATA_COL.RELEASE), 0, 0, 0, 0, 1]);
     }
     var eventData = google.visualization.data.group(data, [{
         column: 0,
@@ -34,6 +35,10 @@ function computeEventData(inputData) {
         column: 4,
         aggregation: google.visualization.data.sum,
         type: 'number'
+    }, {
+        column: 5,
+        aggregation: google.visualization.data.sum,
+        type: 'number'
     }]);
     var cumulativEventData = builtEventDataStructure(inputData);
     for (var i = 0; i < eventData.getNumberOfRows(); i++) {
@@ -41,7 +46,8 @@ function computeEventData(inputData) {
             cumputeCumulativeValue(i, 1, eventData, cumulativEventData),
             cumputeCumulativeValue(i, 2, eventData, cumulativEventData),
             cumputeCumulativeValue(i, 3, eventData, cumulativEventData),
-            cumputeCumulativeValue(i, 4, eventData, cumulativEventData)]);
+            cumputeCumulativeValue(i, 4, eventData, cumulativEventData),
+            cumputeCumulativeValue(i, 5, eventData, cumulativEventData)]);
     }
     return cumulativEventData;
 }
@@ -52,6 +58,7 @@ function builtEventDataStructure(inputData) {
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.CREATION));
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.ANALYSIS));
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.DEVELOPMENT));
+    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.VALIDATION));
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.RELEASE));
     return data;
 }
@@ -65,8 +72,9 @@ function computeDurationData(inputData) {
     data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.PROJECT));
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.REF));
     data.addColumn('string', 'Jira Ref');
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.EFFORT));
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.VALUE));
+    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.TASK_FILTER_1));
+    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.TASK_FILTER_2));
+    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.TASK_FILTER_3));
     data.addColumn('date', 'Release');
     data.addColumn('number', "Backlog");
     data.addColumn('number', "Analysis");
@@ -81,8 +89,9 @@ function computeDurationData(inputData) {
         data.addRow([inputData.getValue(i, RAW_DATA_COL.PROJECT),
             inputData.getValue(i, RAW_DATA_COL.REF),
             inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF),
-            inputData.getValue(i, RAW_DATA_COL.EFFORT),
-            inputData.getValue(i, RAW_DATA_COL.VALUE),
+            inputData.getValue(i, RAW_DATA_COL.TASK_FILTER_1),
+            inputData.getValue(i, RAW_DATA_COL.TASK_FILTER_2),
+            inputData.getValue(i, RAW_DATA_COL.TASK_FILTER_3),
             inputData.getValue(i, RAW_DATA_COL.RELEASE),
             backlogDuration,
             analysisDuration,
@@ -96,12 +105,8 @@ function computeDurationData(inputData) {
 
 function computeDurationGroupedData(inputData, groupBy) {
     var data = google.visualization.data.group(inputData, [groupBy], [{
-        column: 10,
+        column: 11,
         aggregation: google.visualization.data.sum,
-        type: 'number'
-    }, {
-        column: 6,
-        aggregation: google.visualization.data.avg,
         type: 'number'
     }, {
         column: 7,
@@ -113,6 +118,10 @@ function computeDurationGroupedData(inputData, groupBy) {
         type: 'number'
     }, {
         column: 9,
+        aggregation: google.visualization.data.avg,
+        type: 'number'
+    }, {
+        column: 10,
         aggregation: google.visualization.data.avg,
         type: 'number'
     }]);

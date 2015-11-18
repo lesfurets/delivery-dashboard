@@ -24,7 +24,7 @@ function buildCumulativeFlowChart(config) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
         'containerId': config.id,
-        'view': {'columns': [0, 1, 2, 3, 4]},
+        'view': {'columns': [0, 1, 2, 3, 4, 5]},
         'options': {
             'height': config.height,
             'chartArea': {
@@ -50,7 +50,7 @@ function buildTasksDurationColumnChart(config) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ColumnChart',
         'containerId': config.id,
-        'view': {'columns': [2, 6, 7, 8]},
+        'view': {'columns': [2, 7, 8, 9]},
         'options': {
             'isStacked': true,
             'hAxis': {
@@ -74,15 +74,14 @@ function buildTasksDurationColumnChart(config) {
     return durationChart;
 }
 
-function buildFilter(controlType, containerId, filterColumnLabel, filterListener) {
+function buildFilter(controlType, containerId, filterColumnIndex) {
     var filter = new google.visualization.ControlWrapper({
         'controlType': controlType,
         'containerId': containerId,
         'options': {
-            'filterColumnLabel': filterColumnLabel,
+            'filterColumnIndex': filterColumnIndex,
         },
     });
-    google.visualization.events.addListener(filter, 'statechange', filterListener);
     return filter;
 }
 
@@ -101,7 +100,7 @@ function buildRangeFilter(elementId) {
                     }
                 },
                 'chartView': {
-                    'columns': [0, 1, 2, 3, 4]
+                    'columns': [0, 1, 2, 3, 4, 5]
                 }
             },
         },
@@ -147,12 +146,14 @@ function buildCumulativFlowDashboard(config) {
  * TasksDurationDashboard
  **************************/
 
-function buildTasksDurationDashboard(config, columnChart, filterListener) {
-    var projectFilter = buildFilter('CategoryFilter', config.projectFilter, 'Project', filterListener);
-    var effortFilter = buildFilter('CategoryFilter', config.effortFilter, 'Effort', filterListener);
-    var valueFilter = buildFilter('CategoryFilter', config.valueFilter, 'Value', filterListener);
-    var dateRangeFilter = buildFilter('DateRangeFilter', config.dateRangeFilter, 'Release', filterListener);
+function buildFilteredDashboard(config, chart, filterListener) {
+    var filters = [];
+    for (index = 0; index < config.taskFilters.length; index++) {
+        var filterConfig = config.taskFilters[index];
+        filters.push(buildFilter(filterConfig.filter_type, filterConfig.id, filterConfig.columnIndex));
+    }
+    google.visualization.events.addListener(chart, 'ready', filterListener);
     var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
-    dashboard.bind([effortFilter, valueFilter, dateRangeFilter, projectFilter], columnChart);
+    dashboard.bind(filters, chart);
     return dashboard;
 }

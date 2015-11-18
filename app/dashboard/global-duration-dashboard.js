@@ -9,7 +9,7 @@ function GlobalDurationDashboard(config) {
 
     this.initWidgets = function () {
         tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
-        tasksDurationDashboard = buildTasksDurationDashboard(config, tasksDurationColumnChart, updateTable);
+        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
     };
@@ -41,7 +41,7 @@ function GlobalDurationDashboard(config) {
             tasksListTable.setDataTable(dataToDisplay);
             tasksListTable.draw();
 
-            tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, 11));
+            tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, 12));
             tasksDurationStatsTable.draw();
         }
     };

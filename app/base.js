@@ -2,10 +2,12 @@ google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'tabl
 
 var globalCumulativeDashboard = new GlobalCumulativeDashboard(globalCumulativeFlowDashboardConfig);
 var globalDurationDashboard = new GlobalDurationDashboard(globalDurationDashboardConfig);
-var lastMonthDashboard = new TimePeriodDashboard(lastMonthDashboardConfig);
+var month1Dashboard = new TimePeriodDashboard(month1DashboardConfig);
+var month2Dashboard = new TimePeriodDashboard(month2DashboardConfig);
+var month3Dashboard = new TimePeriodDashboard(month3DashboardConfig);
 var currentMonthDashboard = new TimePeriodDashboard(currentMonthDashboardConfig);
 
-var allDashboard = [globalCumulativeDashboard, globalDurationDashboard, lastMonthDashboard, currentMonthDashboard];
+var allDashboard = [globalCumulativeDashboard, globalDurationDashboard, month1Dashboard, month2Dashboard, month3Dashboard, currentMonthDashboard];
 var currentDashboards = [];
 
 google.setOnLoadCallback(initApp);
@@ -53,8 +55,14 @@ $(document).on('ready', function () {
         if (target == "#tab-global-view") {
             loadRawData([globalCumulativeDashboard, globalDurationDashboard]);
         }
-        else if (target == "#tab_last_month_view") {
-            loadRawData([lastMonthDashboard]);
+        else if (target == "#tab_month_1_view") {
+            loadRawData([month1Dashboard]);
+        }
+        else if (target == "#tab_month_2_view") {
+            loadRawData([month2Dashboard]);
+        }
+        else if (target == "#tab_month_3_view") {
+            loadRawData([month3Dashboard]);
         }
         else if (target == "#tab_current_month_view") {
             loadRawData([currentMonthDashboard]);
