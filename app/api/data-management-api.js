@@ -72,41 +72,66 @@ function computeDurationData(inputData) {
     data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.PROJECT));
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.REF));
     data.addColumn('string', 'Jira Ref');
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.TASK_FILTER_1));
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.TASK_FILTER_2));
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.TASK_FILTER_3));
     data.addColumn('date', 'Release');
     data.addColumn('number', "Backlog");
     data.addColumn('number', "Analysis");
     data.addColumn('number', "Development");
+    data.addColumn('number', "Ready To Release");
     data.addColumn('number', "Total");
     data.addColumn('number', "Tasks");
     data.addColumn('string', "");
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            data.addColumn(inputData.getColumnType(RAW_DATA_COL.FILTERS[index].columnIndex), inputData.getColumnLabel(RAW_DATA_COL.FILTERS[index].columnIndex));
+        }
+    }
+
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var backlogDuration = duration(inputData, i, RAW_DATA_COL.CREATION, RAW_DATA_COL.ANALYSIS);
-        var analysisDuration = (duration(inputData, i, RAW_DATA_COL.ANALYSIS, RAW_DATA_COL.DEVELOPMENT) + 0.5);
-        var developmentDuration = (duration(inputData, i, RAW_DATA_COL.DEVELOPMENT, RAW_DATA_COL.RELEASE) + 0.5);
-        data.addRow([inputData.getValue(i, RAW_DATA_COL.PROJECT),
-            inputData.getValue(i, RAW_DATA_COL.REF),
-            inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF),
-            inputData.getValue(i, RAW_DATA_COL.TASK_FILTER_1),
-            inputData.getValue(i, RAW_DATA_COL.TASK_FILTER_2),
-            inputData.getValue(i, RAW_DATA_COL.TASK_FILTER_3),
-            inputData.getValue(i, RAW_DATA_COL.RELEASE),
-            backlogDuration,
-            analysisDuration,
-            developmentDuration,
-            backlogDuration + analysisDuration + developmentDuration,
-            1,
-            'Selection']);
+        var creationDate = inputData.getValue(i, RAW_DATA_COL.CREATION);
+        var analysisDate = inputData.getValue(i, RAW_DATA_COL.ANALYSIS);
+        var devlopmentDate = inputData.getValue(i, RAW_DATA_COL.DEVELOPMENT);
+        var validationDate = inputData.getValue(i, RAW_DATA_COL.VALIDATION);
+        var releaseDate = inputData.getValue(i, RAW_DATA_COL.RELEASE);
+
+        var row = [];
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT));
+        row.push(inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(releaseDate);
+        row.push(creationDate.getWorkDaysUntil(analysisDate) - 1);
+        row.push(analysisDate.getWorkDaysUntil(devlopmentDate) - 0.5);
+        row.push(devlopmentDate.getWorkDaysUntil(validationDate) - 0.5);
+        row.push(validationDate.getWorkDaysUntil(releaseDate) - 1);
+        row.push(creationDate.getWorkDaysUntil(releaseDate));
+        row.push(1);
+        row.push('Selection');
+        if (RAW_DATA_COL.FILTERS != null) {
+            for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+                row.push(inputData.getValue(i, RAW_DATA_COL.FILTERS[index].columnIndex));
+            }
+        }
+
+        data.addRow(row);
     }
     return data;
 }
 
 function computeDurationGroupedData(inputData, groupBy) {
     var data = google.visualization.data.group(inputData, [groupBy], [{
-        column: 11,
+        column: 9,
         aggregation: google.visualization.data.sum,
+        type: 'number'
+    }, {
+        column: 4,
+        aggregation: google.visualization.data.avg,
+        type: 'number'
+    }, {
+        column: 5,
+        aggregation: google.visualization.data.avg,
+        type: 'number'
+    }, {
+        column: 6,
+        aggregation: google.visualization.data.avg,
         type: 'number'
     }, {
         column: 7,
@@ -116,23 +141,13 @@ function computeDurationGroupedData(inputData, groupBy) {
         column: 8,
         aggregation: google.visualization.data.avg,
         type: 'number'
-    }, {
-        column: 9,
-        aggregation: google.visualization.data.avg,
-        type: 'number'
-    }, {
-        column: 10,
-        aggregation: google.visualization.data.avg,
-        type: 'number'
     }]);
     var formatter = new google.visualization.NumberFormat({suffix: ' day(s)'});
     formatter.format(data, 2);
     formatter.format(data, 3);
     formatter.format(data, 4);
     formatter.format(data, 5);
+    formatter.format(data, 6);
     return data
 }
 
-function duration(data, row, from, to) {
-    return (data.getValue(row, to) - data.getValue(row, from)) / (1000 * 60 * 60 * 24);
-}

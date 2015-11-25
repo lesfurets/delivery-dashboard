@@ -1,4 +1,11 @@
 google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
+$(function () {
+    $(".element-container").each(function (index) {
+        $(this).load($(this).attr("element"));
+    });
+});
+
+var test = '';
 
 var globalCumulativeDashboard = new GlobalCumulativeDashboard(globalCumulativeFlowDashboardConfig);
 var globalDurationDashboard = new GlobalDurationDashboard(globalDurationDashboardConfig);
@@ -16,7 +23,7 @@ function initApp() {
     for (var i = 0; i < allDashboard.length; i++) {
         allDashboard[i].initWidgets();
     }
-    loadRawData([globalCumulativeDashboard, globalDurationDashboard]);
+    loadRawData([globalCumulativeDashboard]);
 }
 
 function reloadRawData() {
@@ -52,8 +59,11 @@ function QueryResponseHandler(dataConsumer) {
 $(document).on('ready', function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href") // activated tab
-        if (target == "#tab-global-view") {
-            loadRawData([globalCumulativeDashboard, globalDurationDashboard]);
+        if (target == "#tab-global-flow-view") {
+            loadRawData([globalCumulativeDashboard]);
+        }
+        if (target == "#tab-global-duration-view") {
+            loadRawData([globalDurationDashboard]);
         }
         else if (target == "#tab_month_1_view") {
             loadRawData([month1Dashboard]);

@@ -63,11 +63,12 @@ body {
     width: 1024px;
 }
 
-.card.to-print.stats{
+.card-relative-chart .card.to-print.stats {
     position: absolute;
-    width: 600px;
+    width: 610px;
     top: 35px;
     left: 65px;
+    background: rgba(255, 255, 255, .5) !important;
 }
 
 .modal.ticket-list .modal-dialog {
@@ -88,4 +89,8 @@ body {
         width: 100%;
         height: 130px
     }
+}
+
+#global_duration_scatter_chart_div {
+    margin-top: 50px;
 }

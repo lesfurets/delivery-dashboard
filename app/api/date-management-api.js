@@ -1,4 +1,34 @@
-function calcBusinessDays(dDate1, dDate2) {         // input given as Date objects
+var monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
+Date.prototype.getMonthLabel = function () {
+    return monthNames[this.getMonth()];
+}
+
+Date.prototype.formatDDMMYYYY = function () {
+    var dd = this.getDate();
+    dd = dd < 10 ? '0' + dd : dd;
+    var mm = this.getMonth() + 1; //January is 0!
+    mm = mm < 10 ? '0' + mm : mm;
+    var yyyy = this.getFullYear();
+    return dd + '/' + mm + '/' + yyyy;
+};
+
+Date.prototype.getWeek = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+};
+
+Date.prototype.getWorkDaysUntil = function (date) {
+    return getWorkDaysBetween(this, date);
+};
+
+Date.prototype.getWorkDaysSince = function (date) {
+    return getWorkDaysBetween(date, this);
+};
+
+function getWorkDaysBetween(dDate1, dDate2) {         // input given as Date objects
 
     var iWeeks, iDateDiff, iAdjust = 0;
 

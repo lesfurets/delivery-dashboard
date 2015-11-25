@@ -12,7 +12,7 @@ function GlobalCumulativeDashboard(config) {
 
     this.loadData = function (data) {
         rawData = data;
-        eventData = eventData = computeEventData(data);
+        eventData = computeEventData(data);
     };
 
     this.refresh = function () {

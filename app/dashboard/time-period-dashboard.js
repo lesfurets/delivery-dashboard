@@ -4,7 +4,6 @@ function TimePeriodDashboard(config) {
     var tasksListTable;
 
     var rawData;
-    var durationStats;
 
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
@@ -14,7 +13,6 @@ function TimePeriodDashboard(config) {
 
     this.loadData = function (data) {
         rawData = filterLastMonth(data, config.date.start);
-        durationStats = computeDurationGroupedData(computeDurationData(data), 1);
     };
 
     this.refresh = function () {
@@ -24,7 +22,7 @@ function TimePeriodDashboard(config) {
             cumulativeFlowGraph.setDataTable(computeEventData(rawData));
             cumulativeFlowGraph.draw();
 
-            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), 0));
+            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), 11));
             durationStatsTable.draw();
 
             tasksListTable.setDataTable(rawData)

@@ -1,25 +1,3 @@
-var monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-
-Date.prototype.getMonthLabel = function () {
-    return monthNames[this.getMonth()];
-}
-
-Date.prototype.formatDDMMYYYY = function () {
-    var dd = this.getDate();
-    dd = dd < 10 ? '0' + dd : dd;
-    var mm = this.getMonth() + 1; //January is 0!
-    mm = mm < 10 ? '0' + mm : mm;
-    var yyyy = this.getFullYear();
-    return dd + '/' + mm + '/' + yyyy;
-};
-
-Date.prototype.getWeek = function () {
-    var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-};
-
 var today = new Date();
 var oneWeekAgo = new Date(today.getTime());
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -45,6 +23,17 @@ month3FirstDay.setMonth(month3FirstDay.getMonth() - 3);
 var month3LastDay = new Date(today.getTime());
 month3LastDay.setMonth(month3LastDay.getMonth() - 2);
 month3LastDay.setDate(0);
+
+var filtersConfig = [];
+if (RAW_DATA_COL.FILTERS != null) {
+    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+        filtersConfig.push({
+            id: "global_task_duration_filter_" + (index + 1),
+            filterType: RAW_DATA_COL.FILTERS[index].filterType,
+            columnIndex: 11 + index
+        });
+    }
+}
 
 var month1DashboardConfig = {
     date: {
@@ -135,13 +124,10 @@ var globalDurationDashboardConfig = {
     durationColumnChart: {
         id: 'global_duration_column_chart_div'
     },
+    durationScatterChart: {
+        id: 'global_duration_scatter_chart_div'
+    },
     durationStats: 'global_task_duration_stats',
-    taskFilters: [
-        {id: 'global_task_duration_filter_1', filter_type: 'CategoryFilter', columnIndex: 3},
-        {id: 'global_task_duration_filter_2', filter_type: 'CategoryFilter', columnIndex: 4},
-        {id: 'global_task_duration_filter_3', filter_type: 'CategoryFilter', columnIndex: 5},
-        {id: 'global_task_duration_filter_4', filter_type: 'CategoryFilter', columnIndex: 0},
-        {id: 'global_task_duration_filter_5', filter_type: 'DateRangeFilter', columnIndex: 6}
-    ],
+    taskFilters: filtersConfig,
     tasksList: 'global_task_duration_tasks_list'
 };

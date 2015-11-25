@@ -50,7 +50,7 @@ function buildTasksDurationColumnChart(config) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ColumnChart',
         'containerId': config.id,
-        'view': {'columns': [2, 7, 8, 9]},
+        'view': {'columns': [2, 4, 5, 6, 7]},
         'options': {
             'isStacked': true,
             'hAxis': {
@@ -67,6 +67,33 @@ function buildTasksDurationColumnChart(config) {
             'chartArea': {
                 'width': '90%',
                 'height': '100%'
+            }
+        }
+    });
+    setTaskSelectListener(durationChart);
+    return durationChart;
+}
+
+function buildTasksDurationScatterChart(config) {
+    var durationChart = new google.visualization.ChartWrapper({
+        'chartType': 'ScatterChart',
+        'containerId': config.id,
+        'view': {'columns': [3, 8]},
+        'options': {
+            'height': 400,
+            'hAxis': {
+                'title': 'Dates',
+                'textPosition': 'out'
+            },
+            'vAxis': {
+                'title': 'Duration (days)',
+                'textPosition': 'in'
+            },
+            'legend': {
+                'position': 'in'
+            },
+            'chartArea': {
+                'width': '90%',
             }
         }
     });
@@ -146,14 +173,14 @@ function buildCumulativFlowDashboard(config) {
  * TasksDurationDashboard
  **************************/
 
-function buildFilteredDashboard(config, chart, filterListener) {
+function buildFilteredDashboard(config, chart, chart2, filterListener) {
     var filters = [];
-    for (index = 0; index < config.taskFilters.length; index++) {
+    for (var index = 0; index < config.taskFilters.length; index++) {
         var filterConfig = config.taskFilters[index];
-        filters.push(buildFilter(filterConfig.filter_type, filterConfig.id, filterConfig.columnIndex));
+        filters.push(buildFilter(filterConfig.filterType, filterConfig.id, filterConfig.columnIndex));
     }
     google.visualization.events.addListener(chart, 'ready', filterListener);
     var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
-    dashboard.bind(filters, chart);
+    dashboard.bind(filters, [chart, chart2]);
     return dashboard;
 }
