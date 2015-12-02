@@ -22,7 +22,7 @@ function TimePeriodDashboard(config) {
             cumulativeFlowGraph.setDataTable(computeEventData(rawData));
             cumulativeFlowGraph.draw();
 
-            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), 11));
+            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), RAW_DATA_COL.EVENTS.length + 6));
             durationStatsTable.draw();
 
             tasksListTable.setDataTable(rawData)

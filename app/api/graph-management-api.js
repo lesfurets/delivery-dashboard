@@ -24,8 +24,10 @@ function buildCumulativeFlowChart(config) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
         'containerId': config.id,
-        'view': {'columns': [0, 1, 2, 3, 4, 5]},
         'options': {
+            'animation':{
+                'startup': true
+            },
             'height': config.height,
             'chartArea': {
                 'width': '90%',
@@ -50,7 +52,7 @@ function buildTasksDurationColumnChart(config) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ColumnChart',
         'containerId': config.id,
-        'view': {'columns': [2, 4, 5, 6, 7]},
+        'view': {'columns': config.columns},
         'options': {
             'isStacked': true,
             'hAxis': {
@@ -78,7 +80,7 @@ function buildTasksDurationScatterChart(config) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ScatterChart',
         'containerId': config.id,
-        'view': {'columns': [3, 8]},
+        'view': {'columns': config.columns},
         'options': {
             'height': 400,
             'hAxis': {
@@ -94,6 +96,7 @@ function buildTasksDurationScatterChart(config) {
             },
             'chartArea': {
                 'width': '90%',
+                'height': '80%'
             }
         }
     });
@@ -125,9 +128,6 @@ function buildRangeFilter(elementId) {
                     'chartArea': {
                         'width': '90%'
                     }
-                },
-                'chartView': {
-                    'columns': [0, 1, 2, 3, 4, 5]
                 }
             },
         },

@@ -43,7 +43,7 @@ function GlobalDurationDashboard(config) {
             tasksListTable.setDataTable(dataToDisplay);
             tasksListTable.draw();
 
-            tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, 10));
+            tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, RAW_DATA_COL.EVENTS.length + 5));
             tasksDurationStatsTable.draw();
         }
     };

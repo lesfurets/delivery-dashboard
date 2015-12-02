@@ -1,3 +1,54 @@
+var globalCumulativeFlowDashboardConfig = {
+    titleSuffix: {
+        id: 'global_culumative_flow_title_suffix',
+    },
+    dashboard: 'global_cumulative_flow_dashboard_div',
+    cumulativeFlowChart: {
+        id: 'global_cumulative_flow_area_chart_div',
+        height: 400
+    },
+    rangeFilter: 'global_cumulative_flow_chart_range_filter_div',
+    tasksList: 'global_cumulative_flow_tasks_list'
+};
+
+var durationsColumns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
+    return index == 0 ? 2 : index + 3;
+});
+
+var filtersConfig = [];
+filtersConfig.push({
+    id: "global_task_duration_filter_0",
+    filterType: 'NumberRangeFilter',
+    columnIndex: RAW_DATA_COL.EVENTS.length + 3
+});
+if (RAW_DATA_COL.FILTERS != null) {
+    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+        filtersConfig.push({
+            id: "global_task_duration_filter_" + (index + 1),
+            filterType: RAW_DATA_COL.FILTERS[index].filterType,
+            columnIndex: RAW_DATA_COL.EVENTS.length + 6 + index
+        });
+    }
+}
+
+var globalDurationDashboardConfig = {
+    titleSuffix: {
+        id: 'global_duration_title_suffix'
+    },
+    dashboard: 'global_duration_dashboard_div',
+    durationColumnChart: {
+        id: 'global_duration_column_chart_div',
+        columns: durationsColumns
+    },
+    durationScatterChart: {
+        id: 'global_duration_scatter_chart_div',
+        columns: [3, RAW_DATA_COL.EVENTS.length + 3]
+    },
+    durationStats: 'global_task_duration_stats',
+    taskFilters: filtersConfig,
+    tasksList: 'global_task_duration_tasks_list'
+};
+
 var today = new Date();
 var oneWeekAgo = new Date(today.getTime());
 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -23,17 +74,6 @@ month3FirstDay.setMonth(month3FirstDay.getMonth() - 3);
 var month3LastDay = new Date(today.getTime());
 month3LastDay.setMonth(month3LastDay.getMonth() - 2);
 month3LastDay.setDate(0);
-
-var filtersConfig = [];
-if (RAW_DATA_COL.FILTERS != null) {
-    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-        filtersConfig.push({
-            id: "global_task_duration_filter_" + (index + 1),
-            filterType: RAW_DATA_COL.FILTERS[index].filterType,
-            columnIndex: 11 + index
-        });
-    }
-}
 
 var month1DashboardConfig = {
     date: {
@@ -101,33 +141,4 @@ var currentMonthDashboardConfig = {
     },
     durationStats: 'current_month_duration_stats',
     tasksList: 'current_month_tasks_list'
-};
-
-var globalCumulativeFlowDashboardConfig = {
-    titleSuffix: {
-        id: 'global_culumative_flow_title_suffix',
-    },
-    dashboard: 'global_cumulative_flow_dashboard_div',
-    cumulativeFlowChart: {
-        id: 'global_cumulative_flow_area_chart_div',
-        height: 400
-    },
-    rangeFilter: 'global_cumulative_flow_chart_range_filter_div',
-    tasksList: 'global_cumulative_flow_tasks_list'
-};
-
-var globalDurationDashboardConfig = {
-    titleSuffix: {
-        id: 'global_duration_title_suffix'
-    },
-    dashboard: 'global_duration_dashboard_div',
-    durationColumnChart: {
-        id: 'global_duration_column_chart_div'
-    },
-    durationScatterChart: {
-        id: 'global_duration_scatter_chart_div'
-    },
-    durationStats: 'global_task_duration_stats',
-    taskFilters: filtersConfig,
-    tasksList: 'global_task_duration_tasks_list'
 };
