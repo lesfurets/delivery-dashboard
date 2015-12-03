@@ -1,3 +1,30 @@
+<script type="text/javascript">
+    var today = new Date();
+    var oneWeekAgo = new Date(today.getTime());
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    var oneMonthAgo = new Date(today.getTime());
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 2);
+
+    var currentMonthDashboardConfig = {
+        date: {
+            start: oneMonthAgo,
+            end: oneWeekAgo,
+        },
+        titleSuffix: {
+            id: 'current_month_title_suffix',
+            value: "(" + oneMonthAgo.formatDDMMYYYY() + " - " + oneWeekAgo.formatDDMMYYYY() + ")"
+        },
+        cumulativeFlowChart: {
+            id: 'current_month_extract_cumulative_chart',
+            height: 600
+        },
+        durationStats: 'current_month_duration_stats',
+        tasksList: 'current_month_tasks_list'
+    };
+
+    registerDashboard("#tab_current_month_view", new ReportDashboard(currentMonthDashboardConfig));
+</script>
+
 <div class="card to-print graph">
     <div class="row">
         <h2 class="col-md-12 card-title"><img class="print-logo" src="img/team-traffic.png"/> Team Traffic - Cycle time<span id="current_month_title_suffix"></span>

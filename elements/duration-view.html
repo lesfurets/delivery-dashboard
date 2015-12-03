@@ -1,3 +1,44 @@
+<script type="text/javascript">
+    var durationsColumns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
+        return index == 0 ? 2 : index + 4;
+    });
+
+    var filtersConfig = [];
+    filtersConfig.push({
+        id: "global_task_duration_filter_0",
+        filterType: 'NumberRangeFilter',
+        columnIndex: RAW_DATA_COL.EVENTS.length + 3
+    });
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            filtersConfig.push({
+                id: "global_task_duration_filter_" + (index + 1),
+                filterType: RAW_DATA_COL.FILTERS[index].filterType,
+                columnIndex: RAW_DATA_COL.EVENTS.length + 7 + index
+            });
+        }
+    }
+
+    var globalDurationDashboardConfig = {
+        titleSuffix: {
+            id: 'global_duration_title_suffix'
+        },
+        dashboard: 'global_duration_dashboard_div',
+        durationColumnChart: {
+            id: 'global_duration_column_chart_div',
+            columns: durationsColumns
+        },
+        durationScatterChart: {
+            id: 'global_duration_scatter_chart_div',
+            columns: [4, RAW_DATA_COL.EVENTS.length + 4, 3]
+        },
+        durationStats: 'global_task_duration_stats',
+        taskFilters: filtersConfig,
+        tasksList: 'global_task_duration_tasks_list'
+    };
+
+    registerDashboard("#tab-global-duration-view" , new DurationDashboard(globalDurationDashboardConfig));
+</script>
 <div class="card">
     <div class="row">
         <h2 class="col-md-12 card-title">Tasks Duration<span id="global_duration_title_suffix"></span>

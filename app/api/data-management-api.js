@@ -17,12 +17,10 @@ function computeEventData(inputData) {
             data.addRow(row);
         }
     }
-    var eventData = google.visualization.data.group(data, [{
-        column: 0,
-        type: 'date'
-    }], Array.apply(null, {length: statusNumber}).map(function(value, index){
-        return { column: index + 1, aggregation: google.visualization.data.sum, type : 'number' }
-    }));
+    var eventData = google.visualization.data.group(data, [{ column: 0, type: 'date'}],
+        Array.apply(null, {length: statusNumber}).map(function(value, index){
+            return { column: index + 1, aggregation: google.visualization.data.sum, type : 'number' }
+        }));
     var cumulativEventData = builtEventDataStructure(inputData);
     for (var i = 0; i < eventData.getNumberOfRows(); i++) {
         var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
@@ -50,6 +48,7 @@ function computeDurationData(inputData) {
     data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.PROJECT));
     data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.REF));
     data.addColumn('string', 'Jira Ref');
+    data.addColumn({type: 'string', role: 'tooltip'}, 'Tooltip');
     data.addColumn('date', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
     for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
         data.addColumn('number', RAW_DATA_COL.EVENTS[index].status);
@@ -58,9 +57,7 @@ function computeDurationData(inputData) {
     data.addColumn('number', "Tasks");
     data.addColumn('string', "");
     if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            data.addColumn(inputData.getColumnType(RAW_DATA_COL.FILTERS[index].columnIndex), inputData.getColumnLabel(RAW_DATA_COL.FILTERS[index].columnIndex));
-        }
+        RAW_DATA_COL.FILTERS.forEach(function (filter) { data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex)); });
     }
 
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
@@ -72,6 +69,7 @@ function computeDurationData(inputData) {
         row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT));
         row.push(inputData.getValue(i, RAW_DATA_COL.REF));
         row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
         row.push(durations[durations.length - 1]);
         for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
             row.push(durations[index].getWorkDaysUntil(durations[index + 1]) + RAW_DATA_COL.EVENTS[index].correction);
@@ -80,9 +78,7 @@ function computeDurationData(inputData) {
         row.push(1);
         row.push('Selection');
         if (RAW_DATA_COL.FILTERS != null) {
-            for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-                row.push(inputData.getValue(i, RAW_DATA_COL.FILTERS[index].columnIndex));
-            }
+            RAW_DATA_COL.FILTERS.forEach(function (filter) { row.push(inputData.getValue(i, filter.columnIndex)) })
         }
 
         data.addRow(row);

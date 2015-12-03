@@ -1,13 +1,16 @@
-function GlobalCumulativeDashboard(config) {
+function CumulativeDashboard(config) {
     var cumulativFlowDashboard;
     var tasksListTable;
 
     var rawData;
     var eventData;
 
+    var initialized = false;
+
     this.initWidgets = function () {
         cumulativFlowDashboard = buildCumulativFlowDashboard(config);
         tasksListTable = buildTasksListTable(config.tasksList);
+        initialized = true;
     };
 
     this.loadData = function (data) {
@@ -31,5 +34,8 @@ function GlobalCumulativeDashboard(config) {
         $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
     };
 
+    this.isInitialized = function () {
+        return initialized;
+    };
 
 }

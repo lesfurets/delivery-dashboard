@@ -1,3 +1,32 @@
+<script type="text/javascript">
+    var today = new Date();
+    var month3FirstDay = new Date(today.getTime());
+    month3FirstDay.setDate(1);
+    month3FirstDay.setMonth(month3FirstDay.getMonth() - 3);
+    var month3LastDay = new Date(today.getTime());
+    month3LastDay.setMonth(month3LastDay.getMonth() - 2);
+    month3LastDay.setDate(0);
+
+    var month3DashboardConfig = {
+        date: {
+            start: month3FirstDay,
+            end: month3LastDay,
+        },
+        titleSuffix: {
+            id: 'month_3_title_suffix',
+            value: month3FirstDay.getMonthLabel()
+        },
+        cumulativeFlowChart: {
+            id: 'month_3_extract_cumulative_chart',
+            height: 600
+        },
+        durationStats: 'month_3_duration_stats',
+        tasksList: 'month_3_tasks_list'
+    };
+
+    registerDashboard("#tab_month_3_view", new ReportDashboard(month3DashboardConfig));
+</script>
+
 <div class="card to-print graph">
     <div class="row">
         <h2 class="col-md-12 card-title">

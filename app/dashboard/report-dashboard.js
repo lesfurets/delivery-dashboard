@@ -1,14 +1,17 @@
-function TimePeriodDashboard(config) {
+function ReportDashboard(config) {
     var cumulativeFlowGraph;
     var durationStatsTable;
     var tasksListTable;
 
     var rawData;
 
+    var initialized = false;
+
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
         durationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
+        initialized = true;
     };
 
     this.loadData = function (data) {
@@ -33,6 +36,10 @@ function TimePeriodDashboard(config) {
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
         $("#" + config.titleSuffix.id).text(" - " + config.titleSuffix.value + " - " + numberOfRows + " task" + plural);
+    };
+
+    this.isInitialized = function () {
+        return initialized;
     };
 
 }

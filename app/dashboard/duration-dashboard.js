@@ -1,4 +1,4 @@
-function GlobalDurationDashboard(config) {
+function DurationDashboard(config) {
     var tasksDurationDashboard;
     var tasksDurationColumnChart;
     var tasksDurationScatterChart;
@@ -8,12 +8,15 @@ function GlobalDurationDashboard(config) {
     var rawData;
     var durationData;
 
+    var initialized = false;
+
     this.initWidgets = function () {
         tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
         tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, tasksDurationScatterChart, updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
+        initialized = true;
     };
 
     this.loadData = function (data) {
@@ -46,6 +49,10 @@ function GlobalDurationDashboard(config) {
             tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, RAW_DATA_COL.EVENTS.length + 5));
             tasksDurationStatsTable.draw();
         }
+    };
+
+    this.isInitialized = function () {
+        return initialized;
     };
 
 }
