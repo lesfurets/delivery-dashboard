@@ -1,20 +1,21 @@
 <script type="text/javascript">
-    var durationsColumns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
-        return index == 0 ? 2 : index + 4;
+    var durationsColumns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length - 1}).map(function (value, index) {
+        return DURATION_DATA_STATUS_OFFSET + index;
     });
+    durationsColumns.unshift(2);
 
     var filtersConfig = [];
     filtersConfig.push({
         id: "global_task_duration_filter_0",
         filterType: 'NumberRangeFilter',
-        columnIndex: RAW_DATA_COL.EVENTS.length + 3
+        columnIndex: DURATION_DATA_CYCLE_TIME
     });
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
             filtersConfig.push({
                 id: "global_task_duration_filter_" + (index + 1),
                 filterType: RAW_DATA_COL.FILTERS[index].filterType,
-                columnIndex: RAW_DATA_COL.EVENTS.length + 7 + index
+                columnIndex: DURATION_DATA_FILTER_OFFSET + index
             });
         }
     }
@@ -30,7 +31,8 @@
         },
         durationScatterChart: {
             id: 'global_duration_scatter_chart_div',
-            columns: [4, RAW_DATA_COL.EVENTS.length + 4, 3]
+//            columns: [4, DURATION_DATA_FILTER_OFFSET -1, DURATION_DATA_END_OFFSET]
+            columns: [DURATION_DATA_STATUS_OFFSET - 1, DURATION_DATA_FILTER_OFFSET - 1, DURATION_DATA_END_OFFSET]
         },
         durationStats: 'global_task_duration_stats',
         taskFilters: filtersConfig,

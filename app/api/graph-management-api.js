@@ -97,6 +97,10 @@ function buildTasksDurationScatterChart(config) {
             'chartArea': {
                 'width': '90%',
                 'height': '80%'
+            },
+            interpolateNulls: true,
+            series: {
+                1: { lineWidth: 2, pointSize: 0, lineDashStyle: [10, 2] }
             }
         }
     });
