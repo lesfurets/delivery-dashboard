@@ -25,7 +25,7 @@ function ReportDashboard(config) {
             cumulativeFlowGraph.setDataTable(computeEventData(rawData));
             cumulativeFlowGraph.draw();
 
-            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), RAW_DATA_COL.EVENTS.length + 6));
+            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), DURATION_DATA_FILTER_OFFSET));
             durationStatsTable.draw();
 
             tasksListTable.setDataTable(rawData)
