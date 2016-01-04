@@ -15,7 +15,7 @@ function ReportDashboard(config) {
     };
 
     this.loadData = function (data) {
-        rawData = filterLastMonth(data, config.date.start);
+        rawData = filterCreatedAfter(filterReleasedBefore(data, config.date.start),config.date.end);
     };
 
     this.refresh = function () {
@@ -25,7 +25,7 @@ function ReportDashboard(config) {
             cumulativeFlowGraph.setDataTable(computeEventData(rawData));
             cumulativeFlowGraph.draw();
 
-            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(rawData), DURATION_DATA_FILTER_OFFSET));
+            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(filterReleasedAfter(rawData,config.date.end)), DURATION_DATA_FILTER_OFFSET));
             durationStatsTable.draw();
 
             tasksListTable.setDataTable(rawData)
