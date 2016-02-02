@@ -1,10 +1,10 @@
 google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
-$(function () {
+var containerToLoad = 0;
+google.setOnLoadCallback(function () {
+    containerToLoad = $(".element-container").size();
     $(".element-container").each(function (index) {
         $(this).load($(this).attr("element"));
     });
-
-    google.setOnLoadCallback(initApp);
 });
 
 var allDashboards = [];
@@ -14,6 +14,10 @@ function registerDashboard(tabId,dashboard,isDefault){
     allDashboards.push({ tab:tabId , controller: dashboard});
     if(isDefault) {
         currentDashboards.push(dashboard);
+    }
+    containerToLoad--;
+    if(containerToLoad == 0){
+        initApp()
     }
 }
 
