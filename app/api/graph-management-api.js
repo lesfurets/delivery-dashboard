@@ -156,8 +156,13 @@ function setTaskSelectListener(element) {
 
 function buildTimePeriodDashboard(config) {
     var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart);
-    areaChart.setOption('hAxis.viewWindow.min', config.date.start);
-    areaChart.setOption('hAxis.viewWindow.max', config.date.end);
+    limitTimePeriodDashboard(areaChart,config.date.start,config.date.end);
+    return areaChart;
+}
+
+function limitTimePeriodDashboard(areaChart, firstDay, lastDay) {
+    areaChart.setOption('hAxis.viewWindow.min', firstDay);
+    areaChart.setOption('hAxis.viewWindow.max', lastDay);
     return areaChart;
 }
 

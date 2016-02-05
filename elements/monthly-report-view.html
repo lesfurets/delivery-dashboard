@@ -1,0 +1,68 @@
+<script type="text/javascript">
+    var startDate = new Date(RAW_DATA_FIRST_ENTRY);
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 15);
+
+    var month1DashboardConfig = {
+        date: {
+            start: new Date(currentDate.getFullYear(),currentDate.getMonth(),1),
+            end: new Date(currentDate.getFullYear(),currentDate.getMonth() + 1, 0),
+        },
+        titleSuffix: {
+            id: 'monthly_report_title_suffix'
+        },
+        cumulativeFlowChart: {
+            id: 'monthly_report_extract_cumulative_chart',
+            height: 600
+        },
+        durationStats: 'monthly_report_duration_stats',
+        tasksList: 'monthly_report_tasks_list'
+    };
+
+    var reportDashboard = new ReportDashboard(month1DashboardConfig);
+    registerDashboard("#tab_monthly_report_view", reportDashboard);
+
+    while (startDate < currentDate) {
+        $('#monthSelector').append($('<option>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('value', currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1)));
+        currentDate.setMonth(currentDate.getMonth() - 1);
+    }
+
+    $( "#monthSelector" ).change(function() {
+        var firstDay = new Date($(this).val());
+        var lastDay = new Date(firstDay.getFullYear(), firstDay.getMonth() + 1, 0);
+        reportDashboard.resetDates(firstDay,lastDay);
+    });
+
+</script>
+
+<div class="card to-print graph">
+    <div class="row">
+        <h2 class="col-md-12 card-title">
+            <img class="print-logo" src="img/team-traffic.png"/> Team Traffic - Cycle time - <form id="month_form"><select id="monthSelector"></select></form> <span id="monthly_report_title_suffix"></span>
+            <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#monthly_report_tasks_list_modal"></span></a>
+        </h2>
+    </div>
+    <div class="row card-relative-chart">
+        <div id="monthly_report_extract_cumulative_chart"></div>
+        <div class="card to-print stats">
+            <div id="monthly_report_duration_stats"></div>
+        </div>
+    </div>
+</div>
+
+<div id="monthly_report_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tasks list</h4>
+            </div>
+            <div class="modal-body">
+                <div id="monthly_report_tasks_list" class="col-md-12"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

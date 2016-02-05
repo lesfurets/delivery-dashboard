@@ -3,9 +3,13 @@ function ReportDashboard(config) {
     var durationStatsTable;
     var tasksListTable;
 
-    var rawData;
+    var rawDara;
+    var filteredData;
 
     var initialized = false;
+
+    var startDate = config.date.start;
+    var endDate = config.date.end;
 
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
@@ -15,31 +19,44 @@ function ReportDashboard(config) {
     };
 
     this.loadData = function (data) {
-        rawData = filterCreatedAfter(filterReleasedBefore(data, config.date.start),config.date.end);
+        rawDara = data;
+        this.filterData();
+    };
+
+    this.filterData = function () {
+        filteredData = filterCreatedAfter(filterReleasedBefore(rawDara, startDate), endDate);
     };
 
     this.refresh = function () {
-        if (rawData != null) {
-            setTitleSuffix(rawData.getNumberOfRows());
+        if (filteredData != null) {
+            setTitleSuffix(filteredData.getNumberOfRows());
 
-            cumulativeFlowGraph.setDataTable(computeEventData(rawData));
+            cumulativeFlowGraph.setDataTable(computeEventData(filteredData));
             cumulativeFlowGraph.draw();
 
-            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(filterReleasedAfter(rawData,config.date.end)), DURATION_DATA_FILTER_OFFSET));
+            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(filterReleasedAfter(filteredData, endDate)), DURATION_DATA_FILTER_OFFSET));
             durationStatsTable.draw();
 
-            tasksListTable.setDataTable(rawData)
+            tasksListTable.setDataTable(filteredData)
             tasksListTable.draw();
         }
     };
 
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix.id).text(" - " + config.titleSuffix.value + " - " + numberOfRows + " task" + plural);
+        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
         return initialized;
     };
+
+    this.resetDates = function (firstDay, lastDate) {
+        startDate = firstDay;
+        endDate = lastDate;
+        limitTimePeriodDashboard(cumulativeFlowGraph, startDate, endDate);
+        this.filterData();
+        this.refresh();
+    }
 
 }

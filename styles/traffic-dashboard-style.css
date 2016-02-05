@@ -90,3 +90,7 @@ body {
         height: 130px
     }
 }
+
+#month_form {
+    display: inline;
+}
