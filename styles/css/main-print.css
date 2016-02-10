@@ -1,0 +1,32 @@
+.tab-content {
+    padding-top: 0;
+}
+
+.card {
+	display: none;
+}
+
+.card.to-print {
+	display: inline-block;
+    width: 1024px;
+}
+
+.card-title {
+    padding-bottom: 10px;
+    margin: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.print-logo {
+	display: inline;
+    height: 70px;
+    padding-right: 10px;
+}
+
+.card.to-print.stats{
+    border: 1px solid #f0f0f0;
+}
+
+.not-to-print {
+    display: none;
+}

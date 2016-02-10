@@ -1,0 +1,74 @@
+<html lang="en">
+<head>
+    <title>Panel Team Dashboard</title>
+
+    <meta charset="utf-8">
+    <!-- proper rendering and touch zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="../styles/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../styles/css/main-print.css" media="print"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript" src="../app/config/app-config-panel.js"></script>
+
+    <script type="text/javascript" src="../app/api/data-management-api.js"></script>
+    <script type="text/javascript" src="../app/api/graph-management-api.js"></script>
+    <script type="text/javascript" src="../app/api/date-management-api.js"></script>
+
+    <script type="text/javascript" src="../app/dashboard/cumulative-dashboard.js"></script>
+    <script type="text/javascript" src="../app/dashboard/duration-dashboard.js"></script>
+    <script type="text/javascript" src="../app/dashboard/report-dashboard.js"></script>
+    <script type="text/javascript" src="../app/dashboard/task-manager.js"></script>
+
+    <script type="text/javascript" src="../app/base.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!--<img class="navbar-brand-logo" src="img/team-traffic.png"/>-->
+            <span class="navbar-brand">Panel Dashboard</span>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a data-toggle="tab" href="#tab-global-flow-view">Flow</a></li>
+                <li><a data-toggle="tab" href="#tab-global-duration-view">Duration</a></li>
+                <li><a data-toggle="tab" href="#tab_tasks_manager">Manage Tasks</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-plus"></span></a></li>
+                <li><a href="#" onclick="reloadRawData()"><span class="glyphicon glyphicon-refresh"></span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid">
+    <div class="tab-content">
+
+        <div id="tab-global-flow-view" class="element-container tab-pane fade in active" element="elements/flow-view.html"></div>
+
+        <div id="tab-global-duration-view" class="element-container tab-pane fade in" element="elements/duration-view.html"></div>
+
+        <div id="tab_tasks_manager" class="element-container tab-pane fade in" element="elements/task-manager.html"></div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
