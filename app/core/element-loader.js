@@ -14,9 +14,6 @@ google.setOnLoadCallback(function () {
 // Wait for all elements to be loaded before initializing the app
 function registerDashboard(tabId, dashboard, isDefault) {
     allDashboards.push({tab: tabId, controller: dashboard});
-    if (isDefault) {
-        currentDashboards.push(dashboard);
-    }
     containerToLoad--;
     if (containerToLoad == 0) {
         initApp()

@@ -606,25 +606,25 @@ function loadRawData(dataConsumer) {
     query.send(handler.handleResponse);
 }
 
+// dispatch data to all dashboard when revieved
 function QueryResponseHandler(dataConsumer) {
     this.handleResponse = function (response) {
         var inputData = response.getDataTable();
 
         dataConsumer.forEach(function (consumer) {
             consumer.loadData(inputData);
+            consumer.refresh();
         });
 
-        var drawCharts = function () {
+        window.onresize = function () {
             dataConsumer.forEach(function (consumer) {
                 consumer.refresh();
             });
         };
-
-        drawCharts();
-        window.onresize = drawCharts;
     }
 }
 
+// Manage tab changes, laod if required the target tab and load data
 $(document).on('ready', function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href") // activated tab
@@ -657,9 +657,6 @@ google.setOnLoadCallback(function () {
 // Wait for all elements to be loaded before initializing the app
 function registerDashboard(tabId, dashboard, isDefault) {
     allDashboards.push({tab: tabId, controller: dashboard});
-    if (isDefault) {
-        currentDashboards.push(dashboard);
-    }
     containerToLoad--;
     if (containerToLoad == 0) {
         initApp()
@@ -670,6 +667,10 @@ if (requestedUrl.match('#')) {
     $(document).ready(function () {
         $('.navbar .dropdown-menu a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
     });
+} else {
+    $(document).ready(function () {
+        $('.navbar .dropdown-menu a[href=#tab-global-flow-view]').tab('show');
+    });
 }
 
 // Changing url to fit the displayed tab
@@ -677,7 +678,7 @@ $(document).on('ready', function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href");
         var currentUrl = document.location.toString();
-        var baseUrl = currentUrl.match('#') ? url.split('#')[0] : currentUrl;
+        var baseUrl = currentUrl.match('#') ? currentUrl.split('#')[0] : currentUrl;
         document.location = baseUrl + target;
     });
 });

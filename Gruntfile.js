@@ -45,6 +45,13 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             },
+            js: {
+                files: ['app/api/**/*.js','app/dashboard/**/*.js','app/core/**/*.js'],
+                tasks: ['app'],
+                options: {
+                    livereload: true
+                }
+            },
             html: {
                 files: ['html/**/*.html'],
                 options: {
