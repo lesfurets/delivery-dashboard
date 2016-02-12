@@ -2,6 +2,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-less");
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
     grunt.initConfig({
         less: {
@@ -24,10 +25,19 @@ module.exports = function (grunt) {
                 src: 'styles/css/*.css'
             }
         },
+        concat: {
+            options: {
+                separator: ';',
+            },
+            dist: {
+                src: ['app/api/**/*.js','app/dashboard/**/*.js','app/core/**/*.js'],
+                dest: 'app/base.js'
+            },
+        },
         watch: {
             less: {
                 files: ['styles/less/**/*.less'],
-                tasks: ['default'],
+                tasks: ['styles'],
             },
             css: {
                 files: ['styles/css/main.css'],
@@ -40,10 +50,12 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
-            }
+            },
         }
     });
 
-    grunt.registerTask('default', ['less', 'autoprefixer']);
+    grunt.registerTask('styles', ['less', 'autoprefixer']);
+    grunt.registerTask('app', ['concat']);
     grunt.registerTask('w', ['less', 'autoprefixer', 'watch']);
+    grunt.registerTask('default', ['styles', 'app']);
 };
