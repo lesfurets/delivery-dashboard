@@ -1,50 +1,54 @@
-.switch {
+.switch{
     display: inline-block;
-    position: relative;
-    height: 30px;
-    width: 140px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    vertical-align: text-top;
-}
+    vertical-align: top;
+    margin-right: 2px;
 
-.switch-label {
-    color: #aaa;
-    position: relative;
-    z-index: 2;
-    float: left;
-    width: 68px;
-    line-height: 28px;
-    font-size: 15px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 0;
-}
+    .switch-label{
+        display: inline-block;
+        font-size: 20px;
+        cursor: pointer;
 
-.switch-input[type="radio"]:checked+.switch-label{
-    color: #000;
-}
+        &:first-child {
+            color: #000;
+        }
 
-.switch-input {
-    display: none;
-}
+        &:last-child {
+            color: #aaa;
+        }
+    }
 
-.switch-input:checked + .switch-label-on ~ .switch-selection {
-    left: 70px;
-    /* Note: left: 50% doesn't transition in WebKit */
-}
+    .switch-widget {
+        vertical-align: middle;
+        cursor: pointer;
+        display: inline-block;
+        width: 50px;
+        height: 30px;
+        background-color: #dddddd;
+        border-radius: 15px;
 
-.switch-selection {
-    display: block;
-    position: absolute;
-    z-index: 1;
-    top: 2px;
-    left: 2px;
-    width: 66px;
-    height: 24px;
-    border-radius: 3px;
-    background-color: #eeeeee;
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 0 2px rgba(0, 0, 0, 0.2);
-    transition: left 0.15s ease-out;
+        &:before{
+            content: " ";
+            height: 26px;
+            width: 26px;
+            background-color: white;
+            border-radius: 50%;
+            display: block;
+            margin: 2px 0 2px 2px;
+            transition: margin 0.3s ease-in;
+        }
+    }
+
+    &.switched{
+        .switch-widget:before {
+            margin-left: 22px;
+        }
+
+        .switch-label:first-child {
+            color: #aaa;
+        }
+
+        .switch-label:last-child {
+            color: #000;
+        }
+    }
 }

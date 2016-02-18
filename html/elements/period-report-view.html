@@ -1,0 +1,97 @@
+<script type="text/javascript">
+    var startDate = new Date(RAW_DATA_FIRST_ENTRY);
+    var endPeriod = new Date();
+    endPeriod.setDate(endPeriod.getDate() - 15);
+    var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
+
+    var periodReportDashboardConfig = {
+        date: {
+            start: startPeriod,
+            end: endPeriod,
+        },
+        titleSuffix: {
+            id: 'period_report_title_suffix'
+        },
+        cumulativeFlowChart: {
+            id: 'period_report_extract_cumulative_chart',
+            height: 600
+        },
+        durationStats: 'period_report_duration_stats',
+        tasksList: 'period_report_tasks_list'
+    };
+
+    var periodReportDashboard = new ReportDashboard(periodReportDashboardConfig);
+    registerDashboard("#tab_period_report_view", periodReportDashboard);
+
+    //Initialisation du Date Range Picker
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            startDate: startPeriod.formatDDMMYYYY(),
+            endDate: endPeriod.formatDDMMYYYY(),
+            minDate: startDate.formatDDMMYYYY(),
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }, function(start, end, label) {
+            periodReportDashboard.resetDates(start.toDate(), end.toDate());
+        });
+    });
+
+    //Manage the switch
+    $('#period_report_first-position-label').click(function() {
+        $("#period_report_switch").removeClass("switched");
+        periodReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET);
+    });
+    $('#period_report_second-position-label').click(function() {
+        $("#period_report_switch").addClass("switched");
+        periodReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET + 1);
+    });
+    $('#period_report_switch-widget').click(function() {
+        $("#period_report_switch").toggleClass("switched");
+        periodReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET + ($("#period_report_switch").hasClass("switched") ? 1 : 0));
+    });
+
+
+</script>
+
+<div class="card to-print graph">
+    <div class="row">
+        <h2 class="col-md-12 card-title">
+            <img class="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
+            <input type="text" name="daterange" value="01/01/2015 - 01/31/2015" />
+            <span id="period_report_title_suffix"></span>
+            <div class="not-to-print pull-right">
+                <div id="period_report_switch" class="switch">
+                    <div id="period_report_first-position-label" class="switch-label">Type</div>
+                    <div id="period_report_switch-widget" class="switch-widget"></div>
+                    <div id="period_report_second-position-label" class="switch-label">Effort</div>
+                </div>
+                <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#period_report_tasks_list_modal"></span></a>
+            </div>
+        </h2>
+    </div>
+    <div class="row card-relative-chart">
+        <div id="period_report_extract_cumulative_chart"></div>
+        <div class="card to-print stats">
+            <div id="period_report_duration_stats"></div>
+        </div>
+    </div>
+</div>
+
+<div id="period_report_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tasks list</h4>
+            </div>
+            <div class="modal-body">
+                <div id="period_report_tasks_list" class="col-md-12"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
