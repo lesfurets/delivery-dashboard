@@ -30,14 +30,16 @@ function computeEventData(inputData) {
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
         var statusNumber = RAW_DATA_COL.EVENTS.length;
         for (var statusIndex = 0; statusIndex < statusNumber; statusIndex++) {
-            var row = Array.apply(null, {length: statusNumber}).map(function(value, index){return index == statusIndex ? 1 : 0});
+            var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
+                return index == statusIndex ? 1 : 0
+            });
             row.unshift(inputData.getValue(i, RAW_DATA_COL.EVENTS[statusIndex].columnIndex));
             data.addRow(row);
         }
     }
-    var eventData = google.visualization.data.group(data, [{ column: 0, type: 'date'}],
-        Array.apply(null, {length: statusNumber}).map(function(value, index){
-            return { column: index + 1, aggregation: google.visualization.data.sum, type : 'number' }
+    var eventData = google.visualization.data.group(data, [{column: 0, type: 'date'}],
+        Array.apply(null, {length: statusNumber}).map(function (value, index) {
+            return {column: index + 1, aggregation: google.visualization.data.sum, type: 'number'}
         }));
     var cumulativEventData = builtEventDataStructure(inputData);
     for (var i = 0; i < eventData.getNumberOfRows(); i++) {
@@ -61,12 +63,25 @@ function builtEventDataStructure(inputData) {
     return data;
 }
 
-var DURATION_DATA_STATUS_OFFSET = 7;
-var DURATION_DATA_FILTER_OFFSET = DURATION_DATA_STATUS_OFFSET + RAW_DATA_COL.EVENTS.length;
-var DURATION_DATA_END_OFFSET = DURATION_DATA_FILTER_OFFSET + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
-var DURATION_DATA_CYCLE_TIME = DURATION_DATA_FILTER_OFFSET - 1;
-var DURATION_DATA_GROUP_ALL = 5;
-var DURATION_DATA_COUNT = 4;
+var DURATION_INDEX_STATIC_PROJECT = 0;
+var DURATION_INDEX_STATIC_REF = 1;
+var DURATION_INDEX_STATIC_COUNT = 4;
+var DURATION_INDEX_STATIC_GROUP_ALL = 5;
+var DURATION_INDEX_STATIC_EVENT_LAST = 6;
+var DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_EVENT_LAST;
+
+var DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
+var DURATION_INDEX_DURATION_LAST = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+var DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_DURATION_LAST;
+
+var DURATION_INDEX_FILTER_FIRST = DURATION_INDEX_DURATION_LAST + 1;
+var DURATION_INDEX_FILTER_LAST = DURATION_INDEX_DURATION_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
+
+var DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_FILTER_LAST + 1;
+var DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
+var DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
+var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
 
 function computeDurationData(inputData) {
     var data = new google.visualization.DataTable();
@@ -82,9 +97,12 @@ function computeDurationData(inputData) {
     }
     data.addColumn('number', "Cycle Time");
     if (RAW_DATA_COL.FILTERS != null) {
-        RAW_DATA_COL.FILTERS.forEach(function (filter) { data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex)); });
+        RAW_DATA_COL.FILTERS.forEach(function (filter) {
+            data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex));
+        });
     }
 
+    // Parsing events data to compute duration data
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
         var durations = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
             return inputData.getValue(i, RAW_DATA_COL.EVENTS[index].columnIndex);
@@ -98,47 +116,95 @@ function computeDurationData(inputData) {
         row.push(1);
         row.push('Selection');
         row.push(durations[durations.length - 1]);
+        // Compute durations (in work days) and applying correction from config
         for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
             row.push(durations[index].getWorkDaysUntil(durations[index + 1]) + RAW_DATA_COL.EVENTS[index].correction);
         }
         row.push(durations[0].getWorkDaysUntil(durations[durations.length - 1]));
         if (RAW_DATA_COL.FILTERS != null) {
-            RAW_DATA_COL.FILTERS.forEach(function (filter) { row.push(inputData.getValue(i, filter.columnIndex)) })
+            RAW_DATA_COL.FILTERS.forEach(function (filter) {
+                row.push(inputData.getValue(i, filter.columnIndex))
+            })
         }
 
         data.addRow(row);
     }
 
-    // Aggregate the previous view to calculate the average. This table should be a single table that looks like:
-    // [['', AVERAGE]], so you can get the Average with .getValue(0,1)
-    var group = google.visualization.data.group(data, [5], [{
-        column: DURATION_DATA_CYCLE_TIME,
-        id: 'avg',
-        label: 'average',
-        aggregation: google.visualization.data.avg,
-        'type': 'number'
-    }]);
+    return data;
+}
+function computeDurationStats(inputData) {
 
-    // Create a DataView where the third column is the average.
-    var dataAvg = new google.visualization.DataView(data);
-    var dataAvgStruct = Array.apply(null, {length: DURATION_DATA_END_OFFSET}).map(function(value, index){return index});
-    dataAvgStruct.push({
-        type: 'number',
-        label: 'average',
-        calc: function (dt, row) {
-            return group.getValue(0, 1);
-        }
-    })
-    dataAvg.setColumns(dataAvgStruct);
+    var group = google.visualization.data.group(inputData, [DURATION_INDEX_STATIC_GROUP_ALL], [
+        createAggregationColumn(google.visualization.data.avg),
+        createAggregationColumn(getQuartileFunction(0.5)),
+        createAggregationColumn(getQuartileFunction(0.9))]);
 
-    return dataAvg;
+    // Adding statistics
+    // To have tendlines to show specific values (average, 50% and 90% lines), we only need to display 2 points
+    // in a new serie and to draw a trendline between them.
+    // That's why we are addind 3 columns at the end of the DataView.
+    // We feel these columns with the required value only if date is min date or max date (to have our points at
+    // the edge of the chart).
+    // | Date  | Project | Ref | Cycle Time | Average |
+    // |-------|---------|-----|------------|---------|
+    // | 01/01 | TEST    |   1 |         16 |      19 |
+    // | 01/02 | TEST    |   2 |         18 |         | ╗
+    // | 01/03 | TEST    |   2 |         18 |         | ║> Don't need to feel the value as we want to draw a line
+    // | 01/04 | TEST    |   3 |         20 |         | ╝
+    // | 01/05 | TEST    |   4 |         22 |      19 |
+    // ╚════════════════════════════════════╩═════════╝
+    //                    V                      V
+    //               Actual Data             Statistics
+    // We will then add new data series with these columns defining point size to 2 and adding a linear trend line.
+
+    var minDate = inputData.getColumnRange(DURATION_INDEX_STATIC_EVENT_LAST).min
+    var maxDate = inputData.getColumnRange(DURATION_INDEX_STATIC_EVENT_LAST).max
+
+    // Creating a structure [0, 1, 2 ...  ]
+    var dataStatisticsStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
+    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, 'Average', group.getValue(0, 1)));
+    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '50%', group.getValue(0, 2)));
+    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '90%', group.getValue(0, 3)));
+
+    var dataWithStatistics = new google.visualization.DataView(inputData);
+    dataWithStatistics.setColumns(dataStatisticsStruct);
+
+    return dataWithStatistics;
 }
 
-function computeDurationGroupedData(inputData, groupBy) {
+function createStatColumn(minDate, maxDate, label, value) {
+    return {
+        type: 'number', label: label,
+        calc: function (table, row) {
+            return table.getValue(row, DURATION_INDEX_STATIC_EVENT_LAST) == minDate
+            || table.getValue(row, DURATION_INDEX_STATIC_EVENT_LAST) == maxDate ? value : null;
+        }
+    };
+}
+
+function createAggregationColumn(aggregationFunction) {
+    return {
+        column: DURATION_INDEX_DURATION_CYCLE_TIME,
+        aggregation: aggregationFunction,
+        'type': 'number'
+    };
+}
+
+function integerSorter(a,b) {
+    return a - b;
+}
+
+function getQuartileFunction(ration){
+    return function count(values) {
+        return values.sort(integerSorter)[Math.floor(values.length * ration)];
+    }
+}
+
+function groupDurationDataBy(inputData, groupBy) {
     var columns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
-        return { column: DURATION_DATA_STATUS_OFFSET + index, aggregation: google.visualization.data.avg, type: 'number'}
+        return {column: DURATION_INDEX_DURATION_FIRST + index, aggregation: google.visualization.data.avg, type: 'number'}
     });
-    columns.unshift({ column: DURATION_DATA_COUNT, aggregation: google.visualization.data.sum, type: 'number'});
+    columns.unshift({column: DURATION_INDEX_STATIC_COUNT, aggregation: google.visualization.data.sum, type: 'number'});
     var data = google.visualization.data.group(inputData, [groupBy], columns);
 
     var formatter = new google.visualization.NumberFormat({suffix: ' day(s)'});

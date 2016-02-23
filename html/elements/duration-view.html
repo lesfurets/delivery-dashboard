@@ -1,21 +1,22 @@
 <script type="text/javascript">
     var durationsColumns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length - 1}).map(function (value, index) {
-        return DURATION_DATA_STATUS_OFFSET + index;
+        return DURATION_INDEX_DURATION_FIRST + index;
     });
     durationsColumns.unshift(2);
 
+    // Building filter loading based on dashboard configuration configuration
     var filtersConfig = [];
     filtersConfig.push({
         id: "global_task_duration_filter_0",
         filterType: 'NumberRangeFilter',
-        columnIndex: DURATION_DATA_CYCLE_TIME
+        columnIndex: DURATION_INDEX_DURATION_CYCLE_TIME
     });
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
             filtersConfig.push({
                 id: "global_task_duration_filter_" + (index + 1),
                 filterType: RAW_DATA_COL.FILTERS[index].filterType,
-                columnIndex: DURATION_DATA_FILTER_OFFSET + index
+                columnIndex: DURATION_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -31,8 +32,7 @@
         },
         durationScatterChart: {
             id: 'global_duration_scatter_chart_div',
-//            columns: [4, DURATION_DATA_FILTER_OFFSET -1, DURATION_DATA_END_OFFSET]
-            columns: [DURATION_DATA_STATUS_OFFSET - 1, DURATION_DATA_FILTER_OFFSET - 1, DURATION_DATA_END_OFFSET]
+            columns: [DURATION_INDEX_STATIC_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]
         },
         durationStats: 'global_task_duration_stats',
         taskFilters: filtersConfig,

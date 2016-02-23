@@ -15,7 +15,7 @@ function loadRawData(dataConsumer) {
     query.send(handler.handleResponse);
 }
 
-// dispatch data to all dashboard when revieved
+// Dispatch data to all dashboards
 function QueryResponseHandler(dataConsumer) {
     this.handleResponse = function (response) {
         var inputData = response.getDataTable();
@@ -33,7 +33,7 @@ function QueryResponseHandler(dataConsumer) {
     }
 }
 
-// Manage tab changes, laod if required the target tab and load data
+// Manage tab changes, load if required the target tab and load data
 $(document).on('ready', function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href") // activated tab

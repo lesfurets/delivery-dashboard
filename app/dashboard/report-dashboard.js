@@ -10,7 +10,7 @@ function ReportDashboard(config) {
 
     var startDate = config.date.start;
     var endDate = config.date.end;
-    var reduceColumn = DURATION_DATA_FILTER_OFFSET;
+    var reduceColumn = DURATION_INDEX_FILTER_FIRST;
 
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
@@ -35,7 +35,7 @@ function ReportDashboard(config) {
             cumulativeFlowGraph.setDataTable(computeEventData(filteredData));
             cumulativeFlowGraph.draw();
 
-            durationStatsTable.setDataTable(computeDurationGroupedData(computeDurationData(filterReleasedAfter(filteredData, endDate)), reduceColumn));
+            durationStatsTable.setDataTable(groupDurationDataBy(computeDurationData(filterReleasedAfter(filteredData, endDate)), reduceColumn));
             durationStatsTable.draw();
 
             tasksListTable.setDataTable(filteredData)

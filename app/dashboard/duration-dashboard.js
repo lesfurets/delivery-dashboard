@@ -13,7 +13,7 @@ function DurationDashboard(config) {
     this.initWidgets = function () {
         tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
-        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, tasksDurationScatterChart, updateTable);
+        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
         initialized = true;
@@ -43,10 +43,13 @@ function DurationDashboard(config) {
         if (dataToDisplay != null) {
             setTitleSuffix(dataToDisplay.getNumberOfRows());
 
+            tasksDurationScatterChart.setDataTable(computeDurationStats(dataToDisplay));
+            tasksDurationScatterChart.draw();
+
             tasksListTable.setDataTable(dataToDisplay);
             tasksListTable.draw();
 
-            tasksDurationStatsTable.setDataTable(computeDurationGroupedData(dataToDisplay, DURATION_DATA_GROUP_ALL));
+            tasksDurationStatsTable.setDataTable(groupDurationDataBy(dataToDisplay, DURATION_INDEX_STATIC_GROUP_ALL));
             tasksDurationStatsTable.draw();
         }
     };

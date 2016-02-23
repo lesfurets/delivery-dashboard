@@ -40,15 +40,15 @@
     //Manage the switch
     $('#period_report_first-position-label').click(function() {
         $("#period_report_switch").removeClass("switched");
-        periodReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET);
+        periodReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
     });
     $('#period_report_second-position-label').click(function() {
         $("#period_report_switch").addClass("switched");
-        periodReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET + 1);
+        periodReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
     });
     $('#period_report_switch-widget').click(function() {
         $("#period_report_switch").toggleClass("switched");
-        periodReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET + ($("#period_report_switch").hasClass("switched") ? 1 : 0));
+        periodReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + ($("#period_report_switch").hasClass("switched") ? 1 : 0));
     });
 
 

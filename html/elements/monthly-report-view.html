@@ -43,15 +43,15 @@
     //Manage the switch
     $('#monthly_report_first-position-label').click(function() {
         $("#monthly_report_switch").removeClass("switched");
-        monthReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET);
+        monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
     });
     $('#monthly_report_second-position-label').click(function() {
         $("#monthly_report_switch").addClass("switched");
-        monthReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET + 1);
+        monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
     });
     $('#monthly_report_switch-widget').click(function() {
         $("#monthly_report_switch").toggleClass("switched");
-        monthReportDashboard.resetReduce(DURATION_DATA_FILTER_OFFSET + ($("#monthly_report_switch").hasClass("switched") ? 1 : 0));
+        monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + ($("#monthly_report_switch").hasClass("switched") ? 1 : 0));
     });
 
 

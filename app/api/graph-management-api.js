@@ -25,7 +25,7 @@ function buildCumulativeFlowChart(config) {
         'chartType': 'AreaChart',
         'containerId': config.id,
         'options': {
-            'animation':{
+            'animation': {
                 'startup': true
             },
             'height': config.height,
@@ -98,10 +98,17 @@ function buildTasksDurationScatterChart(config) {
                 'width': '90%',
                 'height': '80%'
             },
-            interpolateNulls: true,
             series: {
-                1: { lineWidth: 2, pointSize: 0, lineDashStyle: [10, 2] }
-            }
+                0: {labelInLegend: 'Tasks'},
+                1: {pointSize: 0, visibleInLegend: false},
+                2: {pointSize: 0, visibleInLegend: false},
+                3: {pointSize: 0, visibleInLegend: false}
+            },
+            trendlines: {
+                1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
+                2: {labelInLegend: '50%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
+                3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
+            },
         }
     });
     setTaskSelectListener(durationChart);
@@ -146,7 +153,7 @@ function setTaskSelectListener(element) {
     google.visualization.events.addListener(element, 'select', function () {
         var rowNumber = element.getChart().getSelection()[0].row;
         var data = element.getDataTable();
-        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, 0) + '-' + data.getValue(rowNumber, 1), '_blank');
+        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, DURATION_INDEX_STATIC_PROJECT) + '-' + data.getValue(rowNumber, DURATION_INDEX_STATIC_REF), '_blank');
     });
 }
 
@@ -156,7 +163,7 @@ function setTaskSelectListener(element) {
 
 function buildTimePeriodDashboard(config) {
     var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart);
-    limitDashboardPeriod(areaChart,config.date.start,config.date.end);
+    limitDashboardPeriod(areaChart, config.date.start, config.date.end);
     return areaChart;
 }
 
@@ -182,7 +189,7 @@ function buildCumulativFlowDashboard(config) {
  * TasksDurationDashboard
  **************************/
 
-function buildFilteredDashboard(config, chart, chart2, filterListener) {
+function buildFilteredDashboard(config, chart, filterListener) {
     var filters = [];
     for (var index = 0; index < config.taskFilters.length; index++) {
         var filterConfig = config.taskFilters[index];
@@ -190,6 +197,6 @@ function buildFilteredDashboard(config, chart, chart2, filterListener) {
     }
     google.visualization.events.addListener(chart, 'ready', filterListener);
     var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
-    dashboard.bind(filters, [chart, chart2]);
+    dashboard.bind(filters, [chart]);
     return dashboard;
 }
