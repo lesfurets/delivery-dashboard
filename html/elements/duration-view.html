@@ -1,77 +1,65 @@
 <script type="text/javascript">
-    var durationsColumns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length - 1}).map(function (value, index) {
-        return DURATION_INDEX_DURATION_FIRST + index;
-    });
-    durationsColumns.unshift(2);
-
-    // Building filter loading based on dashboard configuration configuration
-    var filtersConfig = [];
-    filtersConfig.push({
-        id: "global_task_duration_filter_0",
+    // Building all filters defined in config file
+    var filterContainer = "task_duration_filter";
+    var filtersConfig = generateFiltersModelFromConfig(filterContainer);
+    filtersConfig.unshift({
+        id: filterContainer + "_max_cycle_time",
         filterType: 'NumberRangeFilter',
         columnIndex: DURATION_INDEX_DURATION_CYCLE_TIME
     });
-    if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            filtersConfig.push({
-                id: "global_task_duration_filter_" + (index + 1),
-                filterType: RAW_DATA_COL.FILTERS[index].filterType,
-                columnIndex: DURATION_INDEX_FILTER_FIRST + index
-            });
-        }
+    generateFiltersDom(filterContainer, filtersConfig);
+
+    // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events Nb -1)
+    var durationsColumns = [2];
+    for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+        durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
     }
 
-    var globalDurationDashboardConfig = {
+    var taskDurationDashboardConfig = {
         titleSuffix: {
-            id: 'global_duration_title_suffix'
+            id: 'task_duration_title_suffix'
         },
-        dashboard: 'global_duration_dashboard_div',
+        dashboard: 'task_duration_dashboard_div',
         durationColumnChart: {
-            id: 'global_duration_column_chart_div',
+            id: 'task_duration_column_chart_div',
             columns: durationsColumns
         },
         durationScatterChart: {
-            id: 'global_duration_scatter_chart_div',
-            columns: [DURATION_INDEX_STATIC_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]
+            id: 'task_duration_scatter_chart_div',
+            columns: [DURATION_INDEX_STATIC_LAST,
+                DURATION_INDEX_DURATION_LAST,
+                DURATION_INDEX_STATITICS_AVERAGE,
+                DURATION_INDEX_STATITICS_50PCT,
+                DURATION_INDEX_STATITICS_90PCT]
         },
-        durationStats: 'global_task_duration_stats',
+        durationStats: 'task_duration_stats',
         taskFilters: filtersConfig,
-        tasksList: 'global_task_duration_tasks_list'
+        tasksList: 'task_duration_tasks_list'
     };
 
-    registerDashboard("#tab-global-duration-view" , new DurationDashboard(globalDurationDashboardConfig));
+    registerDashboard("#tab_duration_view", new DurationDashboard(taskDurationDashboardConfig));
 </script>
 <div class="card">
     <div class="row">
-        <h2 class="col-md-12 card-title">Tasks Duration<span id="global_duration_title_suffix"></span>
-            <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#global_duration_tasks_list_modal"></span></a>
+        <h2 class="col-md-12 card-title">Tasks Duration<span id="task_duration_title_suffix"></span>
+            <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#task_duration_tasks_list_modal"></span></a>
         </h2>
     </div>
     <div class="row">
-        <div id="global_duration_dashboard_div" class="col-md-12 card-block">
+        <div id="task_duration_dashboard_div" class="col-md-12 card-block">
+            <div id="task_duration_filter" class="row card-block"></div>
             <div class="row card-block">
-                <div class="col-md-7 text-center">
-                    <div id="global_task_duration_filter_0"></div>
-                    <div id="global_task_duration_filter_5"></div>
-                    <div id="global_task_duration_filter_6"></div>
-                </div>
-                <div class="col-md-5 text-center">
-                    <div id="global_task_duration_filter_1"></div>
-                    <div id="global_task_duration_filter_2"></div>
-                    <div id="global_task_duration_filter_3"></div>
-                    <div id="global_task_duration_filter_4"></div>
-                </div>
-                <div id="global_task_duration_stats"></div>
+                <div id="task_duration_stats"></div>
             </div>
             <div class="row card-block">
-                <div id="global_duration_column_chart_div"></div>
-                <div id="global_duration_scatter_chart_div"></div>
+                <div id="task_duration_column_chart_div"></div>
+                <div id="task_duration_scatter_chart_div"></div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="global_duration_tasks_list_modal" class="modal ticket-list fade" role="dialog">
+<div id="task_duration_tasks_list_modal" class="modal ticket-list fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,7 +67,7 @@
                 <h4 class="modal-title">Tasks list</h4>
             </div>
             <div class="modal-body">
-                <div id="global_task_duration_tasks_list" class="col-md-12"></div>
+                <div id="task_duration_tasks_list" class="col-md-12"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

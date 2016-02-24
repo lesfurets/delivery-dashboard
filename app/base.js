@@ -120,7 +120,9 @@ function computeDurationData(inputData) {
         for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
             row.push(durations[index].getWorkDaysUntil(durations[index + 1]) + RAW_DATA_COL.EVENTS[index].correction);
         }
+        // Compute full cycle time
         row.push(durations[0].getWorkDaysUntil(durations[durations.length - 1]));
+        // Adding data to allow filtering
         if (RAW_DATA_COL.FILTERS != null) {
             RAW_DATA_COL.FILTERS.forEach(function (filter) {
                 row.push(inputData.getValue(i, filter.columnIndex))
@@ -133,10 +135,10 @@ function computeDurationData(inputData) {
     return data;
 }
 function computeDurationStats(inputData) {
-
+    // Using group method to find Avg, 50% and 90% values
     var group = google.visualization.data.group(inputData, [DURATION_INDEX_STATIC_GROUP_ALL], [
         createAggregationColumn(google.visualization.data.avg),
-        createAggregationColumn(getQuartileFunction(0.5)),
+        createAggregationColumn(getQuartileFunction(0.75)),
         createAggregationColumn(getQuartileFunction(0.9))]);
 
     // Adding statistics
@@ -160,10 +162,11 @@ function computeDurationStats(inputData) {
     var minDate = inputData.getColumnRange(DURATION_INDEX_STATIC_EVENT_LAST).min
     var maxDate = inputData.getColumnRange(DURATION_INDEX_STATIC_EVENT_LAST).max
 
-    // Creating a structure [0, 1, 2 ...  ]
+    // Creating a structure [0, 1, 2 ... inputData.size] to keep all original columns
     var dataStatisticsStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
+    // Adding new columns, setting satistics data only on edge dates
     dataStatisticsStruct.push(createStatColumn(minDate, maxDate, 'Average', group.getValue(0, 1)));
-    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '50%', group.getValue(0, 2)));
+    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '75%', group.getValue(0, 2)));
     dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '90%', group.getValue(0, 3)));
 
     var dataWithStatistics = new google.visualization.DataView(inputData);
@@ -382,7 +385,7 @@ function buildTasksDurationScatterChart(config) {
             },
             trendlines: {
                 1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
-                2: {labelInLegend: '50%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
+                2: {labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
                 3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
             },
         }
@@ -685,6 +688,37 @@ function registerDashboard(tabId, dashboard, isDefault) {
     if (containerToLoad == 0) {
         initApp()
     }
+};function generateFiltersModelFromConfig(filterIdPrefix) {
+    var filtersConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            var filterId = filterIdPrefix + "_" + index;
+            var filterType = RAW_DATA_COL.FILTERS[index].filterType;
+
+            filtersConfig.push({
+                id: filterId,
+                filterType: filterType,
+                columnIndex: DURATION_INDEX_FILTER_FIRST + index
+            });
+        }
+    }
+    return filtersConfig;
+}
+
+function generateFiltersDom(containerId, filtersConfig) {
+    var rangeFilterContainer = containerId + "_" + "range";
+    var categoryFilterContainer = containerId + "_" + "category";
+    $("#" + containerId)
+        .append($('<div>').attr('id', rangeFilterContainer).addClass("col-md-7 text-center"))
+        .append($('<div>').attr('id', categoryFilterContainer).addClass("col-md-5 text-center"));
+    for (var index = 0; index < filtersConfig.length; index++) {
+
+        var filterContainer = filtersConfig[index].filterType == 'CategoryFilter' ?
+        categoryFilterContainer : rangeFilterContainer;
+
+        $("#" + filterContainer).append($('<div>').attr('id', filtersConfig[index].id));
+    }
+    return filtersConfig;
 };function initApp() {
     currentDashboards.forEach(function (element) {
         element.initWidgets();

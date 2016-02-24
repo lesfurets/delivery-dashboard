@@ -106,7 +106,7 @@ function buildTasksDurationScatterChart(config) {
             },
             trendlines: {
                 1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
-                2: {labelInLegend: '50%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
+                2: {labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
                 3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
             },
         }

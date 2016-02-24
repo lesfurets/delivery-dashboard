@@ -15,6 +15,10 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
     <script type="text/javascript" src="../app/config/app-config-panel.js"></script>
     <script type="text/javascript" src="../app/base.js"></script>
 </head>
@@ -35,7 +39,7 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li class="active"><a data-toggle="tab" href="#tab-global-flow-view">Flow</a></li>
-                <li><a data-toggle="tab" href="#tab-global-duration-view">Duration</a></li>
+                <li><a data-toggle="tab" href="#tab_duration_view">Duration</a></li>
                 <li><a data-toggle="tab" href="#tab_tasks_manager">Manage Tasks</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -52,7 +56,7 @@
 
         <div id="tab-global-flow-view" class="element-container tab-pane fade in active" element="elements/flow-view.html"></div>
 
-        <div id="tab-global-duration-view" class="element-container tab-pane fade in" element="elements/duration-view.html"></div>
+        <div id="tab_duration_view" class="element-container tab-pane fade in" element="elements/duration-view.html"></div>
 
         <div id="tab_tasks_manager" class="element-container tab-pane fade in" element="elements/task-manager.html"></div>
 

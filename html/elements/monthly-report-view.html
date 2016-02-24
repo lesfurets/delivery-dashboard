@@ -33,14 +33,14 @@
     registerDashboard("#tab_monthly_report_view", monthReportDashboard);
     setDropDownValue(currentDate);
 
-    //Initialisation du Month Picker
+    // Initializing Month Picker
     while (startDate < currentDate) {
         $('#monthSelector').append($('<option>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('value', currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1)));
         $('#month_dropdown_list').append($('<li>').append($('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('onClick', 'changeDate(\'' + currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + '\');').attr('href', '#')));
         currentDate.setMonth(currentDate.getMonth() - 1);
     }
 
-    //Manage the switch
+    //Managing the switch
     $('#monthly_report_first-position-label').click(function() {
         $("#monthly_report_switch").removeClass("switched");
         monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
