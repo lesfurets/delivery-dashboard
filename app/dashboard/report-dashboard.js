@@ -10,7 +10,7 @@ function ReportDashboard(config) {
 
     var startDate = config.date.start;
     var endDate = config.date.end;
-    var reduceColumn = DURATION_INDEX_FILTER_FIRST;
+    var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);

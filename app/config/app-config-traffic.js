@@ -21,7 +21,10 @@ var RAW_DATA_COL = {
     ]
 };
 
-//REPORT_CONFIG = {
-//    FIRST_ENTRY : "2015-06",
-//    PROJECTION : " "
-//}
+REPORT_CONFIG = {
+    first_entry : "2015-06",
+    projection : [
+        {position : 0, filterLabel : "Type"},
+        {position : 1, filterLabel : "Effort"}
+    ]
+}

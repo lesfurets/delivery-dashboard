@@ -590,7 +590,7 @@ function buildFilteredDashboard(config, chart, filterListener) {
 
     var startDate = config.date.start;
     var endDate = config.date.end;
-    var reduceColumn = DURATION_INDEX_FILTER_FIRST;
+    var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
@@ -726,13 +726,16 @@ function generateFiltersDom(containerId, filtersConfig) {
 }
 
 function generateToggleFilter(containerId, dashboard) {
+    if(REPORT_CONFIG.projection.length < 2){
+        return;
+    }
     var choice1Id = containerId + "_" + "choice_1";
     var choice2Id = containerId + "_" + "choice_2";
     var widgetId = containerId + "_" + "switch";
     $("#" + containerId)
-        .append($('<div>').attr('id', choice1Id).addClass("switch-label").text("Type"))
+        .append($('<div>').attr('id', choice1Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel))
         .append($('<div>').attr('id', widgetId).addClass("switch-widget"))
-        .append($('<div>').attr('id', choice2Id).addClass("switch-label").text("Effort"));
+        .append($('<div>').attr('id', choice2Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel));
 
     //Manage the switch
     $('#' + choice1Id).click(function () {
@@ -745,7 +748,8 @@ function generateToggleFilter(containerId, dashboard) {
     });
     $('#' + widgetId).click(function () {
         $("#" + containerId).toggleClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + ($("#" + containerId).hasClass("switched") ? 1 : 0));
+        var filterIndex = $("#" + containerId).hasClass("switched") ? 1 : 0;
+        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
 };function initApp() {
     currentDashboards.forEach(function (element) {
