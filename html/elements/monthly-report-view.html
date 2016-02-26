@@ -30,7 +30,6 @@
     };
 
     var monthReportDashboard = new ReportDashboard(monthReportDashboardConfig);
-    registerDashboard("#tab_monthly_report_view", monthReportDashboard);
     setDropDownValue(currentDate);
 
     // Initializing Month Picker
@@ -40,21 +39,9 @@
         currentDate.setMonth(currentDate.getMonth() - 1);
     }
 
-    //Managing the switch
-    $('#monthly_report_first-position-label').click(function() {
-        $("#monthly_report_switch").removeClass("switched");
-        monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
-    });
-    $('#monthly_report_second-position-label').click(function() {
-        $("#monthly_report_switch").addClass("switched");
-        monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
-    });
-    $('#monthly_report_switch-widget').click(function() {
-        $("#monthly_report_switch").toggleClass("switched");
-        monthReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + ($("#monthly_report_switch").hasClass("switched") ? 1 : 0));
-    });
+    generateToggleFilter("monthly_report_switch", monthReportDashboard);
 
-
+    registerDashboard("#tab_monthly_report_view", monthReportDashboard);
 </script>
 
 <div class="card to-print graph">
@@ -67,11 +54,7 @@
             </div>
             <span id="monthly_report_title_suffix"></span>
             <div class="not-to-print pull-right">
-                <div id="monthly_report_switch" class="switch">
-                    <div id="monthly_report_first-position-label" class="switch-label">Type</div>
-                    <div id="monthly_report_switch-widget" class="switch-widget"></div>
-                    <div id="monthly_report_second-position-label" class="switch-label">Effort</div>
-                </div>
+                <div id="monthly_report_switch" class="switch"></div>
                 <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#monthly_report_tasks_list_modal"></span></a>
             </div>
         </h2>

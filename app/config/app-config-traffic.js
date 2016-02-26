@@ -20,3 +20,8 @@ var RAW_DATA_COL = {
         {columnIndex: 9, filterType: 'DateRangeFilter'}
     ]
 };
+
+//REPORT_CONFIG = {
+//    FIRST_ENTRY : "2015-06",
+//    PROJECTION : " "
+//}

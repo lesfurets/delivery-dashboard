@@ -21,7 +21,6 @@
     };
 
     var periodReportDashboard = new ReportDashboard(periodReportDashboardConfig);
-    registerDashboard("#tab_period_report_view", periodReportDashboard);
 
     //Initialisation du Date Range Picker
     $(function() {
@@ -37,21 +36,9 @@
         });
     });
 
-    //Manage the switch
-    $('#period_report_first-position-label').click(function() {
-        $("#period_report_switch").removeClass("switched");
-        periodReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
-    });
-    $('#period_report_second-position-label').click(function() {
-        $("#period_report_switch").addClass("switched");
-        periodReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
-    });
-    $('#period_report_switch-widget').click(function() {
-        $("#period_report_switch").toggleClass("switched");
-        periodReportDashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + ($("#period_report_switch").hasClass("switched") ? 1 : 0));
-    });
+    generateToggleFilter("period_report_switch", periodReportDashboard);
 
-
+    registerDashboard("#tab_period_report_view", periodReportDashboard);
 </script>
 
 <div class="card to-print graph">
@@ -61,11 +48,7 @@
             <input type="text" name="daterange" value="01/01/2015 - 01/31/2015" />
             <span id="period_report_title_suffix"></span>
             <div class="not-to-print pull-right">
-                <div id="period_report_switch" class="switch">
-                    <div id="period_report_first-position-label" class="switch-label">Type</div>
-                    <div id="period_report_switch-widget" class="switch-widget"></div>
-                    <div id="period_report_second-position-label" class="switch-label">Effort</div>
-                </div>
+                <div id="period_report_switch" class="switch"></div>
                 <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#period_report_tasks_list_modal"></span></a>
             </div>
         </h2>
