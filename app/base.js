@@ -775,11 +775,11 @@ $(document).on('ready', function () {
 var requestedUrl = document.location.toString();
 if (requestedUrl.match('#')) {
     $(document).ready(function () {
-        $('.navbar .dropdown-menu a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
+        $('.navbar a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
     });
 } else {
     $(document).ready(function () {
-        $('.navbar .dropdown-menu a[href=#tab-global-flow-view]').tab('show');
+        $('.navbar a[href=#tab-global-flow-view]').tab('show');
     });
 }
 

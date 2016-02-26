@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <title>Panel Team Dashboard</title>
+    <title>Traffic Team Dashboard</title>
 
     <meta charset="utf-8">
     <!-- proper rendering and touch zooming -->
@@ -19,7 +19,7 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
 
-    <script type="text/javascript" src="../app/config/app-config-panel.js"></script>
+    <script type="text/javascript" src="../app/config/app-config-traffic.js"></script>
     <script type="text/javascript" src="../app/base.js"></script>
 </head>
 
@@ -33,13 +33,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <!--<img class="navbar-brand-logo" src="img/team-traffic.png"/>-->
-            <span class="navbar-brand">Panel Dashboard</span>
+            <img class="navbar-brand-logo" src="../img/team-traffic.png"/>
+            <span class="navbar-brand">Traffic Dashboard</span>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li><a data-toggle="tab" href="#tab-global-flow-view">Flow</a></li>
-                <li><a data-toggle="tab" href="#tab_duration_view">Duration</a></li>
                 <li><a data-toggle="tab" href="#tab_tasks_manager">Manage Tasks</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -53,16 +52,12 @@
 
 <div class="container-fluid">
     <div class="tab-content">
-
         <div id="tab-global-flow-view" class="element-container tab-pane fade in active" element="elements/flow-view.html"></div>
-
-        <div id="tab_duration_view" class="element-container tab-pane fade in" element="elements/duration-view.html"></div>
-
         <div id="tab_tasks_manager" class="element-container tab-pane fade in" element="elements/task-manager.html"></div>
-
     </div>
 
 </div>
 
+<script src="http://localhost:35729/livereload.js"></script>
 </body>
 </html>
