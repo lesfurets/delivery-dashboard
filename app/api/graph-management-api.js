@@ -115,17 +115,6 @@ function buildTasksDurationScatterChart(config) {
     return durationChart;
 }
 
-function buildFilter(controlType, containerId, filterColumnIndex) {
-    var filter = new google.visualization.ControlWrapper({
-        'controlType': controlType,
-        'containerId': containerId,
-        'options': {
-            'filterColumnIndex': filterColumnIndex,
-        },
-    });
-    return filter;
-}
-
 function buildRangeFilter(elementId) {
     return new google.visualization.ControlWrapper({
         'controlType': 'ChartRangeFilter',
@@ -143,6 +132,31 @@ function buildRangeFilter(elementId) {
             },
         },
     });
+}
+
+function buildSimpleChart(elementId, chartType, title) {
+    return new google.visualization.ChartWrapper({
+        'chartType': chartType,
+        'containerId': elementId,
+        'options': {
+            'width': 400,
+            'height': 400,
+            'pieSliceText': 'label',
+            'legend': 'none',
+            'title' : title
+        }
+    });
+}
+
+function buildFilter(containerId, controlType, filterColumnIndex) {
+    var filter = new google.visualization.ControlWrapper({
+        'controlType': controlType,
+        'containerId': containerId,
+        'options': {
+            'filterColumnIndex': filterColumnIndex,
+        }
+    });
+    return filter;
 }
 
 /***************************
@@ -189,14 +203,27 @@ function buildCumulativFlowDashboard(config) {
  * TasksDurationDashboard
  **************************/
 
-function buildFilteredDashboard(config, chart, filterListener) {
+function buildFilters(filtersConfig) {
     var filters = [];
-    for (var index = 0; index < config.taskFilters.length; index++) {
-        var filterConfig = config.taskFilters[index];
-        filters.push(buildFilter(filterConfig.filterType, filterConfig.id, filterConfig.columnIndex));
+    for (var index = 0; index < filtersConfig.length; index++) {
+        var filterConfig = filtersConfig[index];
+        filters.push(buildFilter(filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
     }
-    google.visualization.events.addListener(chart, 'ready', filterListener);
+    return filters;
+}
+
+function buildSimpleCharts(chartsConfig) {
+    var charts = [];
+    for (var index = 0; index < chartsConfig.length; index++) {
+        var chartConfig = chartsConfig[index];
+        charts.push(buildSimpleChart(chartConfig.id, chartConfig.filterType, chartConfig.label));
+    }
+    return charts;
+}
+
+function buildFilteredDashboard(config, charts, filters, filterListener) {
+    google.visualization.events.addListener(charts, 'ready', filterListener);
     var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
-    dashboard.bind(filters, [chart]);
+    dashboard.bind(filters, charts);
     return dashboard;
 }

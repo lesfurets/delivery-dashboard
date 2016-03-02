@@ -13,7 +13,7 @@ function DurationDashboard(config) {
     this.initWidgets = function () {
         tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
-        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, updateTable);
+        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
         initialized = true;

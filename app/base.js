@@ -25,6 +25,10 @@ function filterCreatedAfter(inputData, toDate) {
     return view;
 }
 
+/***************************
+ *  Event Data
+ **************************/
+
 function computeEventData(inputData) {
     var data = builtEventDataStructure(inputData);
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
@@ -62,6 +66,10 @@ function builtEventDataStructure(inputData) {
     }
     return data;
 }
+
+/***************************
+ *  Duration Data
+ **************************/
 
 var DURATION_INDEX_STATIC_PROJECT = 0;
 var DURATION_INDEX_STATIC_REF = 1;
@@ -134,6 +142,7 @@ function computeDurationData(inputData) {
 
     return data;
 }
+
 function computeDurationStats(inputData) {
     // Using group method to find Avg, 50% and 90% values
     var group = google.visualization.data.group(inputData, [DURATION_INDEX_STATIC_GROUP_ALL], [
@@ -215,6 +224,49 @@ function groupDurationDataBy(inputData, groupBy) {
         formatter.format(data, 2 + index);
     }
     return data
+}
+
+/***************************
+ *  Distribution Data
+ **************************/
+
+var DISTRIBUTION_INDEX_STATIC_REF = 0;
+var DISTRIBUTION_INDEX_STATIC_COUNT = 2;
+var DISTRIBUTION_INDEX_STATIC_EVENT_LAST = 3;
+var DISTRIBUTION_INDEX_STATIC_LAST = DISTRIBUTION_INDEX_STATIC_EVENT_LAST;
+
+var DISTRIBUTION_INDEX_FILTER_FIRST = DISTRIBUTION_INDEX_STATIC_LAST + 1;
+var DISTRIBUTION_INDEX_FILTER_LAST = DISTRIBUTION_INDEX_STATIC_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
+function computeDistributionData(inputData) {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Jira Ref');
+    data.addColumn({type: 'string', role: 'tooltip'}, 'Tooltip');
+    data.addColumn('number', "");
+    data.addColumn('date', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
+    if (RAW_DATA_COL.FILTERS != null) {
+        RAW_DATA_COL.FILTERS.forEach(function (filter) {
+            data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex));
+        });
+    }
+
+    // Parsing events data to compute distribution data
+    for (var i = 0; i < inputData.getNumberOfRows(); i++) {
+        var row = [];
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(0);
+        row.push(inputData.getValue(i, RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
+        // Adding data to allow filtering
+        if (RAW_DATA_COL.FILTERS != null) {
+            RAW_DATA_COL.FILTERS.forEach(function (filter) {
+                row.push(inputData.getValue(i, filter.columnIndex))
+            })
+        }
+        data.addRow(row);
+    }
+
+    return data;
 }
 
 ;var monthNames = ["January", "February", "March", "April", "May", "June",
@@ -394,17 +446,6 @@ function buildTasksDurationScatterChart(config) {
     return durationChart;
 }
 
-function buildFilter(controlType, containerId, filterColumnIndex) {
-    var filter = new google.visualization.ControlWrapper({
-        'controlType': controlType,
-        'containerId': containerId,
-        'options': {
-            'filterColumnIndex': filterColumnIndex,
-        },
-    });
-    return filter;
-}
-
 function buildRangeFilter(elementId) {
     return new google.visualization.ControlWrapper({
         'controlType': 'ChartRangeFilter',
@@ -422,6 +463,31 @@ function buildRangeFilter(elementId) {
             },
         },
     });
+}
+
+function buildSimpleChart(elementId, chartType, title) {
+    return new google.visualization.ChartWrapper({
+        'chartType': chartType,
+        'containerId': elementId,
+        'options': {
+            'width': 400,
+            'height': 400,
+            'pieSliceText': 'label',
+            'legend': 'none',
+            'title' : title
+        }
+    });
+}
+
+function buildFilter(containerId, controlType, filterColumnIndex) {
+    var filter = new google.visualization.ControlWrapper({
+        'controlType': controlType,
+        'containerId': containerId,
+        'options': {
+            'filterColumnIndex': filterColumnIndex,
+        }
+    });
+    return filter;
 }
 
 /***************************
@@ -468,15 +534,28 @@ function buildCumulativFlowDashboard(config) {
  * TasksDurationDashboard
  **************************/
 
-function buildFilteredDashboard(config, chart, filterListener) {
+function buildFilters(filtersConfig) {
     var filters = [];
-    for (var index = 0; index < config.taskFilters.length; index++) {
-        var filterConfig = config.taskFilters[index];
-        filters.push(buildFilter(filterConfig.filterType, filterConfig.id, filterConfig.columnIndex));
+    for (var index = 0; index < filtersConfig.length; index++) {
+        var filterConfig = filtersConfig[index];
+        filters.push(buildFilter(filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
     }
-    google.visualization.events.addListener(chart, 'ready', filterListener);
+    return filters;
+}
+
+function buildSimpleCharts(chartsConfig) {
+    var charts = [];
+    for (var index = 0; index < chartsConfig.length; index++) {
+        var chartConfig = chartsConfig[index];
+        charts.push(buildSimpleChart(chartConfig.id, chartConfig.filterType, chartConfig.label));
+    }
+    return charts;
+}
+
+function buildFilteredDashboard(config, charts, filters, filterListener) {
+    google.visualization.events.addListener(charts, 'ready', filterListener);
     var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
-    dashboard.bind(filters, [chart]);
+    dashboard.bind(filters, charts);
     return dashboard;
 };function CumulativeDashboard(config) {
     var cumulativFlowDashboard;
@@ -511,7 +590,84 @@ function buildFilteredDashboard(config, chart, filterListener) {
 
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
+        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
+    };
+
+    this.isInitialized = function () {
+        return initialized;
+    };
+
+};function DistributionDashboard(config) {
+    var timeDistributionChart
+    var distributionDashboard;
+    var tasksListTable;
+    var taskFilters;
+    var filters;
+    var taskChart;
+    var charts;
+
+    var rawData;
+    var distributionData;
+
+    var initialized = false;
+
+    this.initWidgets = function () {
+        taskFilters = generateFiltersModelFromConfig(config.taskFilter,false);
+        generateFiltersDom(config.taskFilter, taskFilters);
+        filters = buildFilters(taskFilters);
+
+        taskChart = generateChartModelFromConfig()
+        generateChartDom(config.dashboardPrefix, taskChart);
+        charts = buildSimpleCharts(taskChart);
+
+        timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
+
+        distributionDashboard = buildFilteredDashboard(config, timeDistributionChart, filters, updateTable);
+
+        tasksListTable = buildTasksListTable(config.dashboardPrefix + '_tasks_list');
+
+        initialized = true;
+    };
+
+    this.loadData = function (data) {
+        rawData = data;
+        distributionData = computeDistributionData(data);
+    };
+
+    this.refresh = function () {
+        if (distributionData != null) {
+            distributionDashboard.draw(distributionData);
+            updateTable();
+        }
+    };
+
+    var updateTable = function () {
+        var durationChartData = timeDistributionChart.getDataTable();
+        var dataToDisplay = durationChartData != null ? durationChartData : distributionData;
+
+        if (dataToDisplay != null) {
+            setTitleSuffix(dataToDisplay.getNumberOfRows());
+
+
+            for(var i=0; i< charts.length; i++){
+                var group = google.visualization.data.group(dataToDisplay, [taskChart[i].columnIndex], [{
+                    column: 1,
+                    aggregation: google.visualization.data.count,
+                    'type': 'number'
+                }]);
+
+                charts[i].setDataTable(group);
+                charts[i].draw();
+            }
+
+            tasksListTable.setDataTable(dataToDisplay)
+            tasksListTable.draw();
+        }
+    };
+
+    var setTitleSuffix = function (numberOfRows) {
+        var plural = numberOfRows > 1 ? "s" : "";
+        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
@@ -533,7 +689,7 @@ function buildFilteredDashboard(config, chart, filterListener) {
     this.initWidgets = function () {
         tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
-        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, updateTable);
+        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
         initialized = true;
@@ -553,7 +709,7 @@ function buildFilteredDashboard(config, chart, filterListener) {
 
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
+        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     var updateTable = function () {
@@ -592,6 +748,8 @@ function buildFilteredDashboard(config, chart, filterListener) {
     var endDate = config.date.end;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
+    generateToggleFilter(config.filter, this);
+
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
         durationStatsTable = buildDataTable(config.durationStats);
@@ -625,7 +783,7 @@ function buildFilteredDashboard(config, chart, filterListener) {
 
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
+        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
@@ -692,7 +850,7 @@ function registerDashboard(tabId, dashboard, isDefault) {
  *     Filter Generation
  **************************/
 
-function generateFiltersModelFromConfig(filterIdPrefix) {
+function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
@@ -702,7 +860,7 @@ function generateFiltersModelFromConfig(filterIdPrefix) {
             filtersConfig.push({
                 id: filterId,
                 filterType: filterType,
-                columnIndex: DURATION_INDEX_FILTER_FIRST + index
+                columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -751,6 +909,37 @@ function generateToggleFilter(containerId, dashboard) {
         var filterIndex = $("#" + containerId).hasClass("switched") ? 1 : 0;
         dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
+}
+
+/***************************
+ *     Chart Generation
+ **************************/
+
+function generateChartModelFromConfig(chartPrefix) {
+    var chatsConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            var filter = RAW_DATA_COL.FILTERS[index];
+            if(filter.filterType == 'CategoryFilter') {
+                chatsConfig.push({
+                    id: chartPrefix + "_chart_" + index,
+                    filterType:  'PieChart',
+                    columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
+                    label: filter.label
+                });
+            }
+        }
+    }
+    return chatsConfig;
+}
+
+function generateChartDom(containerId, chartsConfig) {
+    var containerSelector = "#" + containerId + '_dashboard';
+    for (var index = 0; index < chartsConfig.length; index++) {
+        $(containerSelector).append($('<div>')
+            .attr('id', chartsConfig[index].id)
+            .addClass("col-md-4"));
+    }
 };function initApp() {
     currentDashboards.forEach(function (element) {
         element.initWidgets();
@@ -811,7 +1000,6 @@ if (requestedUrl.match('#')) {
     });
 } else {
     $(document).ready(function () {
-        //$('.navbar a[data-toggle=tab]')[0].tab('show');
         $('.navbar a[data-toggle=tab]:first').tab('show')
     });
 }

@@ -12,7 +12,7 @@ function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
             filtersConfig.push({
                 id: filterId,
                 filterType: filterType,
-                columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : RAW_DATA_COL.FILTERS[index].columnIndex
+                columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -61,4 +61,35 @@ function generateToggleFilter(containerId, dashboard) {
         var filterIndex = $("#" + containerId).hasClass("switched") ? 1 : 0;
         dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
+}
+
+/***************************
+ *     Chart Generation
+ **************************/
+
+function generateChartModelFromConfig(chartPrefix) {
+    var chatsConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            var filter = RAW_DATA_COL.FILTERS[index];
+            if(filter.filterType == 'CategoryFilter') {
+                chatsConfig.push({
+                    id: chartPrefix + "_chart_" + index,
+                    filterType:  'PieChart',
+                    columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
+                    label: filter.label
+                });
+            }
+        }
+    }
+    return chatsConfig;
+}
+
+function generateChartDom(containerId, chartsConfig) {
+    var containerSelector = "#" + containerId + '_dashboard';
+    for (var index = 0; index < chartsConfig.length; index++) {
+        $(containerSelector).append($('<div>')
+            .attr('id', chartsConfig[index].id)
+            .addClass("col-md-4"));
+    }
 }

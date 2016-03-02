@@ -12,12 +12,12 @@ var RAW_DATA_COL = {
         {columnIndex: 9, status: 'Released', correction: - 1}
     ],
     FILTERS: [
-        {columnIndex: 2, filterType: 'CategoryFilter'},
-        {columnIndex: 3, filterType: 'CategoryFilter'},
-        {columnIndex: 4, filterType: 'CategoryFilter'},
-        {columnIndex: 0, filterType: 'CategoryFilter'},
-        {columnIndex: 5, filterType: 'DateRangeFilter'},
-        {columnIndex: 9, filterType: 'DateRangeFilter'}
+        {columnIndex: 2, filterType: 'CategoryFilter', label:'Type'},
+        {columnIndex: 3, filterType: 'CategoryFilter', label:'Effort'},
+        {columnIndex: 4, filterType: 'CategoryFilter', label:'Value'},
+        {columnIndex: 0, filterType: 'CategoryFilter', label:'Project'},
+        {columnIndex: 5, filterType: 'DateRangeFilter', label:'Creation'},
+        {columnIndex: 9, filterType: 'DateRangeFilter', label:'Release'}
     ]
 };
 
