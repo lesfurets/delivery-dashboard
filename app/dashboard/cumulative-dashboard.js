@@ -31,7 +31,7 @@ function CumulativeDashboard(config) {
 
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
+        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {

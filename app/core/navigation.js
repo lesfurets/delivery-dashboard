@@ -6,7 +6,6 @@ if (requestedUrl.match('#')) {
     });
 } else {
     $(document).ready(function () {
-        //$('.navbar a[data-toggle=tab]')[0].tab('show');
         $('.navbar a[data-toggle=tab]:first').tab('show')
     });
 }

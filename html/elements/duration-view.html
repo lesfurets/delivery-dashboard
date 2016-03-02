@@ -1,7 +1,7 @@
 <script type="text/javascript">
     // Building all filters defined in config file
     var filterContainer = "task_duration_filter";
-    var filtersConfig = generateFiltersModelFromConfig(filterContainer);
+    var filtersConfig = generateFiltersModelFromConfig(filterContainer,true);
     filtersConfig.unshift({
         id: filterContainer + "_max_cycle_time",
         filterType: 'NumberRangeFilter',
@@ -16,16 +16,14 @@
     }
 
     var taskDurationDashboardConfig = {
-        titleSuffix: {
-            id: 'task_duration_title_suffix'
-        },
-        dashboard: 'task_duration_dashboard_div',
+        titleSuffix: 'task_duration_title_suffix',
+        dashboard: 'task_duration_dashboard',
         durationColumnChart: {
-            id: 'task_duration_column_chart_div',
+            id: 'task_duration_column_chart',
             columns: durationsColumns
         },
         durationScatterChart: {
-            id: 'task_duration_scatter_chart_div',
+            id: 'task_duration_column_chart_div',
             columns: [DURATION_INDEX_STATIC_LAST,
                 DURATION_INDEX_DURATION_LAST,
                 DURATION_INDEX_STATITICS_AVERAGE,
@@ -46,14 +44,14 @@
         </h2>
     </div>
     <div class="row">
-        <div id="task_duration_dashboard_div" class="col-md-12 card-block">
+        <div id="task_duration_dashboard" class="col-md-12 card-block">
             <div id="task_duration_filter" class="row card-block"></div>
             <div class="row card-block">
                 <div id="task_duration_stats"></div>
             </div>
             <div class="row card-block">
+                <div id="task_duration_column_chart"></div>
                 <div id="task_duration_column_chart_div"></div>
-                <div id="task_duration_scatter_chart_div"></div>
             </div>
         </div>
     </div>

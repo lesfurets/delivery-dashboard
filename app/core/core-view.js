@@ -2,7 +2,7 @@
  *     Filter Generation
  **************************/
 
-function generateFiltersModelFromConfig(filterIdPrefix) {
+function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
@@ -12,7 +12,7 @@ function generateFiltersModelFromConfig(filterIdPrefix) {
             filtersConfig.push({
                 id: filterId,
                 filterType: filterType,
-                columnIndex: DURATION_INDEX_FILTER_FIRST + index
+                columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : RAW_DATA_COL.FILTERS[index].columnIndex
             });
         }
     }

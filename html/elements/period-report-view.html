@@ -5,19 +5,18 @@
     var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
 
     var periodReportDashboardConfig = {
+        titleSuffix: 'period_report_title_suffix',
         date: {
             start: startPeriod,
             end: endPeriod,
-        },
-        titleSuffix: {
-            id: 'period_report_title_suffix'
         },
         cumulativeFlowChart: {
             id: 'period_report_extract_cumulative_chart',
             height: 600
         },
         durationStats: 'period_report_duration_stats',
-        tasksList: 'period_report_tasks_list'
+        tasksList: 'period_report_tasks_list',
+        filter: "period_report_switch"
     };
 
     var periodReportDashboard = new ReportDashboard(periodReportDashboardConfig);
@@ -35,8 +34,6 @@
             periodReportDashboard.resetDates(start.toDate(), end.toDate());
         });
     });
-
-    generateToggleFilter("period_report_switch", periodReportDashboard);
 
     registerDashboard("#tab_period_report_view", periodReportDashboard);
 </script>

@@ -12,6 +12,8 @@ function ReportDashboard(config) {
     var endDate = config.date.end;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
+    generateToggleFilter(config.filter, this);
+
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
         durationStatsTable = buildDataTable(config.durationStats);
@@ -45,7 +47,7 @@ function ReportDashboard(config) {
 
     var setTitleSuffix = function (numberOfRows) {
         var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix.id).text(" - " + numberOfRows + " task" + plural);
+        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
