@@ -31,17 +31,12 @@ function DurationDashboard(config) {
         }
     };
 
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
-    };
-
     var updateTable = function () {
         var durationChartData = tasksDurationColumnChart.getDataTable();
         var dataToDisplay = durationChartData != null ? durationChartData : durationData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(dataToDisplay.getNumberOfRows());
+            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
 
             tasksDurationScatterChart.setDataTable(computeDurationStats(dataToDisplay));
             tasksDurationScatterChart.draw();

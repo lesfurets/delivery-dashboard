@@ -1,0 +1,2 @@
+ID_SEPARATOR = "_";
+ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";

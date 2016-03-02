@@ -1,5 +1,5 @@
 function CumulativeDashboard(config) {
-    var cumulativFlowDashboard;
+    var cumulativeFlowDashboard;
     var tasksListTable;
 
     var rawData;
@@ -8,7 +8,7 @@ function CumulativeDashboard(config) {
     var initialized = false;
 
     this.initWidgets = function () {
-        cumulativFlowDashboard = buildCumulativFlowDashboard(config);
+        cumulativeFlowDashboard = buildCumulativFlowDashboard(config);
         tasksListTable = buildTasksListTable(config.tasksList);
         initialized = true;
     };
@@ -20,18 +20,13 @@ function CumulativeDashboard(config) {
 
     this.refresh = function () {
         if (eventData != null) {
-            setTitleSuffix(rawData.getNumberOfRows());
+            setTitleSuffix(config.id, rawData.getNumberOfRows());
 
-            cumulativFlowDashboard.draw(eventData);
+            cumulativeFlowDashboard.draw(eventData);
 
             tasksListTable.setDataTable(rawData)
             tasksListTable.draw();
         }
-    };
-
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {

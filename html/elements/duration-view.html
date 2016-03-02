@@ -15,8 +15,8 @@
         durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
     }
 
-    var taskDurationDashboardConfig = {
-        titleSuffix: 'task_duration_title_suffix',
+    var taskDurationViewConfig = {
+        id : "task_duration",
         dashboard: 'task_duration_dashboard',
         durationColumnChart: {
             id: 'task_duration_column_chart',
@@ -35,7 +35,7 @@
         tasksList: 'task_duration_tasks_list'
     };
 
-    registerDashboard("#tab_duration_view", new DurationDashboard(taskDurationDashboardConfig));
+    registerDashboard("#tab_duration_view", new DurationDashboard(taskDurationViewConfig));
 </script>
 <div class="card">
     <div class="row">

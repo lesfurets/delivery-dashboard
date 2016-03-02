@@ -558,7 +558,7 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
     dashboard.bind(filters, charts);
     return dashboard;
 };function CumulativeDashboard(config) {
-    var cumulativFlowDashboard;
+    var cumulativeFlowDashboard;
     var tasksListTable;
 
     var rawData;
@@ -567,7 +567,7 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
     var initialized = false;
 
     this.initWidgets = function () {
-        cumulativFlowDashboard = buildCumulativFlowDashboard(config);
+        cumulativeFlowDashboard = buildCumulativFlowDashboard(config);
         tasksListTable = buildTasksListTable(config.tasksList);
         initialized = true;
     };
@@ -579,18 +579,13 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
 
     this.refresh = function () {
         if (eventData != null) {
-            setTitleSuffix(rawData.getNumberOfRows());
+            setTitleSuffix(config.id, rawData.getNumberOfRows());
 
-            cumulativFlowDashboard.draw(eventData);
+            cumulativeFlowDashboard.draw(eventData);
 
             tasksListTable.setDataTable(rawData)
             tasksListTable.draw();
         }
-    };
-
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
@@ -617,14 +612,14 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
         filters = buildFilters(taskFilters);
 
         taskChart = generateChartModelFromConfig()
-        generateChartDom(config.dashboardPrefix, taskChart);
+        generateChartDom(config.id, taskChart);
         charts = buildSimpleCharts(taskChart);
 
         timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
 
         distributionDashboard = buildFilteredDashboard(config, timeDistributionChart, filters, updateTable);
 
-        tasksListTable = buildTasksListTable(config.dashboardPrefix + '_tasks_list');
+        tasksListTable = buildTasksListTable(config.id + '_tasks_list');
 
         initialized = true;
     };
@@ -646,8 +641,7 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
         var dataToDisplay = durationChartData != null ? durationChartData : distributionData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(dataToDisplay.getNumberOfRows());
-
+            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
 
             for(var i=0; i< charts.length; i++){
                 var group = google.visualization.data.group(dataToDisplay, [taskChart[i].columnIndex], [{
@@ -663,11 +657,6 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
             tasksListTable.setDataTable(dataToDisplay)
             tasksListTable.draw();
         }
-    };
-
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
@@ -707,17 +696,12 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
         }
     };
 
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
-    };
-
     var updateTable = function () {
         var durationChartData = tasksDurationColumnChart.getDataTable();
         var dataToDisplay = durationChartData != null ? durationChartData : durationData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(dataToDisplay.getNumberOfRows());
+            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
 
             tasksDurationScatterChart.setDataTable(computeDurationStats(dataToDisplay));
             tasksDurationScatterChart.draw();
@@ -768,7 +752,7 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
 
     this.refresh = function () {
         if (filteredData != null) {
-            setTitleSuffix(filteredData.getNumberOfRows());
+            setTitleSuffix(config.id, filteredData.getNumberOfRows());
 
             cumulativeFlowGraph.setDataTable(computeEventData(filteredData));
             cumulativeFlowGraph.draw();
@@ -779,11 +763,6 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
             tasksListTable.setDataTable(filteredData)
             tasksListTable.draw();
         }
-    };
-
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {
@@ -824,8 +803,6 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
 
     this.refresh = function () { };
 
-    var setTitleSuffix = function (numberOfRows) { };
-
 };google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
 var containerToLoad = 0;
 var allDashboards = [];
@@ -846,7 +823,8 @@ function registerDashboard(tabId, dashboard, isDefault) {
     if (containerToLoad == 0) {
         initApp()
     }
-};/***************************
+};ID_SEPARATOR = "_";
+ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";;/***************************
  *     Filter Generation
  **************************/
 
@@ -940,7 +918,16 @@ function generateChartDom(containerId, chartsConfig) {
             .attr('id', chartsConfig[index].id)
             .addClass("col-md-4"));
     }
-};function initApp() {
+}
+
+/***************************
+ *     Title Suffix
+ **************************/
+
+var setTitleSuffix = function (viewId, numberOfRows) {
+    var plural = numberOfRows > 1 ? "s" : "";
+    $("#" + viewId  + ID_TITLE_SUFFIX).text(" - " + numberOfRows + " task" + plural);
+};;function initApp() {
     currentDashboards.forEach(function (element) {
         element.initWidgets();
     })

@@ -93,3 +93,12 @@ function generateChartDom(containerId, chartsConfig) {
             .addClass("col-md-4"));
     }
 }
+
+/***************************
+ *     Title Suffix
+ **************************/
+
+var setTitleSuffix = function (viewId, numberOfRows) {
+    var plural = numberOfRows > 1 ? "s" : "";
+    $("#" + viewId  + ID_TITLE_SUFFIX).text(" - " + numberOfRows + " task" + plural);
+};

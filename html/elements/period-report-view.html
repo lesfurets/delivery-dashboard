@@ -4,8 +4,8 @@
     endPeriod.setDate(endPeriod.getDate() - 15);
     var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
 
-    var periodReportDashboardConfig = {
-        titleSuffix: 'period_report_title_suffix',
+    var periodReportViewConfig = {
+        id : "period_report",
         date: {
             start: startPeriod,
             end: endPeriod,
@@ -19,7 +19,7 @@
         filter: "period_report_switch"
     };
 
-    var periodReportDashboard = new ReportDashboard(periodReportDashboardConfig);
+    var periodReportDashboard = new ReportDashboard(periodReportViewConfig);
 
     //Initialisation du Date Range Picker
     $(function() {

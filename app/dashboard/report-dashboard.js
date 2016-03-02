@@ -32,7 +32,7 @@ function ReportDashboard(config) {
 
     this.refresh = function () {
         if (filteredData != null) {
-            setTitleSuffix(filteredData.getNumberOfRows());
+            setTitleSuffix(config.id, filteredData.getNumberOfRows());
 
             cumulativeFlowGraph.setDataTable(computeEventData(filteredData));
             cumulativeFlowGraph.draw();
@@ -43,11 +43,6 @@ function ReportDashboard(config) {
             tasksListTable.setDataTable(filteredData)
             tasksListTable.draw();
         }
-    };
-
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {

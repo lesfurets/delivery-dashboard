@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    var cumulativeFlowDashboardConfig = {
-        titleSuffix: 'flow_title_suffix',
+    var cumulativeFlowViewConfig = {
+        id : "cumulative_flow",
         dashboard: 'cumulative_flow_dashboard',
         cumulativeFlowChart: {
             id: 'cumulative_flow_area_chart',
@@ -10,12 +10,12 @@
         tasksList: 'cumulative_flow_tasks_list'
     };
 
-    registerDashboard("#tab_cumulative_view", new CumulativeDashboard(cumulativeFlowDashboardConfig),true);
+    registerDashboard("#tab_cumulative_view", new CumulativeDashboard(cumulativeFlowViewConfig),true);
 </script>
 
             <div class="card">
                 <div class="row">
-                    <h2 class="col-md-12 card-title">Cumulative Flow<span id="flow_title_suffix"></span>
+                    <h2 class="col-md-12 card-title">Cumulative Flow<span id="cumulative_flow_title_suffix"></span>
                         <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#cumulative_tasks_list_modal"></span></a>
                     </h2>
                 </div>

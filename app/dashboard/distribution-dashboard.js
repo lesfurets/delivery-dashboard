@@ -18,14 +18,14 @@ function DistributionDashboard(config) {
         filters = buildFilters(taskFilters);
 
         taskChart = generateChartModelFromConfig()
-        generateChartDom(config.dashboardPrefix, taskChart);
+        generateChartDom(config.id, taskChart);
         charts = buildSimpleCharts(taskChart);
 
         timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
 
         distributionDashboard = buildFilteredDashboard(config, timeDistributionChart, filters, updateTable);
 
-        tasksListTable = buildTasksListTable(config.dashboardPrefix + '_tasks_list');
+        tasksListTable = buildTasksListTable(config.id + '_tasks_list');
 
         initialized = true;
     };
@@ -47,8 +47,7 @@ function DistributionDashboard(config) {
         var dataToDisplay = durationChartData != null ? durationChartData : distributionData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(dataToDisplay.getNumberOfRows());
-
+            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
 
             for(var i=0; i< charts.length; i++){
                 var group = google.visualization.data.group(dataToDisplay, [taskChart[i].columnIndex], [{
@@ -64,11 +63,6 @@ function DistributionDashboard(config) {
             tasksListTable.setDataTable(dataToDisplay)
             tasksListTable.draw();
         }
-    };
-
-    var setTitleSuffix = function (numberOfRows) {
-        var plural = numberOfRows > 1 ? "s" : "";
-        $("#" + config.titleSuffix).text(" - " + numberOfRows + " task" + plural);
     };
 
     this.isInitialized = function () {

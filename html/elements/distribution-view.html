@@ -1,7 +1,6 @@
 <script type="text/javascript">
-    var distributionDashboardConfig = {
-        dashboardPrefix : "distribution",
-        titleSuffix: 'distribution_title_suffix',
+    var distributionViewConfig = {
+        id : "distribution",
         dashboard: 'distribution_dashboard',
         distributionChart: 'distribution_pie_chart',
         taskFilter: 'distribution_filter',
@@ -11,7 +10,7 @@
         },
     };
 
-    registerDashboard("#tab_distribution_view", new DistributionDashboard(distributionDashboardConfig),true);
+    registerDashboard("#tab_distribution_view", new DistributionDashboard(distributionViewConfig),true);
 </script>
 
             <div class="card">

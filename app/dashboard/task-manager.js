@@ -19,6 +19,4 @@ function TaskManager() {
 
     this.refresh = function () { };
 
-    var setTitleSuffix = function (numberOfRows) { };
-
 }

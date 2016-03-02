@@ -3,8 +3,8 @@
     var currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 15);
 
-    var monthReportDashboardConfig = {
-        titleSuffix: 'monthly_report_title_suffix',
+    var monthReportViewConfig = {
+        id : "monthly_report",
         date: {
             start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
             end: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0),
@@ -28,7 +28,7 @@
         $("#month_dropdown").text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
     }
 
-    var monthReportDashboard = new ReportDashboard(monthReportDashboardConfig);
+    var monthReportDashboard = new ReportDashboard(monthReportViewConfig);
     setDropDownValue(currentDate);
 
     // Initializing Month Picker
