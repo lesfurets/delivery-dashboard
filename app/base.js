@@ -343,8 +343,8 @@ function buildDataTable(elementId) {
     });
 }
 
-function buildTasksListTable(elementId) {
-    var tasksListTable = buildDataTable(elementId);
+function buildTasksListTable(viewId) {
+    var tasksListTable = buildDataTable(viewId + ID_TASK_LIST);
     tasksListTable.setOption('height', '100%');
     tasksListTable.setOption('showRowNumber', true);
     setTaskSelectListener(tasksListTable);
@@ -568,7 +568,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     this.initWidgets = function () {
         cumulativeFlowDashboard = buildCumulativFlowDashboard(config);
-        tasksListTable = buildTasksListTable(config.tasksList);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 
@@ -619,7 +619,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
         distributionDashboard = buildFilteredDashboard(config.id, timeDistributionChart, filters, updateTable);
 
-        tasksListTable = buildTasksListTable(config.id + '_tasks_list');
+        tasksListTable = buildTasksListTable(config.id);
 
         initialized = true;
     };
@@ -680,7 +680,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
         tasksDurationDashboard = buildFilteredDashboard(config.id, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.tasksList);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 
@@ -737,7 +737,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
         durationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.tasksList);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 
@@ -825,7 +825,8 @@ function registerDashboard(tabId, dashboard, isDefault) {
     }
 };ID_SEPARATOR = "_";
 ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
-ID_BASHBOARD = ID_SEPARATOR + "dashboard";;/***************************
+ID_BASHBOARD = ID_SEPARATOR + "dashboard";
+ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';;/***************************
  *     Filter Generation
  **************************/
 

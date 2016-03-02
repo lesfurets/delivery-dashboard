@@ -17,7 +17,7 @@ function ReportDashboard(config) {
     this.initWidgets = function () {
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
         durationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.tasksList);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 

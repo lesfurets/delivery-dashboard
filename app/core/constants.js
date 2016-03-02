@@ -1,3 +1,4 @@
 ID_SEPARATOR = "_";
 ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
 ID_BASHBOARD = ID_SEPARATOR + "dashboard";
+ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';

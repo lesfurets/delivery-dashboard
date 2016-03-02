@@ -12,8 +12,8 @@ function buildDataTable(elementId) {
     });
 }
 
-function buildTasksListTable(elementId) {
-    var tasksListTable = buildDataTable(elementId);
+function buildTasksListTable(viewId) {
+    var tasksListTable = buildDataTable(viewId + ID_TASK_LIST);
     tasksListTable.setOption('height', '100%');
     tasksListTable.setOption('showRowNumber', true);
     setTaskSelectListener(tasksListTable);

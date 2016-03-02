@@ -9,7 +9,7 @@ function CumulativeDashboard(config) {
 
     this.initWidgets = function () {
         cumulativeFlowDashboard = buildCumulativFlowDashboard(config);
-        tasksListTable = buildTasksListTable(config.tasksList);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 

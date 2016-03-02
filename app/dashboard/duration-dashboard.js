@@ -15,7 +15,7 @@ function DurationDashboard(config) {
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
         tasksDurationDashboard = buildFilteredDashboard(config.id, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.tasksList);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 

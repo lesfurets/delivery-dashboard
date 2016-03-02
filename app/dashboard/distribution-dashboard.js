@@ -25,7 +25,7 @@ function DistributionDashboard(config) {
 
         distributionDashboard = buildFilteredDashboard(config.id, timeDistributionChart, filters, updateTable);
 
-        tasksListTable = buildTasksListTable(config.id + '_tasks_list');
+        tasksListTable = buildTasksListTable(config.id);
 
         initialized = true;
     };
