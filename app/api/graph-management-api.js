@@ -221,9 +221,9 @@ function buildSimpleCharts(chartsConfig) {
     return charts;
 }
 
-function buildFilteredDashboard(config, charts, filters, filterListener) {
+function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     google.visualization.events.addListener(charts, 'ready', filterListener);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
+    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_BASHBOARD));
     dashboard.bind(filters, charts);
     return dashboard;
 }

@@ -23,7 +23,7 @@ function DistributionDashboard(config) {
 
         timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
 
-        distributionDashboard = buildFilteredDashboard(config, timeDistributionChart, filters, updateTable);
+        distributionDashboard = buildFilteredDashboard(config.id, timeDistributionChart, filters, updateTable);
 
         tasksListTable = buildTasksListTable(config.id + '_tasks_list');
 

@@ -552,9 +552,9 @@ function buildSimpleCharts(chartsConfig) {
     return charts;
 }
 
-function buildFilteredDashboard(config, charts, filters, filterListener) {
+function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     google.visualization.events.addListener(charts, 'ready', filterListener);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
+    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_BASHBOARD));
     dashboard.bind(filters, charts);
     return dashboard;
 };function CumulativeDashboard(config) {
@@ -617,7 +617,7 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
 
         timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
 
-        distributionDashboard = buildFilteredDashboard(config, timeDistributionChart, filters, updateTable);
+        distributionDashboard = buildFilteredDashboard(config.id, timeDistributionChart, filters, updateTable);
 
         tasksListTable = buildTasksListTable(config.id + '_tasks_list');
 
@@ -678,7 +678,7 @@ function buildFilteredDashboard(config, charts, filters, filterListener) {
     this.initWidgets = function () {
         tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
         tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
-        tasksDurationDashboard = buildFilteredDashboard(config, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
+        tasksDurationDashboard = buildFilteredDashboard(config.id, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
         tasksDurationStatsTable = buildDataTable(config.durationStats);
         tasksListTable = buildTasksListTable(config.tasksList);
         initialized = true;
@@ -824,7 +824,8 @@ function registerDashboard(tabId, dashboard, isDefault) {
         initApp()
     }
 };ID_SEPARATOR = "_";
-ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";;/***************************
+ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
+ID_BASHBOARD = ID_SEPARATOR + "dashboard";;/***************************
  *     Filter Generation
  **************************/
 
