@@ -1,4 +1,4 @@
-function CumulativeDashboard(config) {
+function CumulativeDashboard(viewId) {
     var cumulativeFlowDashboard;
     var tasksListTable;
 
@@ -8,8 +8,11 @@ function CumulativeDashboard(config) {
     var initialized = false;
 
     this.initWidgets = function () {
-        cumulativeFlowDashboard = buildCumulativFlowDashboard(config);
-        tasksListTable = buildTasksListTable(config.id);
+        generateDashboardElementsDom(viewId, [ID_AREA_CHART, ID_RANGE_FILTER])
+        generateTaskListDom(viewId);
+
+        cumulativeFlowDashboard = buildCumulativFlowDashboard(viewId);
+        tasksListTable = buildTasksListTable(viewId);
         initialized = true;
     };
 
@@ -20,7 +23,7 @@ function CumulativeDashboard(config) {
 
     this.refresh = function () {
         if (eventData != null) {
-            setTitleSuffix(config.id, rawData.getNumberOfRows());
+            setTitleSuffix(viewId, rawData.getNumberOfRows());
 
             cumulativeFlowDashboard.draw(eventData);
 

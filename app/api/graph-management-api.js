@@ -20,15 +20,15 @@ function buildTasksListTable(viewId) {
     return tasksListTable;
 }
 
-function buildCumulativeFlowChart(config) {
+function buildCumulativeFlowChart(viewId, height) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
-        'containerId': config.id,
+        'containerId': viewId,
         'options': {
             'animation': {
                 'startup': true
             },
-            'height': config.height,
+            'height': height,
             'chartArea': {
                 'width': '90%',
                 'height': '100%'
@@ -176,7 +176,7 @@ function setTaskSelectListener(element) {
  **************************/
 
 function buildTimePeriodDashboard(config) {
-    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart);
+    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart.id, 600);
     limitDashboardPeriod(areaChart, config.date.start, config.date.end);
     return areaChart;
 }
@@ -191,10 +191,10 @@ function limitDashboardPeriod(areaChart, firstDay, lastDay) {
  * CumulativFlowDashboard
  **************************/
 
-function buildCumulativFlowDashboard(config) {
-    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart);
-    var chartRangeFilter = buildRangeFilter(config.rangeFilter);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
+function buildCumulativFlowDashboard(viewId) {
+    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 400);
+    var chartRangeFilter = buildRangeFilter(viewId + ID_RANGE_FILTER);
+    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
     dashboard.bind([chartRangeFilter], areaChart);
     return dashboard;
 }

@@ -17,7 +17,8 @@ var RAW_DATA_COL = {
         {columnIndex: 4, filterType: 'CategoryFilter', label:'Value'},
         {columnIndex: 0, filterType: 'CategoryFilter', label:'Project'},
         {columnIndex: 5, filterType: 'DateRangeFilter', label:'Creation'},
-        {columnIndex: 9, filterType: 'DateRangeFilter', label:'Release'}
+        {columnIndex: 9, filterType: 'DateRangeFilter', label:'Release'},
+        {columnIndex: 10, filterType: 'CategoryFilter', label:'Version'}
     ]
 };
 

@@ -1,43 +1,14 @@
 <script type="text/javascript">
-    var cumulativeFlowViewConfig = {
-        id : "cumulative_flow",
-        cumulativeFlowChart: {
-            id: 'cumulative_flow_area_chart',
-            height: 400
-        },
-        rangeFilter: 'cumulative_flow_chart_range_filter',
-    };
-
-    registerDashboard("#tab_cumulative_view", new CumulativeDashboard(cumulativeFlowViewConfig),true);
+    registerDashboard("#tab_cumulative_view", new CumulativeDashboard("tab_cumulative_view"), true);
 </script>
 
-            <div class="card">
-                <div class="row">
-                    <h2 class="col-md-12 card-title">Cumulative Flow<span id="cumulative_flow_title_suffix"></span>
-                        <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#cumulative_tasks_list_modal"></span></a>
-                    </h2>
-                </div>
-                <div class="row">
-                    <div id="cumulative_flow_dashboard" class="col-md-12 card-block">
-                        <div id="cumulative_flow_area_chart"></div>
-                        <div id="cumulative_flow_chart_range_filter"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="cumulative_tasks_list_modal" class="modal ticket-list fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Tasks list</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div id="cumulative_flow_tasks_list" class="col-md-12"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="card">
+    <div class="row">
+        <h2 class="col-md-12 card-title">Cumulative Flow<span id="cumulative_flow_title_suffix"></span>
+            <a class="not-to-print" href="#"><span class="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#cumulative_flow_tasks_list_modal"></span></a>
+        </h2>
+    </div>
+    <div class="row">
+        <div id="tab_cumulative_view_dashboard" class="col-md-12 card-block"></div>
+    </div>
+</div>

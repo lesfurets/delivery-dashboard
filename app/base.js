@@ -351,15 +351,15 @@ function buildTasksListTable(viewId) {
     return tasksListTable;
 }
 
-function buildCumulativeFlowChart(config) {
+function buildCumulativeFlowChart(viewId, height) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
-        'containerId': config.id,
+        'containerId': viewId,
         'options': {
             'animation': {
                 'startup': true
             },
-            'height': config.height,
+            'height': height,
             'chartArea': {
                 'width': '90%',
                 'height': '100%'
@@ -507,7 +507,7 @@ function setTaskSelectListener(element) {
  **************************/
 
 function buildTimePeriodDashboard(config) {
-    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart);
+    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart.id, 600);
     limitDashboardPeriod(areaChart, config.date.start, config.date.end);
     return areaChart;
 }
@@ -522,10 +522,10 @@ function limitDashboardPeriod(areaChart, firstDay, lastDay) {
  * CumulativFlowDashboard
  **************************/
 
-function buildCumulativFlowDashboard(config) {
-    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart);
-    var chartRangeFilter = buildRangeFilter(config.rangeFilter);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(config.dashboard));
+function buildCumulativFlowDashboard(viewId) {
+    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 400);
+    var chartRangeFilter = buildRangeFilter(viewId + ID_RANGE_FILTER);
+    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
     dashboard.bind([chartRangeFilter], areaChart);
     return dashboard;
 }
@@ -557,7 +557,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_BASHBOARD));
     dashboard.bind(filters, charts);
     return dashboard;
-};function CumulativeDashboard(config) {
+};function CumulativeDashboard(viewId) {
     var cumulativeFlowDashboard;
     var tasksListTable;
 
@@ -567,8 +567,11 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     var initialized = false;
 
     this.initWidgets = function () {
-        cumulativeFlowDashboard = buildCumulativFlowDashboard(config);
-        tasksListTable = buildTasksListTable(config.id);
+        generateDashboardElementsDom(viewId, [ID_AREA_CHART, ID_RANGE_FILTER])
+        generateTaskListDom(viewId);
+
+        cumulativeFlowDashboard = buildCumulativFlowDashboard(viewId);
+        tasksListTable = buildTasksListTable(viewId);
         initialized = true;
     };
 
@@ -579,7 +582,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     this.refresh = function () {
         if (eventData != null) {
-            setTitleSuffix(config.id, rawData.getNumberOfRows());
+            setTitleSuffix(viewId, rawData.getNumberOfRows());
 
             cumulativeFlowDashboard.draw(eventData);
 
@@ -826,7 +829,10 @@ function registerDashboard(tabId, dashboard, isDefault) {
 };ID_SEPARATOR = "_";
 ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
 ID_BASHBOARD = ID_SEPARATOR + "dashboard";
-ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';;/***************************
+ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
+ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
+ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';;/***************************
  *     Filter Generation
  **************************/
 
@@ -929,7 +935,52 @@ function generateChartDom(containerId, chartsConfig) {
 var setTitleSuffix = function (viewId, numberOfRows) {
     var plural = numberOfRows > 1 ? "s" : "";
     $("#" + viewId  + ID_TITLE_SUFFIX).text(" - " + numberOfRows + " task" + plural);
-};;function initApp() {
+};
+
+/***************************
+ *   Dashboard Elements
+ **************************/
+
+var generateDashboardElementsDom = function (viewId, suffixList) {
+    for (var index = 0; index < suffixList.length; index++) {
+        $("#" + viewId + ID_BASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
+    }
+};
+
+/***************************
+ *     Task List
+ **************************/
+
+var generateTaskListDom = function (viewId) {
+    //$("#tab_cumulative_view")
+    $("#" + viewId)
+        .append($('<div>')
+            .attr('id', viewId + ID_TASK_LIST_MODAL)
+            .attr('role', "dialog")
+            .addClass("modal ticket-list fade")
+            .append($('<div>').addClass("modal-dialog")
+                .append($('<div>').addClass("modal-content")
+                    .append($('<div>').addClass("modal-header")
+                        .append($('<button>')
+                            .attr('type', "button")
+                            .attr('data-dismiss', "modal")
+                            .addClass("close").html("&times;"))
+                        .append($('<h4>')
+                            .addClass("modal-title")
+                            .text("Tasks list")))
+                    .append($('<div>').addClass("modal-body")
+                        .append($('<div>')
+                            .attr('id', viewId + ID_TASK_LIST)
+                            .addClass("col-md-12")))
+                    .append($('<div>').addClass("modal-footer")
+                        .append($('<button>')
+                            .attr('type', "button")
+                            .attr('data-dismiss', "modal")
+                            .addClass("btn btn-default")
+                            .text("Close"))))));
+};
+
+;function initApp() {
     currentDashboards.forEach(function (element) {
         element.initWidgets();
     })

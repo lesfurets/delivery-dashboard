@@ -102,3 +102,47 @@ var setTitleSuffix = function (viewId, numberOfRows) {
     var plural = numberOfRows > 1 ? "s" : "";
     $("#" + viewId  + ID_TITLE_SUFFIX).text(" - " + numberOfRows + " task" + plural);
 };
+
+/***************************
+ *   Dashboard Elements
+ **************************/
+
+var generateDashboardElementsDom = function (viewId, suffixList) {
+    for (var index = 0; index < suffixList.length; index++) {
+        $("#" + viewId + ID_BASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
+    }
+};
+
+/***************************
+ *     Task List
+ **************************/
+
+var generateTaskListDom = function (viewId) {
+    //$("#tab_cumulative_view")
+    $("#" + viewId)
+        .append($('<div>')
+            .attr('id', viewId + ID_TASK_LIST_MODAL)
+            .attr('role', "dialog")
+            .addClass("modal ticket-list fade")
+            .append($('<div>').addClass("modal-dialog")
+                .append($('<div>').addClass("modal-content")
+                    .append($('<div>').addClass("modal-header")
+                        .append($('<button>')
+                            .attr('type', "button")
+                            .attr('data-dismiss', "modal")
+                            .addClass("close").html("&times;"))
+                        .append($('<h4>')
+                            .addClass("modal-title")
+                            .text("Tasks list")))
+                    .append($('<div>').addClass("modal-body")
+                        .append($('<div>')
+                            .attr('id', viewId + ID_TASK_LIST)
+                            .addClass("col-md-12")))
+                    .append($('<div>').addClass("modal-footer")
+                        .append($('<button>')
+                            .attr('type', "button")
+                            .attr('data-dismiss', "modal")
+                            .addClass("btn btn-default")
+                            .text("Close"))))));
+};
+
