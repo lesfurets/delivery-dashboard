@@ -118,7 +118,6 @@ var generateDashboardElementsDom = function (viewId, suffixList) {
  **************************/
 
 var generateTaskListDom = function (viewId) {
-    //$("#tab_cumulative_view")
     $("#" + viewId)
         .append($('<div>')
             .attr('id', viewId + ID_TASK_LIST_MODAL)

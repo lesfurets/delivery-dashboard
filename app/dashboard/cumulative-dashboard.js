@@ -13,6 +13,7 @@ function CumulativeDashboard(viewId) {
 
         cumulativeFlowDashboard = buildCumulativFlowDashboard(viewId);
         tasksListTable = buildTasksListTable(viewId);
+
         initialized = true;
     };
 

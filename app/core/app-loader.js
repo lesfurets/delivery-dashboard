@@ -12,7 +12,7 @@ google.setOnLoadCallback(function () {
 });
 
 // Wait for all elements to be loaded before initializing the app
-function registerDashboard(tabId, dashboard, isDefault) {
+function registerDashboard(tabId, dashboard) {
     allDashboards.push({tab: tabId, controller: dashboard});
     containerToLoad--;
     if (containerToLoad == 0) {

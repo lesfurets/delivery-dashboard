@@ -572,6 +572,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
         cumulativeFlowDashboard = buildCumulativFlowDashboard(viewId);
         tasksListTable = buildTasksListTable(viewId);
+
         initialized = true;
     };
 
@@ -820,7 +821,7 @@ google.setOnLoadCallback(function () {
 });
 
 // Wait for all elements to be loaded before initializing the app
-function registerDashboard(tabId, dashboard, isDefault) {
+function registerDashboard(tabId, dashboard) {
     allDashboards.push({tab: tabId, controller: dashboard});
     containerToLoad--;
     if (containerToLoad == 0) {
@@ -952,7 +953,6 @@ var generateDashboardElementsDom = function (viewId, suffixList) {
  **************************/
 
 var generateTaskListDom = function (viewId) {
-    //$("#tab_cumulative_view")
     $("#" + viewId)
         .append($('<div>')
             .attr('id', viewId + ID_TASK_LIST_MODAL)
