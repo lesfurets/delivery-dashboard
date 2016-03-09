@@ -566,6 +566,8 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var initialized = false;
 
+    registerDashboard("#" + viewId, this);
+
     this.initWidgets = function () {
         generateDashboardElementsDom(viewId, [ID_AREA_CHART, ID_RANGE_FILTER])
         generateTaskListDom(viewId);
