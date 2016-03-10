@@ -729,15 +729,16 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     var durationStatsTable;
     var tasksListTable;
 
-    var rawDara;
+    var rawData;
     var filteredData;
 
     var initialized = false;
 
-    var startDate = config.date.start;
-    var endDate = config.date.end;
+    var startDate;
+    var endDate;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
+    registerDashboard(config.id, this);
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
@@ -749,19 +750,20 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         generateToggleFilter(config.id, this);
         generateTaskListDom(config.id);
 
-        cumulativeFlowGraph = buildTimePeriodDashboard(config.id, config.date.start, config.date.end);
+        console.log("Build dashboard "+startDate + " --- " + endDate);
+        cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
         durationStatsTable = buildDataTable(config.id + ID_DURATION_STATS);
         tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 
     this.loadData = function (data) {
-        rawDara = data;
+        rawData = data;
         this.filterData();
     };
 
     this.filterData = function () {
-        filteredData = filterCreatedAfter(filterReleasedBefore(rawDara, startDate), endDate);
+        filteredData = filterCreatedAfter(filterReleasedBefore(rawData, startDate), endDate);
     };
 
     this.refresh = function () {
@@ -783,9 +785,13 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         return initialized;
     };
 
-    this.resetDates = function (firstDay, lastDate) {
+    this.setDates = function (firstDay, lastDate) {
         startDate = firstDay;
-        endDate = lastDate;
+        endDate = lastDate !=  null ? lastDate : new Date(firstDay.getFullYear(), firstDay.getMonth() + 1, 0);
+    }
+
+    this.resetDates = function (firstDay, lastDate) {
+        this.setDates(firstDay, lastDate);
         limitDashboardPeriod(cumulativeFlowGraph, startDate, endDate);
         this.filterData();
         this.refresh();
@@ -1004,6 +1010,13 @@ var generateTaskListDom = function (viewId) {
  **************************/
 
 var generateMonthSelectorDom = function (viewId, dashboard) {
+    var startDate = new Date(REPORT_CONFIG.first_entry);
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 15);
+    currentDate.setDate(1);
+
+    dashboard.setDates(new Date(currentDate));
+
     // Creating Dom structure for bootstrap Dropdown
     $("#" + viewId + ID_TIME_SELECTOR).addClass("dropdown")
         .append($("<button>")
@@ -1016,10 +1029,6 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
             .attr('id', viewId + ID_MONTH_SELECTOR_LIST)
             .attr('aria-labelledby', "month_dropdown")
             .addClass("dropdown-menu"));
-
-    var startDate = new Date(REPORT_CONFIG.first_entry);
-    var currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 15);
 
     // Populating with the lists of values
     setDropDownValue(currentDate);
@@ -1034,7 +1043,7 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
         date.setDate(1);
         return function(){
             setDropDownValue(date);
-            dashboard.resetDates(date, new Date(date.getFullYear(), date.getMonth() + 1, 0))
+            dashboard.resetDates(date)
         }
     }
 
@@ -1048,6 +1057,12 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
  **************************/
 
 var generatePeriodSelectorDom = function (viewId, dashboard) {
+    var endPeriod = new Date();
+    endPeriod.setDate(endPeriod.getDate() - 15);
+    var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
+
+    dashboard.setDates(startPeriod, endPeriod)
+
     // Creating Dom structure for selector
     $("#" + viewId + ID_TIME_SELECTOR)
         .append($("<input>")

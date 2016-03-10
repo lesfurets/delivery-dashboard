@@ -3,15 +3,16 @@ function ReportDashboard(config) {
     var durationStatsTable;
     var tasksListTable;
 
-    var rawDara;
+    var rawData;
     var filteredData;
 
     var initialized = false;
 
-    var startDate = config.date.start;
-    var endDate = config.date.end;
+    var startDate;
+    var endDate;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
+    registerDashboard(config.id, this);
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
@@ -23,19 +24,20 @@ function ReportDashboard(config) {
         generateToggleFilter(config.id, this);
         generateTaskListDom(config.id);
 
-        cumulativeFlowGraph = buildTimePeriodDashboard(config.id, config.date.start, config.date.end);
+        console.log("Build dashboard "+startDate + " --- " + endDate);
+        cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
         durationStatsTable = buildDataTable(config.id + ID_DURATION_STATS);
         tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 
     this.loadData = function (data) {
-        rawDara = data;
+        rawData = data;
         this.filterData();
     };
 
     this.filterData = function () {
-        filteredData = filterCreatedAfter(filterReleasedBefore(rawDara, startDate), endDate);
+        filteredData = filterCreatedAfter(filterReleasedBefore(rawData, startDate), endDate);
     };
 
     this.refresh = function () {
@@ -57,9 +59,13 @@ function ReportDashboard(config) {
         return initialized;
     };
 
-    this.resetDates = function (firstDay, lastDate) {
+    this.setDates = function (firstDay, lastDate) {
         startDate = firstDay;
-        endDate = lastDate;
+        endDate = lastDate !=  null ? lastDate : new Date(firstDay.getFullYear(), firstDay.getMonth() + 1, 0);
+    }
+
+    this.resetDates = function (firstDay, lastDate) {
+        this.setDates(firstDay, lastDate);
         limitDashboardPeriod(cumulativeFlowGraph, startDate, endDate);
         this.filterData();
         this.refresh();

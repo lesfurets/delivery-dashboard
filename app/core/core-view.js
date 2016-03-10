@@ -151,6 +151,13 @@ var generateTaskListDom = function (viewId) {
  **************************/
 
 var generateMonthSelectorDom = function (viewId, dashboard) {
+    var startDate = new Date(REPORT_CONFIG.first_entry);
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 15);
+    currentDate.setDate(1);
+
+    dashboard.setDates(new Date(currentDate));
+
     // Creating Dom structure for bootstrap Dropdown
     $("#" + viewId + ID_TIME_SELECTOR).addClass("dropdown")
         .append($("<button>")
@@ -163,10 +170,6 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
             .attr('id', viewId + ID_MONTH_SELECTOR_LIST)
             .attr('aria-labelledby', "month_dropdown")
             .addClass("dropdown-menu"));
-
-    var startDate = new Date(REPORT_CONFIG.first_entry);
-    var currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 15);
 
     // Populating with the lists of values
     setDropDownValue(currentDate);
@@ -181,7 +184,7 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
         date.setDate(1);
         return function(){
             setDropDownValue(date);
-            dashboard.resetDates(date, new Date(date.getFullYear(), date.getMonth() + 1, 0))
+            dashboard.resetDates(date)
         }
     }
 
@@ -195,6 +198,12 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
  **************************/
 
 var generatePeriodSelectorDom = function (viewId, dashboard) {
+    var endPeriod = new Date();
+    endPeriod.setDate(endPeriod.getDate() - 15);
+    var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
+
+    dashboard.setDates(startPeriod, endPeriod)
+
     // Creating Dom structure for selector
     $("#" + viewId + ID_TIME_SELECTOR)
         .append($("<input>")

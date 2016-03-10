@@ -1,19 +1,5 @@
 <script type="text/javascript">
-    var endPeriod = new Date();
-    endPeriod.setDate(endPeriod.getDate() - 15);
-    var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
-
-    var periodReportViewConfig = {
-        id: "tab_period_report_view",
-        selector: CONFIG_PERIOD_SELECTOR,
-        date: {
-            start: startPeriod,
-            end: endPeriod,
-        }
-    };
-
-    var periodReportDashboard = new ReportDashboard(periodReportViewConfig);
-    registerDashboard("#tab_period_report_view", periodReportDashboard);
+    var periodReportDashboard = new ReportDashboard({id: "tab_period_report_view", selector: CONFIG_PERIOD_SELECTOR});
 </script>
 
 <div class="card to-print graph">
