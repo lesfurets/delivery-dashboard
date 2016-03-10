@@ -148,14 +148,44 @@ var generateTaskListDom = function (viewId) {
 /***************************
  *     Month Selector
  **************************/
+var generateMonthSelectorDom = function (viewId, dashboard) {
+    $("#" + viewId + ID_TIME_SELECTOR).addClass("dropdown")
+        .append($("<button>")
+            .attr('id', viewId + ID_MONTH_SELECTOR_LABEL)
+            .attr('type', "button")
+            .attr('data-toggle', "dropdown")
+            .addClass("btn btn-default dropdown-toggle")
+            .append($("<span>").addClass("caret")))
+        .append($("<ul>")
+            .attr('id', viewId + ID_MONTH_SELECTOR_LIST)
+            .attr('aria-labelledby', "month_dropdown")
+            .addClass("dropdown-menu"));
 
-var generateMonthSelectorDom = function (viewId) {
-    $("#" + viewId + ID_TIME_SELECTOR)
-// Initializing Month Picker
+    var startDate = new Date(REPORT_CONFIG.first_entry);
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 15);
+
+    var setDropDownValue = function (date) {
+        $("#" + viewId + ID_MONTH_SELECTOR_LABEL).text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
+    }
+
+    var test = 0;
+    setDropDownValue(currentDate);
+    // Initializing Month Picker
     while (startDate < currentDate) {
-        $('#monthSelector').append($('<option>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('value', currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1)));
-        $('#month_dropdown_list').append($('<li>').append($('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('onClick', 'changeDate(\'' + currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + '\');').attr('href', '#')));
+        test++
+        // We can't use simple functions because they would all be closures that reference the same variable currentDate.
+        var monthLink = $('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('href', '#').on('click', changeDate(new Date(currentDate)));
+        $('#' + viewId + ID_MONTH_SELECTOR_LIST).append($('<li>').append(monthLink));
         currentDate.setMonth(currentDate.getMonth() - 1);
+    }
+
+    function changeDate(date) {
+        date.setDate(1);
+        return function(){
+            setDropDownValue(date);
+            dashboard.resetDates(date, new Date(date.getFullYear(), date.getMonth() + 1, 0))
+        }
     }
 };
 

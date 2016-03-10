@@ -19,25 +19,7 @@
         filter: "monthly_report_switch"
     };
 
-    var changeDate = function (date) {
-        var firstDay = new Date(date);
-        setDropDownValue(firstDay);
-        monthReportDashboard.resetDates(firstDay, new Date(firstDay.getFullYear(), firstDay.getMonth() + 1, 0));
-    }
-
-    var setDropDownValue = function (date) {
-        $("#tab_monthly_report_view_dropdown").text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
-    }
-
     var monthReportDashboard = new ReportDashboard(monthReportViewConfig);
-    setDropDownValue(currentDate);
-
-    // Initializing Month Picker
-    while (startDate < currentDate) {
-        $('#tab_monthly_report_view_month_dropdown_list').append($('<li>').append($('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('onClick', 'changeDate(\'' + currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + '\');').attr('href', '#')));
-        currentDate.setMonth(currentDate.getMonth() - 1);
-    }
-
     registerDashboard("#tab_monthly_report_view", monthReportDashboard);
 </script>
 
@@ -45,10 +27,7 @@
     <div class="row">
         <h2 class="col-md-12 card-title">
             <img class="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
-            <div id="month_selector" class="dropdown">
-                <button id="tab_monthly_report_view_dropdown" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> Dropdown <span class="caret"></span></button>
-                <ul id="tab_monthly_report_view_month_dropdown_list" class="dropdown-menu" aria-labelledby="month_dropdown"></ul>
-            </div>
+            <div id="tab_monthly_report_view_time_selector"></div>
             <span id="monthly_report_title_suffix"></span>
             <div class="not-to-print pull-right">
                 <div id="tab_monthly_report_view_switch" class="switch"></div>

@@ -15,7 +15,7 @@ function ReportDashboard(config) {
 
     this.initWidgets = function () {
         if(config.viewFilter == CONFIG_MONTH_SELECTOR) {
-
+            generateMonthSelectorDom(config.viewId, this)
         }
         generateToggleFilter(config.viewId, this);
         generateTaskListDom(config.viewId);
