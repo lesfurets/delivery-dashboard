@@ -802,8 +802,10 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         this.refresh();
     }
 
-};function TaskManager() {
+};function TaskManager(viewId) {
     var initialized = false;
+
+    registerDashboard("#" + viewId, this);
 
     this.initWidgets = function () {
         var iframe = $('iframe');
@@ -819,9 +821,11 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         return initialized;
     };
 
-    this.loadData = function (data) { };
+    this.loadData = function (data) {
+    };
 
-    this.refresh = function () { };
+    this.refresh = function () {
+    };
 
 };google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
 var containerToLoad = 0;
