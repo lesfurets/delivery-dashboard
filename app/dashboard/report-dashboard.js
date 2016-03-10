@@ -14,18 +14,18 @@ function ReportDashboard(config) {
 
 
     this.initWidgets = function () {
-        if(config.viewFilter == CONFIG_MONTH_SELECTOR) {
-            generateMonthSelectorDom(config.viewId, this)
+        if(config.selector == CONFIG_MONTH_SELECTOR) {
+            generateMonthSelectorDom(config.id, this)
         }
-        if(config.viewFilter == CONFIG_PERIOD_SELECTOR) {
-            generatePeriodSelectorDom(config.viewId, this)
+        if(config.selector == CONFIG_PERIOD_SELECTOR) {
+            generatePeriodSelectorDom(config.id, this)
         }
-        generateToggleFilter(config.viewId, this);
-        generateTaskListDom(config.viewId);
+        generateToggleFilter(config.id, this);
+        generateTaskListDom(config.id);
 
-        cumulativeFlowGraph = buildTimePeriodDashboard(config);
-        durationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.viewId);
+        cumulativeFlowGraph = buildTimePeriodDashboard(config.id, config.date.start, config.date.end);
+        durationStatsTable = buildDataTable(config.id + ID_DURATION_STATS);
+        tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
 

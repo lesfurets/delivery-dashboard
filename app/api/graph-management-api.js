@@ -175,9 +175,9 @@ function setTaskSelectListener(element) {
  * ExtractDashboard
  **************************/
 
-function buildTimePeriodDashboard(config) {
-    var areaChart = buildCumulativeFlowChart(config.cumulativeFlowChart.id, 600);
-    limitDashboardPeriod(areaChart, config.date.start, config.date.end);
+function buildTimePeriodDashboard(viewId, startDate, endDate) {
+    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 600);
+    limitDashboardPeriod(areaChart, startDate, endDate);
     return areaChart;
 }
 

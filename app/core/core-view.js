@@ -45,7 +45,7 @@ function generateToggleFilter(viewId, dashboard) {
     $("#" + viewId + ID_SWITCH)
         .append($('<div>').attr('id', choice1Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel))
         .append($('<div>').attr('id', widgetId).addClass("switch-widget"))
-        .append($('<div>').attr('id', choice2Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel));
+        .append($('<div>').attr('id', choice2Id).addClass("switch-label").text(REPORT_CONFIG.projection[1].filterLabel));
 
     //Manage the switch
     $('#' + choice1Id).click(function () {
@@ -193,7 +193,7 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
 /***************************
  *     Period Selector
  **************************/
-    
+
 var generatePeriodSelectorDom = function (viewId, dashboard) {
     // Creating Dom structure for selector
     $("#" + viewId + ID_TIME_SELECTOR)
