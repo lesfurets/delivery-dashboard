@@ -118,6 +118,7 @@ var generateDashboardElementsDom = function (viewId, suffixList) {
  **************************/
 
 var generateTaskListDom = function (viewId) {
+    // Creating Dom structure for bootstrap Modal
     $("#" + viewId)
         .append($('<div>')
             .attr('id', viewId + ID_TASK_LIST_MODAL)
@@ -148,7 +149,9 @@ var generateTaskListDom = function (viewId) {
 /***************************
  *     Month Selector
  **************************/
+
 var generateMonthSelectorDom = function (viewId, dashboard) {
+    // Creating Dom structure for bootstrap Dropdown
     $("#" + viewId + ID_TIME_SELECTOR).addClass("dropdown")
         .append($("<button>")
             .attr('id', viewId + ID_MONTH_SELECTOR_LABEL)
@@ -165,15 +168,9 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
     var currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 15);
 
-    var setDropDownValue = function (date) {
-        $("#" + viewId + ID_MONTH_SELECTOR_LABEL).text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
-    }
-
-    var test = 0;
+    // Populating with the lists of values
     setDropDownValue(currentDate);
-    // Initializing Month Picker
     while (startDate < currentDate) {
-        test++
         // We can't use simple functions because they would all be closures that reference the same variable currentDate.
         var monthLink = $('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('href', '#').on('click', changeDate(new Date(currentDate)));
         $('#' + viewId + ID_MONTH_SELECTOR_LIST).append($('<li>').append(monthLink));
@@ -187,6 +184,34 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
             dashboard.resetDates(date, new Date(date.getFullYear(), date.getMonth() + 1, 0))
         }
     }
+
+    function setDropDownValue(date) {
+        $("#" + viewId + ID_MONTH_SELECTOR_LABEL).text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
+    }
+};
+
+/***************************
+ *     Period Selector
+ **************************/
+    
+var generatePeriodSelectorDom = function (viewId, dashboard) {
+    // Creating Dom structure for selector
+    $("#" + viewId + ID_TIME_SELECTOR)
+        .append($("<input>")
+            .attr('type', "text")
+            .attr('name', "daterange"));
+
+    // Selector configuration
+    $("#" + viewId + ID_TIME_SELECTOR +' input[name="daterange"]').daterangepicker({
+        startDate: startPeriod.formatDDMMYYYY(),
+        endDate: endPeriod.formatDDMMYYYY(),
+        minDate: startDate.formatDDMMYYYY(),
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    }, function(start, end, label) {
+        dashboard.resetDates(start.toDate(), end.toDate());
+    });
 };
 
 

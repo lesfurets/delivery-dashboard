@@ -21,21 +21,6 @@
     };
 
     var periodReportDashboard = new ReportDashboard(periodReportViewConfig);
-
-    //Initialisation du Date Range Picker
-    $(function() {
-        $('input[name="daterange"]').daterangepicker({
-            startDate: startPeriod.formatDDMMYYYY(),
-            endDate: endPeriod.formatDDMMYYYY(),
-            minDate: startDate.formatDDMMYYYY(),
-            locale: {
-                format: 'DD/MM/YYYY'
-            }
-        }, function(start, end, label) {
-            periodReportDashboard.resetDates(start.toDate(), end.toDate());
-        });
-    });
-
     registerDashboard("#tab_period_report_view", periodReportDashboard);
 </script>
 
@@ -43,7 +28,7 @@
     <div class="row">
         <h2 class="col-md-12 card-title">
             <img class="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
-            <input type="text" name="daterange" value="01/01/2015 - 01/31/2015" />
+            <span id="tab_period_report_view_time_selector"></span>
             <span id="period_report_title_suffix"></span>
             <div class="not-to-print pull-right">
                 <div id="tab_period_report_view_switch" class="switch"></div>
