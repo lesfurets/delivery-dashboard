@@ -5,6 +5,8 @@
 
     var monthReportViewConfig = {
         id : "monthly_report",
+        viewId: "tab_monthly_report_view",
+        viewFilter: CONFIG_MONTH_SELECTOR,
         date: {
             start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
             end: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0),
@@ -24,7 +26,7 @@
     }
 
     var setDropDownValue = function (date) {
-        $("#month_dropdown").text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
+        $("#tab_monthly_report_view_dropdown").text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
     }
 
     var monthReportDashboard = new ReportDashboard(monthReportViewConfig);
@@ -32,8 +34,7 @@
 
     // Initializing Month Picker
     while (startDate < currentDate) {
-        $('#monthSelector').append($('<option>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('value', currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1)));
-        $('#month_dropdown_list').append($('<li>').append($('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('onClick', 'changeDate(\'' + currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + '\');').attr('href', '#')));
+        $('#tab_monthly_report_view_month_dropdown_list').append($('<li>').append($('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('onClick', 'changeDate(\'' + currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + '\');').attr('href', '#')));
         currentDate.setMonth(currentDate.getMonth() - 1);
     }
 
@@ -45,13 +46,13 @@
         <h2 class="col-md-12 card-title">
             <img class="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
             <div id="month_selector" class="dropdown">
-                <button id="month_dropdown" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> Dropdown <span class="caret"></span></button>
-                <ul id="month_dropdown_list" class="dropdown-menu" aria-labelledby="month_dropdown"></ul>
+                <button id="tab_monthly_report_view_dropdown" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> Dropdown <span class="caret"></span></button>
+                <ul id="tab_monthly_report_view_month_dropdown_list" class="dropdown-menu" aria-labelledby="month_dropdown"></ul>
             </div>
             <span id="monthly_report_title_suffix"></span>
             <div class="not-to-print pull-right">
-                <div id="monthly_report_switch" class="switch"></div>
-                <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#monthly_report_tasks_list_modal"></span></a>
+                <div id="tab_monthly_report_view_switch" class="switch"></div>
+                <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#tab_monthly_report_view_tasks_list_modal"></span></a>
             </div>
         </h2>
     </div>
@@ -59,23 +60,6 @@
         <div id="monthly_report_extract_cumulative_chart"></div>
         <div class="card to-print stats">
             <div id="monthly_report_duration_stats"></div>
-        </div>
-    </div>
-</div>
-
-<div id="monthly_report_tasks_list_modal" class="modal ticket-list fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Tasks list</h4>
-            </div>
-            <div class="modal-body">
-                <div id="monthly_report_tasks_list" class="col-md-12"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
 </div>

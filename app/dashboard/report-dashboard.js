@@ -12,12 +12,17 @@ function ReportDashboard(config) {
     var endDate = config.date.end;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
-    generateToggleFilter(config.filter, this);
 
     this.initWidgets = function () {
+        if(config.viewFilter == CONFIG_MONTH_SELECTOR) {
+
+        }
+        generateToggleFilter(config.viewId, this);
+        generateTaskListDom(config.viewId);
+
         cumulativeFlowGraph = buildTimePeriodDashboard(config);
         durationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.id);
+        tasksListTable = buildTasksListTable(config.viewId);
         initialized = true;
     };
 

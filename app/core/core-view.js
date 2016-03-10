@@ -35,30 +35,30 @@ function generateFiltersDom(containerId, filtersConfig) {
     return filtersConfig;
 }
 
-function generateToggleFilter(containerId, dashboard) {
+function generateToggleFilter(viewId, dashboard) {
     if(REPORT_CONFIG.projection.length < 2){
         return;
     }
-    var choice1Id = containerId + "_" + "choice_1";
-    var choice2Id = containerId + "_" + "choice_2";
-    var widgetId = containerId + "_" + "switch";
-    $("#" + containerId)
+    var choice1Id = viewId + "_" + "choice_1";
+    var choice2Id = viewId + "_" + "choice_2";
+    var widgetId = viewId + "_" + "widget";
+    $("#" + viewId + ID_SWITCH)
         .append($('<div>').attr('id', choice1Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel))
         .append($('<div>').attr('id', widgetId).addClass("switch-widget"))
         .append($('<div>').attr('id', choice2Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel));
 
     //Manage the switch
     $('#' + choice1Id).click(function () {
-        $("#" + containerId).removeClass("switched");
+        $("#" + viewId + ID_SWITCH).removeClass("switched");
         dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
     });
     $('#' + choice2Id).click(function () {
-        $("#" + containerId).addClass("switched");
+        $("#" + viewId + ID_SWITCH).addClass("switched");
         dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
     });
     $('#' + widgetId).click(function () {
-        $("#" + containerId).toggleClass("switched");
-        var filterIndex = $("#" + containerId).hasClass("switched") ? 1 : 0;
+        $("#" + viewId + ID_SWITCH).toggleClass("switched");
+        var filterIndex = $("#" + viewId + ID_SWITCH).hasClass("switched") ? 1 : 0;
         dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
 }
@@ -144,4 +144,19 @@ var generateTaskListDom = function (viewId) {
                             .addClass("btn btn-default")
                             .text("Close"))))));
 };
+
+/***************************
+ *     Month Selector
+ **************************/
+
+var generateMonthSelectorDom = function (viewId) {
+    $("#" + viewId + ID_TIME_SELECTOR)
+// Initializing Month Picker
+    while (startDate < currentDate) {
+        $('#monthSelector').append($('<option>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('value', currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1)));
+        $('#month_dropdown_list').append($('<li>').append($('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('onClick', 'changeDate(\'' + currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + '\');').attr('href', '#')));
+        currentDate.setMonth(currentDate.getMonth() - 1);
+    }
+};
+
 

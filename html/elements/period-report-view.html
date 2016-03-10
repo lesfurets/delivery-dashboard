@@ -6,6 +6,8 @@
 
     var periodReportViewConfig = {
         id : "period_report",
+        viewId: "tab_period_report_view",
+        viewFilter: CONFIG_PERIOD_SELECTOR,
         date: {
             start: startPeriod,
             end: endPeriod,
@@ -44,8 +46,8 @@
             <input type="text" name="daterange" value="01/01/2015 - 01/31/2015" />
             <span id="period_report_title_suffix"></span>
             <div class="not-to-print pull-right">
-                <div id="period_report_switch" class="switch"></div>
-                <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#period_report_tasks_list_modal"></span></a>
+                <div id="tab_period_report_view_switch" class="switch"></div>
+                <a href="#"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#tab_period_report_view_tasks_list_modal"></span></a>
             </div>
         </h2>
     </div>
@@ -53,23 +55,6 @@
         <div id="period_report_extract_cumulative_chart"></div>
         <div class="card to-print stats">
             <div id="period_report_duration_stats"></div>
-        </div>
-    </div>
-</div>
-
-<div id="period_report_tasks_list_modal" class="modal ticket-list fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Tasks list</h4>
-            </div>
-            <div class="modal-body">
-                <div id="period_report_tasks_list" class="col-md-12"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
 </div>
