@@ -333,14 +333,18 @@ function getWorkDaysBetween(dDate1, dDate2) {         // input given as Date obj
  *     Charts Factory
  **************************/
 
-function buildDataTable(elementId) {
+function buildDataTable(viewId) {
     return new google.visualization.ChartWrapper({
         'chartType': 'Table',
-        'containerId': elementId,
+        'containerId': viewId,
         'options': {
             width: '100%'
         }
     });
+}
+
+function buildDurationStatsTable(viewId) {
+    return buildDataTable(viewId + ID_DURATION_STATS);
 }
 
 function buildTasksListTable(viewId) {
@@ -379,11 +383,11 @@ function buildCumulativeFlowChart(viewId, height) {
     });
 }
 
-function buildTasksDurationColumnChart(config) {
+function buildTasksDurationColumnChart(viewId, columns) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ColumnChart',
-        'containerId': config.id,
-        'view': {'columns': config.columns},
+        'containerId': viewId + ID_COLUMN_CHART,
+        'view': {'columns': columns},
         'options': {
             'isStacked': true,
             'hAxis': {
@@ -407,11 +411,11 @@ function buildTasksDurationColumnChart(config) {
     return durationChart;
 }
 
-function buildTasksDurationScatterChart(config) {
+function buildTasksDurationScatterChart(viewId, columns) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ScatterChart',
-        'containerId': config.id,
-        'view': {'columns': config.columns},
+        'containerId': viewId + ID_SCATTER_CHART,
+        'view': {'columns': columns},
         'options': {
             'height': 400,
             'hAxis': {
@@ -534,7 +538,16 @@ function buildCumulativFlowDashboard(viewId) {
  * TasksDurationDashboard
  **************************/
 
-function buildFilters(filtersConfig) {
+function buildFilters(viewId, filtersConfig) {
+    var filters = [];
+    for (var index = 0; index < filtersConfig.length; index++) {
+        var filterConfig = filtersConfig[index];
+        filters.push(buildFilter(viewId + filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
+    }
+    return filters;
+}
+
+function buildFiltersOld(filtersConfig) {
     var filters = [];
     for (var index = 0; index < filtersConfig.length; index++) {
         var filterConfig = filtersConfig[index];
@@ -613,9 +626,9 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     var initialized = false;
 
     this.initWidgets = function () {
-        taskFilters = generateFiltersModelFromConfig(config.taskFilter,false);
-        generateFiltersDom(config.taskFilter, taskFilters);
-        filters = buildFilters(taskFilters);
+        taskFilters = generateFiltersModelFromConfigOld(config.taskFilter,false);
+        generateFiltersDomOld(config.taskFilter, taskFilters);
+        filters = buildFiltersOld(taskFilters);
 
         taskChart = generateChartModelFromConfig()
         generateChartDom(config.id, taskChart);
@@ -669,7 +682,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         return initialized;
     };
 
-};function DurationDashboard(config) {
+};function DurationDashboard(viewId) {
     var tasksDurationDashboard;
     var tasksDurationColumnChart;
     var tasksDurationScatterChart;
@@ -681,12 +694,31 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var initialized = false;
 
+    registerDashboard('#' + viewId, this);
+
     this.initWidgets = function () {
-        tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
-        tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
-        tasksDurationDashboard = buildFilteredDashboard(config.id, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
-        tasksDurationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.id);
+        var filtersConfig = generateFiltersModelFromConfig(DURATION_INDEX_FILTER_FIRST);
+        filtersConfig.unshift({
+            id:  "_max_cycle_time",
+            filterType: 'NumberRangeFilter',
+            columnIndex: DURATION_INDEX_DURATION_CYCLE_TIME
+        });
+
+        generateTaskListDom(viewId);
+        generateDashboardElementsDom(viewId, [ID_FILTERS, ID_DURATION_STATS, ID_COLUMN_CHART, ID_SCATTER_CHART]);
+        generateFiltersDom(viewId, filtersConfig);
+
+        // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
+        // Nb -1)
+        var durationsColumns = [2];
+        for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+            durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
+        }
+        tasksDurationColumnChart = buildTasksDurationColumnChart(viewId, durationsColumns);
+        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [DURATION_INDEX_STATIC_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
+        tasksDurationDashboard = buildFilteredDashboard(viewId, tasksDurationColumnChart, buildFilters(viewId, filtersConfig), updateTable);
+        tasksDurationStatsTable = buildDurationStatsTable(viewId);
+        tasksListTable = buildTasksListTable(viewId);
         initialized = true;
     };
 
@@ -707,7 +739,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         var dataToDisplay = durationChartData != null ? durationChartData : durationData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
+            setTitleSuffix(viewId, dataToDisplay.getNumberOfRows());
 
             tasksDurationScatterChart.setDataTable(computeDurationStats(dataToDisplay));
             tasksDurationScatterChart.draw();
@@ -738,7 +770,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     var endDate;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
-    registerDashboard(config.id, this);
+    registerDashboard("#" + config.id, this);
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
@@ -752,7 +784,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
         console.log("Build dashboard "+startDate + " --- " + endDate);
         cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
-        durationStatsTable = buildDataTable(config.id + ID_DURATION_STATS);
+        durationStatsTable = buildDurationStatsTable(config.id);
         tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };
@@ -853,7 +885,13 @@ ID_BASHBOARD = ID_SEPARATOR + "dashboard";
 ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
 ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
 ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
+ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
+ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
 ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';
+ID_FILTER = ID_SEPARATOR + 'filter';
+ID_FILTERS = ID_SEPARATOR + 'filters';
+ID_FILTERS_RANGE = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'range';
+ID_FILTERS_CATEGORY = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'category';
 ID_SWITCH = ID_SEPARATOR + 'switch';
 ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
 ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
@@ -865,7 +903,7 @@ CONFIG_PERIOD_SELECTOR = "pediod_selector";;/***************************
  *     Filter Generation
  **************************/
 
-function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
+function generateFiltersModelFromConfigOld(filterIdPrefix, isDurationData) {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
@@ -882,7 +920,36 @@ function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
     return filtersConfig;
 }
 
-function generateFiltersDom(containerId, filtersConfig) {
+function generateFiltersModelFromConfig(columnOffset) {
+    var filtersConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            filtersConfig.push({
+                id: ID_FILTER + ID_SEPARATOR + index,
+                filterType: RAW_DATA_COL.FILTERS[index].filterType,
+                columnIndex: columnOffset + index
+                //columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
+            });
+        }
+    }
+    return filtersConfig;
+}
+
+function generateFiltersDom(viewId, filtersConfig) {
+    $("#" + viewId + ID_FILTERS)
+        .append($('<div>').attr('id', viewId + ID_FILTERS_RANGE).addClass("col-md-7 text-center"))
+        .append($('<div>').attr('id', viewId + ID_FILTERS_CATEGORY).addClass("col-md-5 text-center"));
+    for (var index = 0; index < filtersConfig.length; index++) {
+
+        var containerSuffix = filtersConfig[index].filterType == 'CategoryFilter' ?
+            ID_FILTERS_CATEGORY :  ID_FILTERS_RANGE;
+
+        $("#" + viewId + containerSuffix).append($('<div>').attr('id', viewId + filtersConfig[index].id));
+    }
+    return filtersConfig;
+}
+
+function generateFiltersDomOld(containerId, filtersConfig) {
     var rangeFilterContainer = containerId + "_" + "range";
     var categoryFilterContainer = containerId + "_" + "category";
     $("#" + containerId)
@@ -1037,7 +1104,8 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
     // Populating with the lists of values
     setDropDownValue(currentDate);
     while (startDate < currentDate) {
-        // We can't use simple functions because they would all be closures that reference the same variable currentDate.
+        // We can't use simple functions because they would all be closures that reference the same variable
+        // currentDate.
         var monthLink = $('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('href', '#').on('click', changeDate(new Date(currentDate)));
         $('#' + viewId + ID_MONTH_SELECTOR_LIST).append($('<li>').append(monthLink));
         currentDate.setMonth(currentDate.getMonth() - 1);
@@ -1061,6 +1129,7 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
  **************************/
 
 var generatePeriodSelectorDom = function (viewId, dashboard) {
+    var startDate = new Date(REPORT_CONFIG.first_entry);
     var endPeriod = new Date();
     endPeriod.setDate(endPeriod.getDate() - 15);
     var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());

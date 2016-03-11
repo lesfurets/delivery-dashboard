@@ -2,14 +2,18 @@
  *     Charts Factory
  **************************/
 
-function buildDataTable(elementId) {
+function buildDataTable(viewId) {
     return new google.visualization.ChartWrapper({
         'chartType': 'Table',
-        'containerId': elementId,
+        'containerId': viewId,
         'options': {
             width: '100%'
         }
     });
+}
+
+function buildDurationStatsTable(viewId) {
+    return buildDataTable(viewId + ID_DURATION_STATS);
 }
 
 function buildTasksListTable(viewId) {
@@ -48,11 +52,11 @@ function buildCumulativeFlowChart(viewId, height) {
     });
 }
 
-function buildTasksDurationColumnChart(config) {
+function buildTasksDurationColumnChart(viewId, columns) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ColumnChart',
-        'containerId': config.id,
-        'view': {'columns': config.columns},
+        'containerId': viewId + ID_COLUMN_CHART,
+        'view': {'columns': columns},
         'options': {
             'isStacked': true,
             'hAxis': {
@@ -76,11 +80,11 @@ function buildTasksDurationColumnChart(config) {
     return durationChart;
 }
 
-function buildTasksDurationScatterChart(config) {
+function buildTasksDurationScatterChart(viewId, columns) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ScatterChart',
-        'containerId': config.id,
-        'view': {'columns': config.columns},
+        'containerId': viewId + ID_SCATTER_CHART,
+        'view': {'columns': columns},
         'options': {
             'height': 400,
             'hAxis': {
@@ -203,7 +207,16 @@ function buildCumulativFlowDashboard(viewId) {
  * TasksDurationDashboard
  **************************/
 
-function buildFilters(filtersConfig) {
+function buildFilters(viewId, filtersConfig) {
+    var filters = [];
+    for (var index = 0; index < filtersConfig.length; index++) {
+        var filterConfig = filtersConfig[index];
+        filters.push(buildFilter(viewId + filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
+    }
+    return filters;
+}
+
+function buildFiltersOld(filtersConfig) {
     var filters = [];
     for (var index = 0; index < filtersConfig.length; index++) {
         var filterConfig = filtersConfig[index];

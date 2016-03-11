@@ -12,7 +12,7 @@ function ReportDashboard(config) {
     var endDate;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
-    registerDashboard(config.id, this);
+    registerDashboard("#" + config.id, this);
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
@@ -26,7 +26,7 @@ function ReportDashboard(config) {
 
         console.log("Build dashboard "+startDate + " --- " + endDate);
         cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
-        durationStatsTable = buildDataTable(config.id + ID_DURATION_STATS);
+        durationStatsTable = buildDurationStatsTable(config.id);
         tasksListTable = buildTasksListTable(config.id);
         initialized = true;
     };

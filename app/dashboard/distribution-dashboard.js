@@ -13,9 +13,9 @@ function DistributionDashboard(config) {
     var initialized = false;
 
     this.initWidgets = function () {
-        taskFilters = generateFiltersModelFromConfig(config.taskFilter,false);
-        generateFiltersDom(config.taskFilter, taskFilters);
-        filters = buildFilters(taskFilters);
+        taskFilters = generateFiltersModelFromConfigOld(config.taskFilter,false);
+        generateFiltersDomOld(config.taskFilter, taskFilters);
+        filters = buildFiltersOld(taskFilters);
 
         taskChart = generateChartModelFromConfig()
         generateChartDom(config.id, taskChart);

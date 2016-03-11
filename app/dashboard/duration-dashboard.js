@@ -1,4 +1,4 @@
-function DurationDashboard(config) {
+function DurationDashboard(viewId) {
     var tasksDurationDashboard;
     var tasksDurationColumnChart;
     var tasksDurationScatterChart;
@@ -10,12 +10,31 @@ function DurationDashboard(config) {
 
     var initialized = false;
 
+    registerDashboard('#' + viewId, this);
+
     this.initWidgets = function () {
-        tasksDurationColumnChart = buildTasksDurationColumnChart(config.durationColumnChart);
-        tasksDurationScatterChart = buildTasksDurationScatterChart(config.durationScatterChart);
-        tasksDurationDashboard = buildFilteredDashboard(config.id, tasksDurationColumnChart, buildFilters(config.taskFilters), updateTable);
-        tasksDurationStatsTable = buildDataTable(config.durationStats);
-        tasksListTable = buildTasksListTable(config.id);
+        var filtersConfig = generateFiltersModelFromConfig(DURATION_INDEX_FILTER_FIRST);
+        filtersConfig.unshift({
+            id:  "_max_cycle_time",
+            filterType: 'NumberRangeFilter',
+            columnIndex: DURATION_INDEX_DURATION_CYCLE_TIME
+        });
+
+        generateTaskListDom(viewId);
+        generateDashboardElementsDom(viewId, [ID_FILTERS, ID_DURATION_STATS, ID_COLUMN_CHART, ID_SCATTER_CHART]);
+        generateFiltersDom(viewId, filtersConfig);
+
+        // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
+        // Nb -1)
+        var durationsColumns = [2];
+        for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+            durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
+        }
+        tasksDurationColumnChart = buildTasksDurationColumnChart(viewId, durationsColumns);
+        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [DURATION_INDEX_STATIC_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
+        tasksDurationDashboard = buildFilteredDashboard(viewId, tasksDurationColumnChart, buildFilters(viewId, filtersConfig), updateTable);
+        tasksDurationStatsTable = buildDurationStatsTable(viewId);
+        tasksListTable = buildTasksListTable(viewId);
         initialized = true;
     };
 
@@ -36,7 +55,7 @@ function DurationDashboard(config) {
         var dataToDisplay = durationChartData != null ? durationChartData : durationData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
+            setTitleSuffix(viewId, dataToDisplay.getNumberOfRows());
 
             tasksDurationScatterChart.setDataTable(computeDurationStats(dataToDisplay));
             tasksDurationScatterChart.draw();

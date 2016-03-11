@@ -2,7 +2,7 @@
  *     Filter Generation
  **************************/
 
-function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
+function generateFiltersModelFromConfigOld(filterIdPrefix, isDurationData) {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
@@ -19,7 +19,36 @@ function generateFiltersModelFromConfig(filterIdPrefix,isDurationData) {
     return filtersConfig;
 }
 
-function generateFiltersDom(containerId, filtersConfig) {
+function generateFiltersModelFromConfig(columnOffset) {
+    var filtersConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            filtersConfig.push({
+                id: ID_FILTER + ID_SEPARATOR + index,
+                filterType: RAW_DATA_COL.FILTERS[index].filterType,
+                columnIndex: columnOffset + index
+                //columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
+            });
+        }
+    }
+    return filtersConfig;
+}
+
+function generateFiltersDom(viewId, filtersConfig) {
+    $("#" + viewId + ID_FILTERS)
+        .append($('<div>').attr('id', viewId + ID_FILTERS_RANGE).addClass("col-md-7 text-center"))
+        .append($('<div>').attr('id', viewId + ID_FILTERS_CATEGORY).addClass("col-md-5 text-center"));
+    for (var index = 0; index < filtersConfig.length; index++) {
+
+        var containerSuffix = filtersConfig[index].filterType == 'CategoryFilter' ?
+            ID_FILTERS_CATEGORY :  ID_FILTERS_RANGE;
+
+        $("#" + viewId + containerSuffix).append($('<div>').attr('id', viewId + filtersConfig[index].id));
+    }
+    return filtersConfig;
+}
+
+function generateFiltersDomOld(containerId, filtersConfig) {
     var rangeFilterContainer = containerId + "_" + "range";
     var categoryFilterContainer = containerId + "_" + "category";
     $("#" + containerId)
@@ -174,7 +203,8 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
     // Populating with the lists of values
     setDropDownValue(currentDate);
     while (startDate < currentDate) {
-        // We can't use simple functions because they would all be closures that reference the same variable currentDate.
+        // We can't use simple functions because they would all be closures that reference the same variable
+        // currentDate.
         var monthLink = $('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('href', '#').on('click', changeDate(new Date(currentDate)));
         $('#' + viewId + ID_MONTH_SELECTOR_LIST).append($('<li>').append(monthLink));
         currentDate.setMonth(currentDate.getMonth() - 1);
@@ -198,6 +228,7 @@ var generateMonthSelectorDom = function (viewId, dashboard) {
  **************************/
 
 var generatePeriodSelectorDom = function (viewId, dashboard) {
+    var startDate = new Date(REPORT_CONFIG.first_entry);
     var endPeriod = new Date();
     endPeriod.setDate(endPeriod.getDate() - 15);
     var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
