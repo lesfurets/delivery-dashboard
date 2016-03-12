@@ -5,9 +5,13 @@ var currentDashboards = [];
 
 // Requesting the load of all elements (element="<element_template>")
 google.setOnLoadCallback(function () {
-    containerToLoad = $(".element-container").size();
-    $(".element-container").each(function (index) {
-        $(this).load($(this).attr("element"));
+    containerToLoad = $("a[element]").size();
+    $("a[element]").each(function (index) {
+        $(".tab-content").append($("<div>")
+            .attr('id', $(this).attr("href").replace("#", ""))
+            .addClass("tab-pane fade in")
+            //.addClass(index == 0 ? "active" : "")
+            .load($(this).attr("element")));
     });
 });
 

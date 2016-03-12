@@ -995,7 +995,6 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         generateToggleFilter(config.id, this);
         createDomForTaskList(config.id);
 
-        console.log("Build dashboard "+startDate + " --- " + endDate);
         cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
         durationStatsTable = buildDurationStatsTable(config.id);
         tasksListTable = buildTasksListTable(config.id);
@@ -1079,9 +1078,13 @@ var currentDashboards = [];
 
 // Requesting the load of all elements (element="<element_template>")
 google.setOnLoadCallback(function () {
-    containerToLoad = $(".element-container").size();
-    $(".element-container").each(function (index) {
-        $(this).load($(this).attr("element"));
+    containerToLoad = $("a[element]").size();
+    $("a[element]").each(function (index) {
+        $(".tab-content").append($("<div>")
+            .attr('id', $(this).attr("href").replace("#", ""))
+            .addClass("tab-pane fade in")
+            //.addClass(index == 0 ? "active" : "")
+            .load($(this).attr("element")));
     });
 });
 
@@ -1114,13 +1117,10 @@ ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
 
 CONFIG_MONTH_SELECTOR = "month_selector";
 CONFIG_PERIOD_SELECTOR = "pediod_selector";;function initApp() {
+    parseUrl()
     currentDashboards.forEach(function (element) {
         element.initWidgets();
     })
-    loadRawData(currentDashboards);
-}
-
-function reloadRawData() {
     loadRawData(currentDashboards);
 }
 
@@ -1166,16 +1166,18 @@ $(document).on('ready', function () {
         loadRawData(currentDashboards);
     });
 });;// Reading url to selecting to the tab to display (format: base_url#<tab_id>)
-var requestedUrl = document.location.toString();
-if (requestedUrl.match('#')) {
-    $(document).ready(function () {
-        $('.navbar a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
-    });
-} else {
-    $(document).ready(function () {
-        $('.navbar a[data-toggle=tab]:first').tab('show')
-    });
-}
+function parseUrl() {
+    var requestedUrl = document.location.toString();
+    if (requestedUrl.match('#')) {
+        $(document).ready(function () {
+            $('.navbar a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
+        });
+    } else {
+        $(document).ready(function () {
+            $('.navbar a[data-toggle=tab]:first').tab('show');
+        });
+    }
+};
 
 // Changing url to fit the displayed tab
 $(document).on('ready', function () {

@@ -38,9 +38,9 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li class="active"><a data-toggle="tab" href="#tab-global-flow-view">Flow</a></li>
-                <li><a data-toggle="tab" href="#tab_duration_view">Duration</a></li>
-                <li><a data-toggle="tab" href="#tab_tasks_manager">Manage Tasks</a></li>
+                <li><a data-toggle="tab" href="#tab_cumulative_view" element="elements/cumulative-view.html">Cumulative Flow</a></li>
+                <li><a data-toggle="tab" href="#tab_duration_view" element="elements/duration-view.html">Duration</a></li>
+                <li><a data-toggle="tab" href="#tab_tasks_manager" element="elements/task-manager.html">Manage Tasks</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-plus"></span></a></li>
@@ -53,16 +53,9 @@
 
 <div class="container-fluid">
     <div class="tab-content">
-
-        <div id="tab_cumulative_view" class="element-container tab-pane fade in active" element="elements/cumulative-view.html"></div>
-
-        <div id="tab_duration_view" class="element-container tab-pane fade in" element="elements/duration-view.html"></div>
-
-        <div id="tab_tasks_manager" class="element-container tab-pane fade in" element="elements/task-manager.html"></div>
-
     </div>
-
 </div>
 
+<script src="http://localhost:35729/livereload.js"></script>
 </body>
 </html>

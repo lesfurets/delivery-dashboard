@@ -1,11 +1,8 @@
 function initApp() {
+    parseUrl()
     currentDashboards.forEach(function (element) {
         element.initWidgets();
     })
-    loadRawData(currentDashboards);
-}
-
-function reloadRawData() {
     loadRawData(currentDashboards);
 }
 

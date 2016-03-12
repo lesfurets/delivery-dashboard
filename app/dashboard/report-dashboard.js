@@ -24,7 +24,6 @@ function ReportDashboard(config) {
         generateToggleFilter(config.id, this);
         createDomForTaskList(config.id);
 
-        console.log("Build dashboard "+startDate + " --- " + endDate);
         cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
         durationStatsTable = buildDurationStatsTable(config.id);
         tasksListTable = buildTasksListTable(config.id);

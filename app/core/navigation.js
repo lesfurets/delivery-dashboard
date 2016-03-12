@@ -1,14 +1,16 @@
 // Reading url to selecting to the tab to display (format: base_url#<tab_id>)
-var requestedUrl = document.location.toString();
-if (requestedUrl.match('#')) {
-    $(document).ready(function () {
-        $('.navbar a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
-    });
-} else {
-    $(document).ready(function () {
-        $('.navbar a[data-toggle=tab]:first').tab('show')
-    });
-}
+function parseUrl() {
+    var requestedUrl = document.location.toString();
+    if (requestedUrl.match('#')) {
+        $(document).ready(function () {
+            $('.navbar a[href=#' + requestedUrl.split('#')[1] + ']').tab('show');
+        });
+    } else {
+        $(document).ready(function () {
+            $('.navbar a[data-toggle=tab]:first').tab('show');
+        });
+    }
+};
 
 // Changing url to fit the displayed tab
 $(document).on('ready', function () {
