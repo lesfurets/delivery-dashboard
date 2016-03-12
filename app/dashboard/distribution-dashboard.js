@@ -1,9 +1,7 @@
-function DistributionDashboard(config) {
+function DistributionDashboard(viewId) {
     var timeDistributionChart
     var distributionDashboard;
     var tasksListTable;
-    var taskFilters;
-    var filters;
     var taskChart;
     var charts;
 
@@ -12,20 +10,21 @@ function DistributionDashboard(config) {
 
     var initialized = false;
 
+    registerDashboard("#" + viewId, this);
+
     this.initWidgets = function () {
-        taskFilters = generateFiltersModelFromConfigOld(config.taskFilter,false);
-        generateFiltersDomOld(config.taskFilter, taskFilters);
-        filters = buildFiltersOld(taskFilters);
-
+        var taskFilters = generateFiltersModelFromConfig(DISTRIBUTION_INDEX_FILTER_FIRST);
         taskChart = generateChartModelFromConfig()
-        generateChartDom(config.id, taskChart);
-        charts = buildSimpleCharts(taskChart);
 
-        timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
+        generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
+        generateFiltersDom(viewId, taskFilters);
+        generateChartDom(viewId, taskChart);
+        generateTaskListDom(viewId);
 
-        distributionDashboard = buildFilteredDashboard(config.id, timeDistributionChart, filters, updateTable);
-
-        tasksListTable = buildTasksListTable(config.id);
+        charts = buildSimpleCharts(viewId, taskChart);
+        timeDistributionChart = buildTasksDurationScatterChart(viewId ,[DISTRIBUTION_INDEX_STATIC_EVENT_LAST, DISTRIBUTION_INDEX_STATIC_COUNT]);
+        distributionDashboard = buildFilteredDashboard(viewId, timeDistributionChart, buildFilters(viewId, taskFilters), updateTable);
+        tasksListTable = buildTasksListTable(viewId);
 
         initialized = true;
     };
@@ -47,7 +46,7 @@ function DistributionDashboard(config) {
         var dataToDisplay = durationChartData != null ? durationChartData : distributionData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
+            setTitleSuffix(viewId, dataToDisplay.getNumberOfRows());
 
             for(var i=0; i< charts.length; i++){
                 var group = google.visualization.data.group(dataToDisplay, [taskChart[i].columnIndex], [{

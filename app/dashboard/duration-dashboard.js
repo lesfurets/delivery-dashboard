@@ -20,9 +20,9 @@ function DurationDashboard(viewId) {
             columnIndex: DURATION_INDEX_DURATION_CYCLE_TIME
         });
 
-        generateTaskListDom(viewId);
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_DURATION_STATS, ID_COLUMN_CHART, ID_SCATTER_CHART]);
         generateFiltersDom(viewId, filtersConfig);
+        generateTaskListDom(viewId);
 
         // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
         // Nb -1)

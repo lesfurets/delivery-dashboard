@@ -547,27 +547,18 @@ function buildFilters(viewId, filtersConfig) {
     return filters;
 }
 
-function buildFiltersOld(filtersConfig) {
-    var filters = [];
-    for (var index = 0; index < filtersConfig.length; index++) {
-        var filterConfig = filtersConfig[index];
-        filters.push(buildFilter(filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
-    }
-    return filters;
-}
-
-function buildSimpleCharts(chartsConfig) {
+function buildSimpleCharts(viewId, chartsConfig) {
     var charts = [];
     for (var index = 0; index < chartsConfig.length; index++) {
         var chartConfig = chartsConfig[index];
-        charts.push(buildSimpleChart(chartConfig.id, chartConfig.filterType, chartConfig.label));
+        charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
     }
     return charts;
 }
 
 function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     google.visualization.events.addListener(charts, 'ready', filterListener);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_BASHBOARD));
+    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_DASHBOARD));
     dashboard.bind(filters, charts);
     return dashboard;
 };function CumulativeDashboard(viewId) {
@@ -611,12 +602,10 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         return initialized;
     };
 
-};function DistributionDashboard(config) {
+};function DistributionDashboard(viewId) {
     var timeDistributionChart
     var distributionDashboard;
     var tasksListTable;
-    var taskFilters;
-    var filters;
     var taskChart;
     var charts;
 
@@ -625,20 +614,21 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var initialized = false;
 
+    registerDashboard("#" + viewId, this);
+
     this.initWidgets = function () {
-        taskFilters = generateFiltersModelFromConfigOld(config.taskFilter,false);
-        generateFiltersDomOld(config.taskFilter, taskFilters);
-        filters = buildFiltersOld(taskFilters);
-
+        var taskFilters = generateFiltersModelFromConfig(DISTRIBUTION_INDEX_FILTER_FIRST);
         taskChart = generateChartModelFromConfig()
-        generateChartDom(config.id, taskChart);
-        charts = buildSimpleCharts(taskChart);
 
-        timeDistributionChart = buildTasksDurationScatterChart(config.durationScatterChart);
+        generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
+        generateFiltersDom(viewId, taskFilters);
+        generateChartDom(viewId, taskChart);
+        generateTaskListDom(viewId);
 
-        distributionDashboard = buildFilteredDashboard(config.id, timeDistributionChart, filters, updateTable);
-
-        tasksListTable = buildTasksListTable(config.id);
+        charts = buildSimpleCharts(viewId, taskChart);
+        timeDistributionChart = buildTasksDurationScatterChart(viewId ,[DISTRIBUTION_INDEX_STATIC_EVENT_LAST, DISTRIBUTION_INDEX_STATIC_COUNT]);
+        distributionDashboard = buildFilteredDashboard(viewId, timeDistributionChart, buildFilters(viewId, taskFilters), updateTable);
+        tasksListTable = buildTasksListTable(viewId);
 
         initialized = true;
     };
@@ -660,7 +650,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         var dataToDisplay = durationChartData != null ? durationChartData : distributionData;
 
         if (dataToDisplay != null) {
-            setTitleSuffix(config.id, dataToDisplay.getNumberOfRows());
+            setTitleSuffix(viewId, dataToDisplay.getNumberOfRows());
 
             for(var i=0; i< charts.length; i++){
                 var group = google.visualization.data.group(dataToDisplay, [taskChart[i].columnIndex], [{
@@ -704,9 +694,9 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
             columnIndex: DURATION_INDEX_DURATION_CYCLE_TIME
         });
 
-        generateTaskListDom(viewId);
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_DURATION_STATS, ID_COLUMN_CHART, ID_SCATTER_CHART]);
         generateFiltersDom(viewId, filtersConfig);
+        generateTaskListDom(viewId);
 
         // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
         // Nb -1)
@@ -881,9 +871,10 @@ function registerDashboard(tabId, dashboard) {
     }
 };ID_SEPARATOR = "_";
 ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
-ID_BASHBOARD = ID_SEPARATOR + "dashboard";
+ID_DASHBOARD = ID_SEPARATOR + "dashboard";
 ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
 ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+ID_CHART = ID_SEPARATOR + 'chart';
 ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
 ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
 ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
@@ -903,23 +894,6 @@ CONFIG_PERIOD_SELECTOR = "pediod_selector";;/***************************
  *     Filter Generation
  **************************/
 
-function generateFiltersModelFromConfigOld(filterIdPrefix, isDurationData) {
-    var filtersConfig = [];
-    if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            var filterId = filterIdPrefix + "_" + index;
-            var filterType = RAW_DATA_COL.FILTERS[index].filterType;
-
-            filtersConfig.push({
-                id: filterId,
-                filterType: filterType,
-                columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
-            });
-        }
-    }
-    return filtersConfig;
-}
-
 function generateFiltersModelFromConfig(columnOffset) {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
@@ -928,7 +902,6 @@ function generateFiltersModelFromConfig(columnOffset) {
                 id: ID_FILTER + ID_SEPARATOR + index,
                 filterType: RAW_DATA_COL.FILTERS[index].filterType,
                 columnIndex: columnOffset + index
-                //columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -945,22 +918,6 @@ function generateFiltersDom(viewId, filtersConfig) {
             ID_FILTERS_CATEGORY :  ID_FILTERS_RANGE;
 
         $("#" + viewId + containerSuffix).append($('<div>').attr('id', viewId + filtersConfig[index].id));
-    }
-    return filtersConfig;
-}
-
-function generateFiltersDomOld(containerId, filtersConfig) {
-    var rangeFilterContainer = containerId + "_" + "range";
-    var categoryFilterContainer = containerId + "_" + "category";
-    $("#" + containerId)
-        .append($('<div>').attr('id', rangeFilterContainer).addClass("col-md-7 text-center"))
-        .append($('<div>').attr('id', categoryFilterContainer).addClass("col-md-5 text-center"));
-    for (var index = 0; index < filtersConfig.length; index++) {
-
-        var filterContainer = filtersConfig[index].filterType == 'CategoryFilter' ?
-            categoryFilterContainer : rangeFilterContainer;
-
-        $("#" + filterContainer).append($('<div>').attr('id', filtersConfig[index].id));
     }
     return filtersConfig;
 }
@@ -1004,7 +961,7 @@ function generateChartModelFromConfig(chartPrefix) {
             var filter = RAW_DATA_COL.FILTERS[index];
             if(filter.filterType == 'CategoryFilter') {
                 chatsConfig.push({
-                    id: chartPrefix + "_chart_" + index,
+                    id:  ID_CHART + ID_SEPARATOR + index,
                     filterType:  'PieChart',
                     columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
                     label: filter.label
@@ -1015,11 +972,11 @@ function generateChartModelFromConfig(chartPrefix) {
     return chatsConfig;
 }
 
-function generateChartDom(containerId, chartsConfig) {
-    var containerSelector = "#" + containerId + '_dashboard';
+function generateChartDom(viewId, chartsConfig) {
+    var containerSelector = "#" + viewId + ID_DASHBOARD;
     for (var index = 0; index < chartsConfig.length; index++) {
         $(containerSelector).append($('<div>')
-            .attr('id', chartsConfig[index].id)
+            .attr('id', viewId + chartsConfig[index].id)
             .addClass("col-md-4"));
     }
 }
@@ -1039,7 +996,7 @@ var setTitleSuffix = function (viewId, numberOfRows) {
 
 var generateDashboardElementsDom = function (viewId, suffixList) {
     for (var index = 0; index < suffixList.length; index++) {
-        $("#" + viewId + ID_BASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
+        $("#" + viewId + ID_DASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
     }
 };
 

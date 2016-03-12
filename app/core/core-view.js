@@ -2,23 +2,6 @@
  *     Filter Generation
  **************************/
 
-function generateFiltersModelFromConfigOld(filterIdPrefix, isDurationData) {
-    var filtersConfig = [];
-    if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            var filterId = filterIdPrefix + "_" + index;
-            var filterType = RAW_DATA_COL.FILTERS[index].filterType;
-
-            filtersConfig.push({
-                id: filterId,
-                filterType: filterType,
-                columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
-            });
-        }
-    }
-    return filtersConfig;
-}
-
 function generateFiltersModelFromConfig(columnOffset) {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
@@ -27,7 +10,6 @@ function generateFiltersModelFromConfig(columnOffset) {
                 id: ID_FILTER + ID_SEPARATOR + index,
                 filterType: RAW_DATA_COL.FILTERS[index].filterType,
                 columnIndex: columnOffset + index
-                //columnIndex: isDurationData ? DURATION_INDEX_FILTER_FIRST + index : DISTRIBUTION_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -44,22 +26,6 @@ function generateFiltersDom(viewId, filtersConfig) {
             ID_FILTERS_CATEGORY :  ID_FILTERS_RANGE;
 
         $("#" + viewId + containerSuffix).append($('<div>').attr('id', viewId + filtersConfig[index].id));
-    }
-    return filtersConfig;
-}
-
-function generateFiltersDomOld(containerId, filtersConfig) {
-    var rangeFilterContainer = containerId + "_" + "range";
-    var categoryFilterContainer = containerId + "_" + "category";
-    $("#" + containerId)
-        .append($('<div>').attr('id', rangeFilterContainer).addClass("col-md-7 text-center"))
-        .append($('<div>').attr('id', categoryFilterContainer).addClass("col-md-5 text-center"));
-    for (var index = 0; index < filtersConfig.length; index++) {
-
-        var filterContainer = filtersConfig[index].filterType == 'CategoryFilter' ?
-            categoryFilterContainer : rangeFilterContainer;
-
-        $("#" + filterContainer).append($('<div>').attr('id', filtersConfig[index].id));
     }
     return filtersConfig;
 }
@@ -103,7 +69,7 @@ function generateChartModelFromConfig(chartPrefix) {
             var filter = RAW_DATA_COL.FILTERS[index];
             if(filter.filterType == 'CategoryFilter') {
                 chatsConfig.push({
-                    id: chartPrefix + "_chart_" + index,
+                    id:  ID_CHART + ID_SEPARATOR + index,
                     filterType:  'PieChart',
                     columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
                     label: filter.label
@@ -114,11 +80,11 @@ function generateChartModelFromConfig(chartPrefix) {
     return chatsConfig;
 }
 
-function generateChartDom(containerId, chartsConfig) {
-    var containerSelector = "#" + containerId + '_dashboard';
+function generateChartDom(viewId, chartsConfig) {
+    var containerSelector = "#" + viewId + ID_DASHBOARD;
     for (var index = 0; index < chartsConfig.length; index++) {
         $(containerSelector).append($('<div>')
-            .attr('id', chartsConfig[index].id)
+            .attr('id', viewId + chartsConfig[index].id)
             .addClass("col-md-4"));
     }
 }
@@ -138,7 +104,7 @@ var setTitleSuffix = function (viewId, numberOfRows) {
 
 var generateDashboardElementsDom = function (viewId, suffixList) {
     for (var index = 0; index < suffixList.length; index++) {
-        $("#" + viewId + ID_BASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
+        $("#" + viewId + ID_DASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
     }
 };
 

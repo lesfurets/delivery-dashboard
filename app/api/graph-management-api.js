@@ -216,27 +216,18 @@ function buildFilters(viewId, filtersConfig) {
     return filters;
 }
 
-function buildFiltersOld(filtersConfig) {
-    var filters = [];
-    for (var index = 0; index < filtersConfig.length; index++) {
-        var filterConfig = filtersConfig[index];
-        filters.push(buildFilter(filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
-    }
-    return filters;
-}
-
-function buildSimpleCharts(chartsConfig) {
+function buildSimpleCharts(viewId, chartsConfig) {
     var charts = [];
     for (var index = 0; index < chartsConfig.length; index++) {
         var chartConfig = chartsConfig[index];
-        charts.push(buildSimpleChart(chartConfig.id, chartConfig.filterType, chartConfig.label));
+        charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
     }
     return charts;
 }
 
 function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     google.visualization.events.addListener(charts, 'ready', filterListener);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_BASHBOARD));
+    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_DASHBOARD));
     dashboard.bind(filters, charts);
     return dashboard;
 }

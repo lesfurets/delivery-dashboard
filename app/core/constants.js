@@ -1,8 +1,9 @@
 ID_SEPARATOR = "_";
 ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
-ID_BASHBOARD = ID_SEPARATOR + "dashboard";
+ID_DASHBOARD = ID_SEPARATOR + "dashboard";
 ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
 ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+ID_CHART = ID_SEPARATOR + 'chart';
 ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
 ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
 ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
