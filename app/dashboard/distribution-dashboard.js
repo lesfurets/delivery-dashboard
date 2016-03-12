@@ -13,13 +13,13 @@ function DistributionDashboard(viewId) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var taskFilters = generateFiltersModelFromConfig(DISTRIBUTION_INDEX_FILTER_FIRST);
-        taskChart = generateChartModelFromConfig()
+        var taskFilters = createModelForFilters(DISTRIBUTION_INDEX_FILTER_FIRST);
+        taskChart = createModelForChart()
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
         generateFiltersDom(viewId, taskFilters);
         generateChartDom(viewId, taskChart);
-        generateTaskListDom(viewId);
+        createDomForTaskList(viewId);
 
         charts = buildSimpleCharts(viewId, taskChart);
         timeDistributionChart = buildTasksDurationScatterChart(viewId ,[DISTRIBUTION_INDEX_STATIC_EVENT_LAST, DISTRIBUTION_INDEX_STATIC_COUNT]);

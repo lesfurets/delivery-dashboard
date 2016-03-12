@@ -16,13 +16,13 @@ function ReportDashboard(config) {
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
-            generateMonthSelectorDom(config.id, this)
+            createDomForMonthSelector(config.id, this)
         }
         if(config.selector == CONFIG_PERIOD_SELECTOR) {
-            generatePeriodSelectorDom(config.id, this)
+            createDomForPeriodSelector(config.id, this)
         }
         generateToggleFilter(config.id, this);
-        generateTaskListDom(config.id);
+        createDomForTaskList(config.id);
 
         console.log("Build dashboard "+startDate + " --- " + endDate);
         cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);

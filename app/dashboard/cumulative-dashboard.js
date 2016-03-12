@@ -11,7 +11,7 @@ function CumulativeDashboard(viewId) {
 
     this.initWidgets = function () {
         generateDashboardElementsDom(viewId, [ID_AREA_CHART, ID_RANGE_FILTER])
-        generateTaskListDom(viewId);
+        createDomForTaskList(viewId);
 
         cumulativeFlowDashboard = buildCumulativFlowDashboard(viewId);
         tasksListTable = buildTasksListTable(viewId);

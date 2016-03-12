@@ -13,7 +13,7 @@ function DurationDashboard(viewId) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var filtersConfig = generateFiltersModelFromConfig(DURATION_INDEX_FILTER_FIRST);
+        var filtersConfig = createModelForFilters(DURATION_INDEX_FILTER_FIRST);
         filtersConfig.unshift({
             id:  "_max_cycle_time",
             filterType: 'NumberRangeFilter',
@@ -22,7 +22,7 @@ function DurationDashboard(viewId) {
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_DURATION_STATS, ID_COLUMN_CHART, ID_SCATTER_CHART]);
         generateFiltersDom(viewId, filtersConfig);
-        generateTaskListDom(viewId);
+        createDomForTaskList(viewId);
 
         // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
         // Nb -1)

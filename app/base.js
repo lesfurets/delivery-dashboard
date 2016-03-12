@@ -1,73 +1,47 @@
-function filterReleasedBefore(inputData, fromDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
-        minValue: fromDate
-    }]));
-    return view;
-}
-
-function filterReleasedAfter(inputData, toDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
-        maxValue: toDate
-    }]));
-    return view;
-}
-
-function filterCreatedAfter(inputData, toDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[0].columnIndex,
-        maxValue: toDate
-    }]));
-    return view;
-}
-
 /***************************
- *  Event Data
+ *  Distribution Data
  **************************/
 
-function computeEventData(inputData) {
-    var data = builtEventDataStructure(inputData);
-    for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var statusNumber = RAW_DATA_COL.EVENTS.length;
-        for (var statusIndex = 0; statusIndex < statusNumber; statusIndex++) {
-            var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
-                return index == statusIndex ? 1 : 0
-            });
-            row.unshift(inputData.getValue(i, RAW_DATA_COL.EVENTS[statusIndex].columnIndex));
-            data.addRow(row);
-        }
-    }
-    var eventData = google.visualization.data.group(data, [{column: 0, type: 'date'}],
-        Array.apply(null, {length: statusNumber}).map(function (value, index) {
-            return {column: index + 1, aggregation: google.visualization.data.sum, type: 'number'}
-        }));
-    var cumulativEventData = builtEventDataStructure(inputData);
-    for (var i = 0; i < eventData.getNumberOfRows(); i++) {
-        var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
-            return (i == 0) ? eventData.getValue(i, index + 1) : eventData.getValue(i, index + 1) + cumulativEventData.getValue(i - 1, index + 1)
-        });
-        row.unshift(eventData.getValue(i, 0));
-        cumulativEventData.addRow(row);
-    }
-    return cumulativEventData;
-}
+var DISTRIBUTION_INDEX_STATIC_REF = 0;
+var DISTRIBUTION_INDEX_STATIC_COUNT = 2;
+var DISTRIBUTION_INDEX_STATIC_EVENT_LAST = 3;
+var DISTRIBUTION_INDEX_STATIC_LAST = DISTRIBUTION_INDEX_STATIC_EVENT_LAST;
 
-function builtEventDataStructure(inputData) {
+var DISTRIBUTION_INDEX_FILTER_FIRST = DISTRIBUTION_INDEX_STATIC_LAST + 1;
+var DISTRIBUTION_INDEX_FILTER_LAST = DISTRIBUTION_INDEX_STATIC_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
+function computeDistributionData(inputData) {
     var data = new google.visualization.DataTable();
-    data.addColumn('date', "EventDate");
-    if (RAW_DATA_COL.EVENTS != null) {
-        for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-            data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[index].columnIndex));
-        }
+    data.addColumn('string', 'Jira Ref');
+    data.addColumn({type: 'string', role: 'tooltip'}, 'Tooltip');
+    data.addColumn('number', "");
+    data.addColumn('date', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
+    if (RAW_DATA_COL.FILTERS != null) {
+        RAW_DATA_COL.FILTERS.forEach(function (filter) {
+            data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex));
+        });
     }
+
+    // Parsing events data to compute distribution data
+    for (var i = 0; i < inputData.getNumberOfRows(); i++) {
+        var row = [];
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
+        row.push(0);
+        row.push(inputData.getValue(i, RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
+        // Adding data to allow filtering
+        if (RAW_DATA_COL.FILTERS != null) {
+            RAW_DATA_COL.FILTERS.forEach(function (filter) {
+                row.push(inputData.getValue(i, filter.columnIndex))
+            })
+        }
+        data.addRow(row);
+    }
+
     return data;
 }
 
-/***************************
+;/***************************
  *  Duration Data
  **************************/
 
@@ -225,50 +199,74 @@ function groupDurationDataBy(inputData, groupBy) {
     }
     return data
 }
-
-/***************************
- *  Distribution Data
+;/***************************
+ *  Event Data
  **************************/
 
-var DISTRIBUTION_INDEX_STATIC_REF = 0;
-var DISTRIBUTION_INDEX_STATIC_COUNT = 2;
-var DISTRIBUTION_INDEX_STATIC_EVENT_LAST = 3;
-var DISTRIBUTION_INDEX_STATIC_LAST = DISTRIBUTION_INDEX_STATIC_EVENT_LAST;
-
-var DISTRIBUTION_INDEX_FILTER_FIRST = DISTRIBUTION_INDEX_STATIC_LAST + 1;
-var DISTRIBUTION_INDEX_FILTER_LAST = DISTRIBUTION_INDEX_STATIC_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
-
-function computeDistributionData(inputData) {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Jira Ref');
-    data.addColumn({type: 'string', role: 'tooltip'}, 'Tooltip');
-    data.addColumn('number', "");
-    data.addColumn('date', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
-    if (RAW_DATA_COL.FILTERS != null) {
-        RAW_DATA_COL.FILTERS.forEach(function (filter) {
-            data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex));
-        });
-    }
-
-    // Parsing events data to compute distribution data
+function computeEventData(inputData) {
+    var data = builtEventDataStructure(inputData);
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var row = [];
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(0);
-        row.push(inputData.getValue(i, RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
-        // Adding data to allow filtering
-        if (RAW_DATA_COL.FILTERS != null) {
-            RAW_DATA_COL.FILTERS.forEach(function (filter) {
-                row.push(inputData.getValue(i, filter.columnIndex))
-            })
+        var statusNumber = RAW_DATA_COL.EVENTS.length;
+        for (var statusIndex = 0; statusIndex < statusNumber; statusIndex++) {
+            var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
+                return index == statusIndex ? 1 : 0
+            });
+            row.unshift(inputData.getValue(i, RAW_DATA_COL.EVENTS[statusIndex].columnIndex));
+            data.addRow(row);
         }
-        data.addRow(row);
     }
+    var eventData = google.visualization.data.group(data, [{column: 0, type: 'date'}],
+        Array.apply(null, {length: statusNumber}).map(function (value, index) {
+            return {column: index + 1, aggregation: google.visualization.data.sum, type: 'number'}
+        }));
+    var cumulativEventData = builtEventDataStructure(inputData);
+    for (var i = 0; i < eventData.getNumberOfRows(); i++) {
+        var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
+            return (i == 0) ? eventData.getValue(i, index + 1) : eventData.getValue(i, index + 1) + cumulativEventData.getValue(i - 1, index + 1)
+        });
+        row.unshift(eventData.getValue(i, 0));
+        cumulativEventData.addRow(row);
+    }
+    return cumulativEventData;
+}
 
+function builtEventDataStructure(inputData) {
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', "EventDate");
+    if (RAW_DATA_COL.EVENTS != null) {
+        for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
+            data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[index].columnIndex));
+        }
+    }
     return data;
 }
 
+;function filterReleasedBefore(inputData, fromDate) {
+    var view = new google.visualization.DataView(inputData);
+    view.setRows(view.getFilteredRows([{
+        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
+        minValue: fromDate
+    }]));
+    return view;
+}
+
+function filterReleasedAfter(inputData, toDate) {
+    var view = new google.visualization.DataView(inputData);
+    view.setRows(view.getFilteredRows([{
+        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
+        maxValue: toDate
+    }]));
+    return view;
+}
+
+function filterCreatedAfter(inputData, toDate) {
+    var view = new google.visualization.DataView(inputData);
+    view.setRows(view.getFilteredRows([{
+        column: RAW_DATA_COL.EVENTS[0].columnIndex,
+        maxValue: toDate
+    }]));
+    return view;
+}
 ;var monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
@@ -330,6 +328,231 @@ function getWorkDaysBetween(dDate1, dDate2) {         // input given as Date obj
     return (iDateDiff + 1);                         // add 1 because dates are inclusive
 
 };/***************************
+ *     Title Suffix
+ **************************/
+
+var setTitleSuffix = function (viewId, numberOfRows) {
+    var plural = numberOfRows > 1 ? "s" : "";
+    $("#" + viewId  + ID_TITLE_SUFFIX).text(" - " + numberOfRows + " task" + plural);
+};
+
+/***************************
+ *   Dashboard Elements
+ **************************/
+
+var generateDashboardElementsDom = function (viewId, suffixList) {
+    for (var index = 0; index < suffixList.length; index++) {
+        $("#" + viewId + ID_DASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
+    }
+};
+
+/***************************
+ *     Filter Generation
+ **************************/
+
+function generateFiltersDom(viewId, filtersConfig) {
+    $("#" + viewId + ID_FILTERS)
+        .append($('<div>').attr('id', viewId + ID_FILTERS_RANGE).addClass("col-md-7 text-center"))
+        .append($('<div>').attr('id', viewId + ID_FILTERS_CATEGORY).addClass("col-md-5 text-center"));
+    for (var index = 0; index < filtersConfig.length; index++) {
+
+        var containerSuffix = filtersConfig[index].filterType == 'CategoryFilter' ?
+            ID_FILTERS_CATEGORY :  ID_FILTERS_RANGE;
+
+        $("#" + viewId + containerSuffix).append($('<div>').attr('id', viewId + filtersConfig[index].id));
+    }
+    return filtersConfig;
+}
+
+/***************************
+ *     Chart Generation
+ **************************/
+
+function generateChartDom(viewId, chartsConfig) {
+    var containerSelector = "#" + viewId + ID_DASHBOARD;
+    for (var index = 0; index < chartsConfig.length; index++) {
+        $(containerSelector).append($('<div>')
+            .attr('id', viewId + chartsConfig[index].id)
+            .addClass("col-md-4"));
+    }
+}
+
+;function createModelForFilters(columnOffset) {
+    var filtersConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            filtersConfig.push({
+                id: ID_FILTER + ID_SEPARATOR + index,
+                filterType: RAW_DATA_COL.FILTERS[index].filterType,
+                columnIndex: columnOffset + index
+            });
+        }
+    }
+    return filtersConfig;
+}
+
+function createModelForChart() {
+    var chatsConfig = [];
+    if (RAW_DATA_COL.FILTERS != null) {
+        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+            var filter = RAW_DATA_COL.FILTERS[index];
+            if(filter.filterType == 'CategoryFilter') {
+                chatsConfig.push({
+                    id:  ID_CHART + ID_SEPARATOR + index,
+                    filterType:  'PieChart',
+                    columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
+                    label: filter.label
+                });
+            }
+        }
+    }
+    return chatsConfig;
+};/***************************
+ *     Task List
+ **************************/
+
+var createDomForTaskList = function (viewId) {
+    // Creating Dom structure for bootstrap Modal
+    $("#" + viewId)
+        .append($('<div>')
+            .attr('id', viewId + ID_TASK_LIST_MODAL)
+            .attr('role', "dialog")
+            .addClass("modal ticket-list fade")
+            .append($('<div>').addClass("modal-dialog")
+                .append($('<div>').addClass("modal-content")
+                    .append($('<div>').addClass("modal-header")
+                        .append($('<button>')
+                            .attr('type', "button")
+                            .attr('data-dismiss', "modal")
+                            .addClass("close").html("&times;"))
+                        .append($('<h4>')
+                            .addClass("modal-title")
+                            .text("Tasks list")))
+                    .append($('<div>').addClass("modal-body")
+                        .append($('<div>')
+                            .attr('id', viewId + ID_TASK_LIST)
+                            .addClass("col-md-12")))
+                    .append($('<div>').addClass("modal-footer")
+                        .append($('<button>')
+                            .attr('type', "button")
+                            .attr('data-dismiss', "modal")
+                            .addClass("btn btn-default")
+                            .text("Close"))))));
+};
+
+
+;/***************************
+ *     Month Selector
+ **************************/
+
+var createDomForMonthSelector = function (viewId, dashboard) {
+    var startDate = new Date(REPORT_CONFIG.first_entry);
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 15);
+    currentDate.setDate(1);
+
+    dashboard.setDates(new Date(currentDate));
+
+    // Creating Dom structure for bootstrap Dropdown
+    $("#" + viewId + ID_TIME_SELECTOR).addClass("dropdown")
+        .append($("<button>")
+            .attr('id', viewId + ID_MONTH_SELECTOR_LABEL)
+            .attr('type', "button")
+            .attr('data-toggle', "dropdown")
+            .addClass("btn btn-default dropdown-toggle")
+            .append($("<span>").addClass("caret")))
+        .append($("<ul>")
+            .attr('id', viewId + ID_MONTH_SELECTOR_LIST)
+            .attr('aria-labelledby', "month_dropdown")
+            .addClass("dropdown-menu"));
+
+    // Populating with the lists of values
+    setDropDownValue(currentDate);
+    while (startDate < currentDate) {
+        // We can't use simple functions because they would all be closures that reference the same variable
+        // currentDate.
+        var monthLink = $('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('href', '#').on('click', changeDate(new Date(currentDate)));
+        $('#' + viewId + ID_MONTH_SELECTOR_LIST).append($('<li>').append(monthLink));
+        currentDate.setMonth(currentDate.getMonth() - 1);
+    }
+
+    function changeDate(date) {
+        date.setDate(1);
+        return function(){
+            setDropDownValue(date);
+            dashboard.resetDates(date)
+        }
+    }
+
+    function setDropDownValue(date) {
+        $("#" + viewId + ID_MONTH_SELECTOR_LABEL).text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
+    }
+};
+
+/***************************
+ *     Period Selector
+ **************************/
+
+var createDomForPeriodSelector = function (viewId, dashboard) {
+    var startDate = new Date(REPORT_CONFIG.first_entry);
+    var endPeriod = new Date();
+    endPeriod.setDate(endPeriod.getDate() - 15);
+    var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
+
+    dashboard.setDates(startPeriod, endPeriod)
+
+    // Creating Dom structure for selector
+    $("#" + viewId + ID_TIME_SELECTOR)
+        .append($("<input>")
+            .attr('type', "text")
+            .attr('name', "daterange"));
+
+    // Selector configuration
+    $("#" + viewId + ID_TIME_SELECTOR +' input[name="daterange"]').daterangepicker({
+        startDate: startPeriod.formatDDMMYYYY(),
+        endDate: endPeriod.formatDDMMYYYY(),
+        minDate: startDate.formatDDMMYYYY(),
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    }, function(start, end, label) {
+        dashboard.resetDates(start.toDate(), end.toDate());
+    });
+};
+
+
+;/***************************
+ *     Toggle Filter
+ **************************/
+
+function generateToggleFilter(viewId, dashboard) {
+    if(REPORT_CONFIG.projection.length < 2){
+        return;
+    }
+    var choice1Id = viewId + "_" + "choice_1";
+    var choice2Id = viewId + "_" + "choice_2";
+    var widgetId = viewId + "_" + "widget";
+    $("#" + viewId + ID_SWITCH)
+        .append($('<div>').attr('id', choice1Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel))
+        .append($('<div>').attr('id', widgetId).addClass("switch-widget"))
+        .append($('<div>').attr('id', choice2Id).addClass("switch-label").text(REPORT_CONFIG.projection[1].filterLabel));
+
+    //Manage the switch
+    $('#' + choice1Id).click(function () {
+        $("#" + viewId + ID_SWITCH).removeClass("switched");
+        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
+    });
+    $('#' + choice2Id).click(function () {
+        $("#" + viewId + ID_SWITCH).addClass("switched");
+        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
+    });
+    $('#' + widgetId).click(function () {
+        $("#" + viewId + ID_SWITCH).toggleClass("switched");
+        var filterIndex = $("#" + viewId + ID_SWITCH).hasClass("switched") ? 1 : 0;
+        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
+    });
+}
+;/***************************
  *     Charts Factory
  **************************/
 
@@ -574,7 +797,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     this.initWidgets = function () {
         generateDashboardElementsDom(viewId, [ID_AREA_CHART, ID_RANGE_FILTER])
-        generateTaskListDom(viewId);
+        createDomForTaskList(viewId);
 
         cumulativeFlowDashboard = buildCumulativFlowDashboard(viewId);
         tasksListTable = buildTasksListTable(viewId);
@@ -617,13 +840,13 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var taskFilters = generateFiltersModelFromConfig(DISTRIBUTION_INDEX_FILTER_FIRST);
-        taskChart = generateChartModelFromConfig()
+        var taskFilters = createModelForFilters(DISTRIBUTION_INDEX_FILTER_FIRST);
+        taskChart = createModelForChart()
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
         generateFiltersDom(viewId, taskFilters);
         generateChartDom(viewId, taskChart);
-        generateTaskListDom(viewId);
+        createDomForTaskList(viewId);
 
         charts = buildSimpleCharts(viewId, taskChart);
         timeDistributionChart = buildTasksDurationScatterChart(viewId ,[DISTRIBUTION_INDEX_STATIC_EVENT_LAST, DISTRIBUTION_INDEX_STATIC_COUNT]);
@@ -687,7 +910,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var filtersConfig = generateFiltersModelFromConfig(DURATION_INDEX_FILTER_FIRST);
+        var filtersConfig = createModelForFilters(DURATION_INDEX_FILTER_FIRST);
         filtersConfig.unshift({
             id:  "_max_cycle_time",
             filterType: 'NumberRangeFilter',
@@ -696,7 +919,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_DURATION_STATS, ID_COLUMN_CHART, ID_SCATTER_CHART]);
         generateFiltersDom(viewId, filtersConfig);
-        generateTaskListDom(viewId);
+        createDomForTaskList(viewId);
 
         // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
         // Nb -1)
@@ -764,13 +987,13 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
-            generateMonthSelectorDom(config.id, this)
+            createDomForMonthSelector(config.id, this)
         }
         if(config.selector == CONFIG_PERIOD_SELECTOR) {
-            generatePeriodSelectorDom(config.id, this)
+            createDomForPeriodSelector(config.id, this)
         }
         generateToggleFilter(config.id, this);
-        generateTaskListDom(config.id);
+        createDomForTaskList(config.id);
 
         console.log("Build dashboard "+startDate + " --- " + endDate);
         cumulativeFlowGraph = buildTimePeriodDashboard(config.id, startDate, endDate);
@@ -890,230 +1113,7 @@ ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
 ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
 
 CONFIG_MONTH_SELECTOR = "month_selector";
-CONFIG_PERIOD_SELECTOR = "pediod_selector";;/***************************
- *     Filter Generation
- **************************/
-
-function generateFiltersModelFromConfig(columnOffset) {
-    var filtersConfig = [];
-    if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            filtersConfig.push({
-                id: ID_FILTER + ID_SEPARATOR + index,
-                filterType: RAW_DATA_COL.FILTERS[index].filterType,
-                columnIndex: columnOffset + index
-            });
-        }
-    }
-    return filtersConfig;
-}
-
-function generateFiltersDom(viewId, filtersConfig) {
-    $("#" + viewId + ID_FILTERS)
-        .append($('<div>').attr('id', viewId + ID_FILTERS_RANGE).addClass("col-md-7 text-center"))
-        .append($('<div>').attr('id', viewId + ID_FILTERS_CATEGORY).addClass("col-md-5 text-center"));
-    for (var index = 0; index < filtersConfig.length; index++) {
-
-        var containerSuffix = filtersConfig[index].filterType == 'CategoryFilter' ?
-            ID_FILTERS_CATEGORY :  ID_FILTERS_RANGE;
-
-        $("#" + viewId + containerSuffix).append($('<div>').attr('id', viewId + filtersConfig[index].id));
-    }
-    return filtersConfig;
-}
-
-function generateToggleFilter(viewId, dashboard) {
-    if(REPORT_CONFIG.projection.length < 2){
-        return;
-    }
-    var choice1Id = viewId + "_" + "choice_1";
-    var choice2Id = viewId + "_" + "choice_2";
-    var widgetId = viewId + "_" + "widget";
-    $("#" + viewId + ID_SWITCH)
-        .append($('<div>').attr('id', choice1Id).addClass("switch-label").text(REPORT_CONFIG.projection[0].filterLabel))
-        .append($('<div>').attr('id', widgetId).addClass("switch-widget"))
-        .append($('<div>').attr('id', choice2Id).addClass("switch-label").text(REPORT_CONFIG.projection[1].filterLabel));
-
-    //Manage the switch
-    $('#' + choice1Id).click(function () {
-        $("#" + viewId + ID_SWITCH).removeClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
-    });
-    $('#' + choice2Id).click(function () {
-        $("#" + viewId + ID_SWITCH).addClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
-    });
-    $('#' + widgetId).click(function () {
-        $("#" + viewId + ID_SWITCH).toggleClass("switched");
-        var filterIndex = $("#" + viewId + ID_SWITCH).hasClass("switched") ? 1 : 0;
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
-    });
-}
-
-/***************************
- *     Chart Generation
- **************************/
-
-function generateChartModelFromConfig(chartPrefix) {
-    var chatsConfig = [];
-    if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            var filter = RAW_DATA_COL.FILTERS[index];
-            if(filter.filterType == 'CategoryFilter') {
-                chatsConfig.push({
-                    id:  ID_CHART + ID_SEPARATOR + index,
-                    filterType:  'PieChart',
-                    columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
-                    label: filter.label
-                });
-            }
-        }
-    }
-    return chatsConfig;
-}
-
-function generateChartDom(viewId, chartsConfig) {
-    var containerSelector = "#" + viewId + ID_DASHBOARD;
-    for (var index = 0; index < chartsConfig.length; index++) {
-        $(containerSelector).append($('<div>')
-            .attr('id', viewId + chartsConfig[index].id)
-            .addClass("col-md-4"));
-    }
-}
-
-/***************************
- *     Title Suffix
- **************************/
-
-var setTitleSuffix = function (viewId, numberOfRows) {
-    var plural = numberOfRows > 1 ? "s" : "";
-    $("#" + viewId  + ID_TITLE_SUFFIX).text(" - " + numberOfRows + " task" + plural);
-};
-
-/***************************
- *   Dashboard Elements
- **************************/
-
-var generateDashboardElementsDom = function (viewId, suffixList) {
-    for (var index = 0; index < suffixList.length; index++) {
-        $("#" + viewId + ID_DASHBOARD).append($('<div>').attr('id', viewId + suffixList[index]));
-    }
-};
-
-/***************************
- *     Task List
- **************************/
-
-var generateTaskListDom = function (viewId) {
-    // Creating Dom structure for bootstrap Modal
-    $("#" + viewId)
-        .append($('<div>')
-            .attr('id', viewId + ID_TASK_LIST_MODAL)
-            .attr('role', "dialog")
-            .addClass("modal ticket-list fade")
-            .append($('<div>').addClass("modal-dialog")
-                .append($('<div>').addClass("modal-content")
-                    .append($('<div>').addClass("modal-header")
-                        .append($('<button>')
-                            .attr('type', "button")
-                            .attr('data-dismiss', "modal")
-                            .addClass("close").html("&times;"))
-                        .append($('<h4>')
-                            .addClass("modal-title")
-                            .text("Tasks list")))
-                    .append($('<div>').addClass("modal-body")
-                        .append($('<div>')
-                            .attr('id', viewId + ID_TASK_LIST)
-                            .addClass("col-md-12")))
-                    .append($('<div>').addClass("modal-footer")
-                        .append($('<button>')
-                            .attr('type', "button")
-                            .attr('data-dismiss', "modal")
-                            .addClass("btn btn-default")
-                            .text("Close"))))));
-};
-
-/***************************
- *     Month Selector
- **************************/
-
-var generateMonthSelectorDom = function (viewId, dashboard) {
-    var startDate = new Date(REPORT_CONFIG.first_entry);
-    var currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 15);
-    currentDate.setDate(1);
-
-    dashboard.setDates(new Date(currentDate));
-
-    // Creating Dom structure for bootstrap Dropdown
-    $("#" + viewId + ID_TIME_SELECTOR).addClass("dropdown")
-        .append($("<button>")
-            .attr('id', viewId + ID_MONTH_SELECTOR_LABEL)
-            .attr('type', "button")
-            .attr('data-toggle', "dropdown")
-            .addClass("btn btn-default dropdown-toggle")
-            .append($("<span>").addClass("caret")))
-        .append($("<ul>")
-            .attr('id', viewId + ID_MONTH_SELECTOR_LIST)
-            .attr('aria-labelledby', "month_dropdown")
-            .addClass("dropdown-menu"));
-
-    // Populating with the lists of values
-    setDropDownValue(currentDate);
-    while (startDate < currentDate) {
-        // We can't use simple functions because they would all be closures that reference the same variable
-        // currentDate.
-        var monthLink = $('<a>').text(currentDate.getFullYear() + " " + currentDate.getMonthLabel()).attr('href', '#').on('click', changeDate(new Date(currentDate)));
-        $('#' + viewId + ID_MONTH_SELECTOR_LIST).append($('<li>').append(monthLink));
-        currentDate.setMonth(currentDate.getMonth() - 1);
-    }
-
-    function changeDate(date) {
-        date.setDate(1);
-        return function(){
-            setDropDownValue(date);
-            dashboard.resetDates(date)
-        }
-    }
-
-    function setDropDownValue(date) {
-        $("#" + viewId + ID_MONTH_SELECTOR_LABEL).text((date.getFullYear() + " " + date.getMonthLabel() + " ")).append($('<span>').attr('class', 'caret'));
-    }
-};
-
-/***************************
- *     Period Selector
- **************************/
-
-var generatePeriodSelectorDom = function (viewId, dashboard) {
-    var startDate = new Date(REPORT_CONFIG.first_entry);
-    var endPeriod = new Date();
-    endPeriod.setDate(endPeriod.getDate() - 15);
-    var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 2, endPeriod.getDate());
-
-    dashboard.setDates(startPeriod, endPeriod)
-
-    // Creating Dom structure for selector
-    $("#" + viewId + ID_TIME_SELECTOR)
-        .append($("<input>")
-            .attr('type', "text")
-            .attr('name', "daterange"));
-
-    // Selector configuration
-    $("#" + viewId + ID_TIME_SELECTOR +' input[name="daterange"]').daterangepicker({
-        startDate: startPeriod.formatDDMMYYYY(),
-        endDate: endPeriod.formatDDMMYYYY(),
-        minDate: startDate.formatDDMMYYYY(),
-        locale: {
-            format: 'DD/MM/YYYY'
-        }
-    }, function(start, end, label) {
-        dashboard.resetDates(start.toDate(), end.toDate());
-    });
-};
-
-
-;function initApp() {
+CONFIG_PERIOD_SELECTOR = "pediod_selector";;function initApp() {
     currentDashboards.forEach(function (element) {
         element.initWidgets();
     })
