@@ -10,7 +10,7 @@ function DistributionDashboard(viewId) {
 
     var initialized = false;
 
-    registerDashboard("#" + viewId, this);
+    registerDashboard(viewId, this);
 
     this.initWidgets = function () {
         var taskFilters = generateFiltersModelFromConfig(DISTRIBUTION_INDEX_FILTER_FIRST);

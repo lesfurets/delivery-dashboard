@@ -570,7 +570,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var initialized = false;
 
-    registerDashboard("#" + viewId, this);
+    registerDashboard(viewId, this);
 
     this.initWidgets = function () {
         generateDashboardElementsDom(viewId, [ID_AREA_CHART, ID_RANGE_FILTER])
@@ -614,7 +614,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var initialized = false;
 
-    registerDashboard("#" + viewId, this);
+    registerDashboard(viewId, this);
 
     this.initWidgets = function () {
         var taskFilters = generateFiltersModelFromConfig(DISTRIBUTION_INDEX_FILTER_FIRST);
@@ -684,7 +684,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var initialized = false;
 
-    registerDashboard('#' + viewId, this);
+    registerDashboard(viewId, this);
 
     this.initWidgets = function () {
         var filtersConfig = generateFiltersModelFromConfig(DURATION_INDEX_FILTER_FIRST);
@@ -760,7 +760,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     var endDate;
     var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
-    registerDashboard("#" + config.id, this);
+    registerDashboard(config.id, this);
 
     this.initWidgets = function () {
         if(config.selector == CONFIG_MONTH_SELECTOR) {
@@ -827,7 +827,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 };function TaskManager(viewId) {
     var initialized = false;
 
-    registerDashboard("#" + viewId, this);
+    registerDashboard(viewId, this);
 
     this.initWidgets = function () {
         var iframe = $('iframe');
@@ -864,7 +864,7 @@ google.setOnLoadCallback(function () {
 
 // Wait for all elements to be loaded before initializing the app
 function registerDashboard(tabId, dashboard) {
-    allDashboards.push({tab: tabId, controller: dashboard});
+    allDashboards.push({tab: "#" + tabId, controller: dashboard});
     containerToLoad--;
     if (containerToLoad == 0) {
         initApp()

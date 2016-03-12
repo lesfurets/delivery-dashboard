@@ -1,7 +1,7 @@
 function TaskManager(viewId) {
     var initialized = false;
 
-    registerDashboard("#" + viewId, this);
+    registerDashboard(viewId, this);
 
     this.initWidgets = function () {
         var iframe = $('iframe');
