@@ -22,10 +22,12 @@ var RAW_DATA_COL = {
     ]
 };
 
-REPORT_CONFIG = {
+var REPORT_CONFIG = {
     first_entry : "2015-06",
     projection : [
         {position : 0, filterLabel : "Type"},
         {position : 1, filterLabel : "Effort"}
     ]
 }
+
+var JIRA_DATA = "jira-data.json"
