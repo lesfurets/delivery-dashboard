@@ -1,4 +1,30 @@
-/***************************
+function filterReleasedBefore(inputData, fromDate) {
+    var view = new google.visualization.DataView(inputData);
+    view.setRows(view.getFilteredRows([{
+        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
+        minValue: fromDate
+    }]));
+    return view;
+}
+
+function filterReleasedAfter(inputData, toDate) {
+    var view = new google.visualization.DataView(inputData);
+    view.setRows(view.getFilteredRows([{
+        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
+        maxValue: toDate
+    }]));
+    return view;
+}
+
+function filterCreatedAfter(inputData, toDate) {
+    var view = new google.visualization.DataView(inputData);
+    view.setRows(view.getFilteredRows([{
+        column: RAW_DATA_COL.EVENTS[0].columnIndex,
+        maxValue: toDate
+    }]));
+    return view;
+}
+;/***************************
  *  Distribution Data
  **************************/
 
@@ -181,7 +207,7 @@ function integerSorter(a,b) {
 }
 
 function getQuartileFunction(ration){
-    return function count(values) {
+    return function getQuartile(values) {
         return values.sort(integerSorter)[Math.floor(values.length * ration)];
     }
 }
@@ -205,13 +231,14 @@ function groupDurationDataBy(inputData, groupBy) {
 
 function computeEventData(inputData) {
     var data = builtEventDataStructure(inputData);
+    // Building a line for each status change event
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
         var statusNumber = RAW_DATA_COL.EVENTS.length;
         for (var statusIndex = 0; statusIndex < statusNumber; statusIndex++) {
             var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
                 return index == statusIndex ? 1 : 0
             });
-            row.unshift(inputData.getValue(i, RAW_DATA_COL.EVENTS[statusIndex].columnIndex));
+            row.unshift(inputData.getValue(i, TASK_INDEX_EVENTS_FIRST + statusIndex));
             data.addRow(row);
         }
     }
@@ -230,44 +257,86 @@ function computeEventData(inputData) {
     return cumulativEventData;
 }
 
+// And 1 column for every events
 function builtEventDataStructure(inputData) {
     var data = new google.visualization.DataTable();
     data.addColumn('date', "EventDate");
-    if (RAW_DATA_COL.EVENTS != null) {
-        for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-            data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[index].columnIndex));
-        }
+    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
+        data.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
     }
     return data;
 }
 
-;function filterReleasedBefore(inputData, fromDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
-        minValue: fromDate
-    }]));
-    return view;
+;/***************************
+ *  Tasks Data
+ **************************/
+
+var TASK_INDEX_STATIC_REFERENCE = 0;
+var TASK_INDEX_STATIC_SYMMARY = 1;
+var TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
+
+var TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
+var TASK_INDEX_EVENTS_LAST = TASK_INDEX_EVENTS_FIRST + RAW_DATA_COL.EVENTS.length;
+
+var TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
+var TASK_INDEX_FILTER_LAST = TASK_INDEX_FILTER_FIRST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
+function computeTaskData(driveData, jiraData) {
+    // Listing all reference
+    var taskRefs = [];
+    for (var i = 0; i < driveData.getNumberOfRows(); i++) {
+        taskRefs.push(driveData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + driveData.getValue(i, RAW_DATA_COL.REF));
+    }
+
+    // Filtering Jira data
+    var jiraDataMap = new Map();
+    jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function(element) {
+        jiraDataMap.set(element.key, element);
+    });
+
+    // Building the structure of the taskData
+    var completedDataStruct = []
+    completedDataStruct.push(refColumnBuilder());
+    completedDataStruct.push(jiraColumnBuilder(jiraDataMap));
+    RAW_DATA_COL.EVENTS.forEach(function(element) {
+        completedDataStruct.push(element.columnIndex);
+    });
+    RAW_DATA_COL.FILTERS.forEach(function(element) {
+        completedDataStruct.push(element.columnIndex);
+    });
+
+    var completedData = new google.visualization.DataView(driveData);
+    completedData.setColumns(completedDataStruct);
+
+    return completedData;
 }
 
-function filterReleasedAfter(inputData, toDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
-        maxValue: toDate
-    }]));
-    return view;
+function refColumnBuilder() {
+    return {
+        type: 'string', label: "Summary",
+        calc: function (table, row) {
+            return table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
+        }
+    };
 }
 
-function filterCreatedAfter(inputData, toDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[0].columnIndex,
-        maxValue: toDate
-    }]));
-    return view;
+// Find the related line in jira-data and extrat field
+function jiraColumnBuilder(jiraDataMap) {
+    return {
+        type: 'string', label: "Summary",
+        calc: function (table, row) {
+            var jiraRef = table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
+            var issue = jiraDataMap.get(jiraRef);
+            return issue != null ? issue.fields.summary : "";
+        }
+    };
 }
-;var monthNames = ["January", "February", "March", "April", "May", "June",
+
+function filterOnId(taskRefs) {
+    this.filter = function (obj) {
+        return taskRefs.includes(obj.key);
+    };
+};var monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
 
@@ -816,7 +885,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
             cumulativeFlowDashboard.draw(eventData);
 
-            tasksListTable.setDataTable(rawData)
+            tasksListTable.setDataTable(eventData);
             tasksListTable.draw();
         }
     };
@@ -1133,26 +1202,21 @@ function loadRawData(dataConsumer) {
 // Completing spreadsheed data with jira if possible
 function QueryResponseHandler(dataConsumer) {
     this.handleResponse = function (response) {
-        var inputData = response.getDataTable();
+        var driveData = response.getDataTable();
 
         if(typeof JIRA_DATA !== 'undefined'){
             //http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000
-            $.getJSON("../resources/"+JIRA_DATA, function (data) {
-                var completedData = new google.visualization.DataView(inputData);
-                var completedDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
-                completedDataStruct.push(createJiraColumn(data));
-                completedData.setColumns(completedDataStruct);
-
-                setUpCustomers(dataConsumer, completedData);
+            $.getJSON("../resources/"+JIRA_DATA, function (jiraData) {
+                setUpConsumer(dataConsumer, computeTaskData(driveData, jiraData));
             });
         } else {
-            setUpCustomers(dataConsumer, inputData);
+            setUpConsumer(dataConsumer, computeTaskData(driveData));
         }
     }
 }
 
 // Dispatch data to all dashboards
-function setUpCustomers(dataConsumer, dataWithStatistics) {
+function setUpConsumer(dataConsumer, dataWithStatistics) {
     dataConsumer.forEach(function (consumer) {
         consumer.loadData(dataWithStatistics);
         consumer.refresh();
@@ -1182,25 +1246,7 @@ $(document).on('ready', function () {
         }
         loadRawData(currentDashboards);
     });
-});
-
-// Find the related line in jira-data and extrat field
-function createJiraColumn(data) {
-    return {
-        type: 'string', label: "Summary",
-        calc: function (table, row) {
-            var jiraRef = table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
-            var issue = data.issues.filter(new FilterOnId(jiraRef).filter)[0];
-            return issue != null ? issue.fields.summary : "";
-        }
-    };
-}
-
-function FilterOnId(taskkey) {
-    this.filter = function (obj) {
-        return obj.key == taskkey;
-    };
-};// Reading url to selecting to the tab to display (format: base_url#<tab_id>)
+});;// Reading url to selecting to the tab to display (format: base_url#<tab_id>)
 function parseUrl() {
     var requestedUrl = document.location.toString();
     if (requestedUrl.match('#')) {

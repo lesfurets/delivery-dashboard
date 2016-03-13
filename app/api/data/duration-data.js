@@ -138,7 +138,7 @@ function integerSorter(a,b) {
 }
 
 function getQuartileFunction(ration){
-    return function count(values) {
+    return function getQuartile(values) {
         return values.sort(integerSorter)[Math.floor(values.length * ration)];
     }
 }

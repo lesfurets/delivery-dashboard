@@ -4,13 +4,14 @@
 
 function computeEventData(inputData) {
     var data = builtEventDataStructure(inputData);
+    // Building a line for each status change event
     for (var i = 0; i < inputData.getNumberOfRows(); i++) {
         var statusNumber = RAW_DATA_COL.EVENTS.length;
         for (var statusIndex = 0; statusIndex < statusNumber; statusIndex++) {
             var row = Array.apply(null, {length: statusNumber}).map(function (value, index) {
                 return index == statusIndex ? 1 : 0
             });
-            row.unshift(inputData.getValue(i, RAW_DATA_COL.EVENTS[statusIndex].columnIndex));
+            row.unshift(inputData.getValue(i, TASK_INDEX_EVENTS_FIRST + statusIndex));
             data.addRow(row);
         }
     }
@@ -29,13 +30,12 @@ function computeEventData(inputData) {
     return cumulativEventData;
 }
 
+// And 1 column for every events
 function builtEventDataStructure(inputData) {
     var data = new google.visualization.DataTable();
     data.addColumn('date', "EventDate");
-    if (RAW_DATA_COL.EVENTS != null) {
-        for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-            data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[index].columnIndex));
-        }
+    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
+        data.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
     }
     return data;
 }

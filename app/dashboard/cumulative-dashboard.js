@@ -30,7 +30,7 @@ function CumulativeDashboard(viewId) {
 
             cumulativeFlowDashboard.draw(eventData);
 
-            tasksListTable.setDataTable(rawData)
+            tasksListTable.setDataTable(eventData);
             tasksListTable.draw();
         }
     };
