@@ -20,9 +20,9 @@ function computeTaskData(driveData, jiraData) {
     }
 
     // Filtering Jira data
-    var jiraDataMap = new Map();
+    var jiraDataMap = {};
     jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function(element) {
-        jiraDataMap.set(element.key, element);
+        jiraDataMap[element.key] = element;
     });
 
     // Building the structure of the taskData
@@ -57,7 +57,7 @@ function jiraColumnBuilder(jiraDataMap) {
         type: 'string', label: "Summary",
         calc: function (table, row) {
             var jiraRef = table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
-            var issue = jiraDataMap.get(jiraRef);
+            var issue = jiraDataMap[jiraRef];
             return issue != null ? issue.fields.summary : "";
         }
     };

@@ -15,6 +15,15 @@ Date.prototype.formatDDMMYYYY = function () {
     return dd + '/' + mm + '/' + yyyy;
 };
 
+Date.prototype.formatYYYYMMDD = function () {
+    var dd = this.getDate();
+    dd = dd < 10 ? '0' + dd : dd;
+    var mm = this.getMonth() + 1; //January is 0!
+    mm = mm < 10 ? '0' + mm : mm;
+    var yyyy = this.getFullYear();
+    return yyyy + '-' + mm + '-' + dd;
+};
+
 Date.prototype.getWeek = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
