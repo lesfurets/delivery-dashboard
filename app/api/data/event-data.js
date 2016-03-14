@@ -45,9 +45,9 @@ function computeEventData(inputData) {
 
     // Order by date and add in a table with a cumulative count
     var cumulativeData = new google.visualization.DataTable();
-    data.addColumn('date', "EventDate");
+    cumulativeData.addColumn('date', "EventDate");
     for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-        data.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
+        cumulativeData.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
     }
 
     Object.keys(eventsByDateMap).sort().forEach(function(dateString,dateIndex) {

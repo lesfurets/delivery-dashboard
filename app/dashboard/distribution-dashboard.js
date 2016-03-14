@@ -13,7 +13,7 @@ function DistributionDashboard(viewId) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var taskFilters = createModelForFilters(DISTRIBUTION_INDEX_FILTER_FIRST);
+        var taskFilters = createModelForFilters();
         taskChart = createModelForChart()
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);

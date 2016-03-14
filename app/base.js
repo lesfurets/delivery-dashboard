@@ -1,4 +1,27 @@
-function filterReleasedBefore(inputData, fromDate) {
+var TASK_INDEX_STATIC_REFERENCE = 0;
+var TASK_INDEX_STATIC_SYMMARY = 1;
+var TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
+
+var TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
+var TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+
+var TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
+var TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
+
+var DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;
+var DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
+var DURATION_INDEX_STATIC_COUNT = DURATION_INDEX_STATIC_GROUP_ALL + 1;
+var DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
+
+var DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
+var DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+var DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
+
+var DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_DURATION_LAST + 1;
+var DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
+var DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
+var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;;function filterReleasedBefore(inputData, fromDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
         column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
@@ -24,123 +47,58 @@ function filterCreatedAfter(inputData, toDate) {
     }]));
     return view;
 }
+
+function columnBuilder(type, label, calc) {
+    return {type: type, label: label, calc: calc};
+}
+
+function constantColumnBuilder(type, label, value) {
+    return {
+        type: type, label: label, calc: function () {
+            return value;
+        }
+    };
+}
+
+function aggregatorBuilder(column, type, aggregation) {
+    return {column: column, type: type, aggregation: aggregation};
+}
 ;/***************************
  *  Distribution Data
  **************************/
 
-var DISTRIBUTION_INDEX_STATIC_REF = 0;
 var DISTRIBUTION_INDEX_STATIC_COUNT = 2;
 var DISTRIBUTION_INDEX_STATIC_EVENT_LAST = 3;
-var DISTRIBUTION_INDEX_STATIC_LAST = DISTRIBUTION_INDEX_STATIC_EVENT_LAST;
-
-var DISTRIBUTION_INDEX_FILTER_FIRST = DISTRIBUTION_INDEX_STATIC_LAST + 1;
-var DISTRIBUTION_INDEX_FILTER_LAST = DISTRIBUTION_INDEX_STATIC_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
 function computeDistributionData(inputData) {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Jira Ref');
-    data.addColumn({type: 'string', role: 'tooltip'}, 'Tooltip');
-    data.addColumn('number', "");
-    data.addColumn('date', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
-    if (RAW_DATA_COL.FILTERS != null) {
-        RAW_DATA_COL.FILTERS.forEach(function (filter) {
-            data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex));
-        });
-    }
-
-    // Parsing events data to compute distribution data
-    for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var row = [];
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(0);
-        row.push(inputData.getValue(i, RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
-        // Adding data to allow filtering
-        if (RAW_DATA_COL.FILTERS != null) {
-            RAW_DATA_COL.FILTERS.forEach(function (filter) {
-                row.push(inputData.getValue(i, filter.columnIndex))
-            })
-        }
-        data.addRow(row);
-    }
-
-    return data;
+    return inputData;
 }
 
 ;/***************************
  *  Duration Data
  **************************/
 
-var DURATION_INDEX_STATIC_PROJECT = 0;
-var DURATION_INDEX_STATIC_REF = 1;
-var DURATION_INDEX_STATIC_COUNT = 4;
-var DURATION_INDEX_STATIC_GROUP_ALL = 5;
-var DURATION_INDEX_STATIC_EVENT_LAST = 6;
-var DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_EVENT_LAST;
-
-var DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
-var DURATION_INDEX_DURATION_LAST = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
-var DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_DURATION_LAST;
-
-var DURATION_INDEX_FILTER_FIRST = DURATION_INDEX_DURATION_LAST + 1;
-var DURATION_INDEX_FILTER_LAST = DURATION_INDEX_DURATION_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
-
-
-var DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_FILTER_LAST + 1;
-var DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
-var DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
-var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
-
 function computeDurationData(inputData) {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', inputData.getColumnLabel(RAW_DATA_COL.PROJECT));
-    data.addColumn('number', inputData.getColumnLabel(RAW_DATA_COL.REF));
-    data.addColumn('string', 'Jira Ref');
-    data.addColumn({type: 'string', role: 'tooltip'}, 'Tooltip');
-    data.addColumn('number', "Tasks");
-    data.addColumn('string', "");
-    data.addColumn('date', inputData.getColumnLabel(RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex));
+    var durationDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
+    durationDataStruct.push(constantColumnBuilder("string", "", "Selection"));
+    durationDataStruct.push(constantColumnBuilder("number", "Count", 1));
     for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
-        data.addColumn('number', RAW_DATA_COL.EVENTS[index].status);
+        var element = RAW_DATA_COL.EVENTS[index];
+        var eventIndex = TASK_INDEX_EVENTS_FIRST + index;
+        durationDataStruct.push(durationColumnBuilder(element.status, eventIndex, eventIndex + 1, element.correction));
     }
-    data.addColumn('number', "Cycle Time");
-    if (RAW_DATA_COL.FILTERS != null) {
-        RAW_DATA_COL.FILTERS.forEach(function (filter) {
-            data.addColumn(inputData.getColumnType(filter.columnIndex), inputData.getColumnLabel(filter.columnIndex));
-        });
-    }
+    durationDataStruct.push(durationColumnBuilder("Cycle Time", TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, 0));
 
-    // Parsing events data to compute duration data
-    for (var i = 0; i < inputData.getNumberOfRows(); i++) {
-        var durations = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
-            return inputData.getValue(i, RAW_DATA_COL.EVENTS[index].columnIndex);
-        });
+    var durationData = new google.visualization.DataView(inputData);
+    durationData.setColumns(durationDataStruct);
 
-        var row = [];
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT));
-        row.push(inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(inputData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + inputData.getValue(i, RAW_DATA_COL.REF));
-        row.push(1);
-        row.push('Selection');
-        row.push(durations[durations.length - 1]);
-        // Compute durations (in work days) and applying correction from config
-        for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
-            row.push(durations[index].getWorkDaysUntil(durations[index + 1]) + RAW_DATA_COL.EVENTS[index].correction);
-        }
-        // Compute full cycle time
-        row.push(durations[0].getWorkDaysUntil(durations[durations.length - 1]));
-        // Adding data to allow filtering
-        if (RAW_DATA_COL.FILTERS != null) {
-            RAW_DATA_COL.FILTERS.forEach(function (filter) {
-                row.push(inputData.getValue(i, filter.columnIndex))
-            })
-        }
+    return durationData.toDataTable();
+}
 
-        data.addRow(row);
-    }
-
-    return data;
+function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
+    return columnBuilder('number', label, function (table, row) {
+        return table.getValue(row, firstEventIndex).getWorkDaysUntil(table.getValue(row, lastEventIndex)) + correction;
+    });
 }
 
 function computeDurationStats(inputData) {
@@ -156,27 +114,28 @@ function computeDurationStats(inputData) {
     // That's why we are addind 3 columns at the end of the DataView.
     // We feel these columns with the required value only if date is min date or max date (to have our points at
     // the edge of the chart).
-    // | Date  | Project | Ref | Cycle Time | Average |
-    // |-------|---------|-----|------------|---------|
-    // | 01/01 | TEST    |   1 |         16 |      19 |
-    // | 01/02 | TEST    |   2 |         18 |         | ╗
-    // | 01/03 | TEST    |   2 |         18 |         | ║> Don't need to feel the value as we want to draw a line
-    // | 01/04 | TEST    |   3 |         20 |         | ╝
-    // | 01/05 | TEST    |   4 |         22 |      19 |
+    // ╔═══════╦═════════╦═════╦════════════╦═════════╗
+    // ║ Date  ║ Project ║ Ref ║ Cycle Time ║ Average ║
+    // ╠═══════╬═════════╬═════╬════════════╬═════════╣
+    // ║ 01/01 ║ TEST    ║   1 ║         16 ║      19 ║
+    // ║ 01/02 ║ TEST    ║   2 ║         18 ║         ║ ╗
+    // ║ 01/03 ║ TEST    ║   2 ║         18 ║         ║ ║> We Don't need to fill the value as we need 2 points
+    // ║ 01/04 ║ TEST    ║   3 ║         20 ║         ║ ╝
+    // ║ 01/05 ║ TEST    ║   4 ║         22 ║      19 ║
     // ╚════════════════════════════════════╩═════════╝
     //                    V                      V
     //               Actual Data             Statistics
     // We will then add new data series with these columns defining point size to 2 and adding a linear trend line.
 
-    var minDate = inputData.getColumnRange(DURATION_INDEX_STATIC_EVENT_LAST).min
-    var maxDate = inputData.getColumnRange(DURATION_INDEX_STATIC_EVENT_LAST).max
+    var minDate = inputData.getColumnRange(TASK_INDEX_EVENTS_FIRST).min
+    var maxDate = inputData.getColumnRange(TASK_INDEX_EVENTS_LAST).max
 
     // Creating a structure [0, 1, 2 ... inputData.size] to keep all original columns
     var dataStatisticsStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
     // Adding new columns, setting satistics data only on edge dates
-    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, 'Average', group.getValue(0, 1)));
-    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '75%', group.getValue(0, 2)));
-    dataStatisticsStruct.push(createStatColumn(minDate, maxDate, '90%', group.getValue(0, 3)));
+    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, 'Average', group.getValue(0, 1)));
+    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, '75%', group.getValue(0, 2)));
+    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, '90%', group.getValue(0, 3)));
 
     var dataWithStatistics = new google.visualization.DataView(inputData);
     dataWithStatistics.setColumns(dataStatisticsStruct);
@@ -184,14 +143,11 @@ function computeDurationStats(inputData) {
     return dataWithStatistics;
 }
 
-function createStatColumn(minDate, maxDate, label, value) {
-    return {
-        type: 'number', label: label,
-        calc: function (table, row) {
-            return table.getValue(row, DURATION_INDEX_STATIC_EVENT_LAST) == minDate
-            || table.getValue(row, DURATION_INDEX_STATIC_EVENT_LAST) == maxDate ? value : null;
-        }
-    };
+function statColumnBuilder(minDate, maxDate, label, value) {
+    return columnBuilder('number', label, function (table, row) {
+        return table.getValue(row, TASK_INDEX_EVENTS_FIRST) == minDate
+        || table.getValue(row, TASK_INDEX_EVENTS_LAST) == maxDate ? value : null;
+    });
 }
 
 function createAggregationColumn(aggregationFunction) {
@@ -202,21 +158,21 @@ function createAggregationColumn(aggregationFunction) {
     };
 }
 
-function integerSorter(a,b) {
-    return a - b;
-}
-
-function getQuartileFunction(ration){
+function getQuartileFunction(ration) {
     return function getQuartile(values) {
-        return values.sort(integerSorter)[Math.floor(values.length * ration)];
+        return values.sort(function (a, b) {
+            return a - b;
+        })[Math.floor(values.length * ration)];
     }
 }
 
 function groupDurationDataBy(inputData, groupBy) {
-    var columns = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(function (value, index) {
-        return {column: DURATION_INDEX_DURATION_FIRST + index, aggregation: google.visualization.data.avg, type: 'number'}
+    var columns = [];
+    RAW_DATA_COL.EVENTS.forEach(function(element, index) {
+        columns.push(aggregatorBuilder(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
     });
-    columns.unshift({column: DURATION_INDEX_STATIC_COUNT, aggregation: google.visualization.data.sum, type: 'number'});
+    columns.unshift(aggregatorBuilder(DURATION_INDEX_STATIC_COUNT, 'number', google.visualization.data.count));
+
     var data = google.visualization.data.group(inputData, [groupBy], columns);
 
     var formatter = new google.visualization.NumberFormat({suffix: ' day(s)'});
@@ -224,8 +180,7 @@ function groupDurationDataBy(inputData, groupBy) {
         formatter.format(data, 2 + index);
     }
     return data
-}
-;/***************************
+};/***************************
  *  Event Data
  **************************/
 
@@ -272,9 +227,9 @@ function computeEventData(inputData) {
 
     // Order by date and add in a table with a cumulative count
     var cumulativeData = new google.visualization.DataTable();
-    data.addColumn('date', "EventDate");
+    cumulativeData.addColumn('date', "EventDate");
     for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-        data.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
+        cumulativeData.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
     }
 
     Object.keys(eventsByDateMap).sort().forEach(function(dateString,dateIndex) {
@@ -292,16 +247,6 @@ function computeEventData(inputData) {
  *  Tasks Data
  **************************/
 
-var TASK_INDEX_STATIC_REFERENCE = 0;
-var TASK_INDEX_STATIC_SYMMARY = 1;
-var TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
-
-var TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
-var TASK_INDEX_EVENTS_LAST = TASK_INDEX_EVENTS_FIRST + RAW_DATA_COL.EVENTS.length;
-
-var TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
-var TASK_INDEX_FILTER_LAST = TASK_INDEX_FILTER_FIRST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
-
 function computeTaskData(driveData, jiraData) {
     // Listing all reference
     var taskRefs = [];
@@ -317,7 +262,7 @@ function computeTaskData(driveData, jiraData) {
 
     // Building the structure of the taskData
     var completedDataStruct = []
-    completedDataStruct.push(refColumnBuilder());
+    completedDataStruct.push(columnBuilder('string', 'Ref', calcRefValue));
     completedDataStruct.push(jiraColumnBuilder(jiraDataMap));
     RAW_DATA_COL.EVENTS.forEach(function(element) {
         completedDataStruct.push(element.columnIndex);
@@ -329,28 +274,19 @@ function computeTaskData(driveData, jiraData) {
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
 
-    return completedData;
+    return completedData.toDataTable();
 }
 
-function refColumnBuilder() {
-    return {
-        type: 'string', label: "Summary",
-        calc: function (table, row) {
-            return table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
-        }
-    };
+function calcRefValue(table, row) {
+    return table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
 }
 
 // Find the related line in jira-data and extrat field
 function jiraColumnBuilder(jiraDataMap) {
-    return {
-        type: 'string', label: "Summary",
-        calc: function (table, row) {
-            var jiraRef = table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
-            var issue = jiraDataMap[jiraRef];
-            return issue != null ? issue.fields.summary : "";
-        }
-    };
+    return columnBuilder('string', 'Ref', function(table, row) {
+        var issue = jiraDataMap[calcRefValue(table,row)];
+        return issue != null ? issue.fields.summary : "";
+    });
 }
 
 function filterOnId(taskRefs) {
@@ -476,14 +412,14 @@ function generateChartDom(viewId, chartsConfig) {
     }
 }
 
-;function createModelForFilters(columnOffset) {
+;function createModelForFilters() {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
             filtersConfig.push({
                 id: ID_FILTER + ID_SEPARATOR + index,
                 filterType: RAW_DATA_COL.FILTERS[index].filterType,
-                columnIndex: columnOffset + index
+                columnIndex: TASK_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -493,17 +429,16 @@ function generateChartDom(viewId, chartsConfig) {
 function createModelForChart() {
     var chatsConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            var filter = RAW_DATA_COL.FILTERS[index];
+        RAW_DATA_COL.FILTERS.forEach(function(filter, index) {
             if(filter.filterType == 'CategoryFilter') {
                 chatsConfig.push({
                     id:  ID_CHART + ID_SEPARATOR + index,
                     filterType:  'PieChart',
-                    columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
+                    columnIndex: TASK_INDEX_FILTER_FIRST + index,
                     label: filter.label
                 });
             }
-        }
+        });
     }
     return chatsConfig;
 };/***************************
@@ -639,16 +574,16 @@ function generateToggleFilter(viewId, dashboard) {
     //Manage the switch
     $('#' + choice1Id).click(function () {
         $("#" + viewId + ID_SWITCH).removeClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
+        dashboard.resetReduce(TASK_INDEX_FILTER_FIRST);
     });
     $('#' + choice2Id).click(function () {
         $("#" + viewId + ID_SWITCH).addClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
+        dashboard.resetReduce(TASK_INDEX_FILTER_FIRST + 1);
     });
     $('#' + widgetId).click(function () {
         $("#" + viewId + ID_SWITCH).toggleClass("switched");
         var filterIndex = $("#" + viewId + ID_SWITCH).hasClass("switched") ? 1 : 0;
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
+        dashboard.resetReduce(TASK_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
 }
 ;/***************************
@@ -915,7 +850,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
             cumulativeFlowDashboard.draw(eventData);
 
-            tasksListTable.setDataTable(eventData);
+            tasksListTable.setDataTable(rawData);
             tasksListTable.draw();
         }
     };
@@ -939,7 +874,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var taskFilters = createModelForFilters(DISTRIBUTION_INDEX_FILTER_FIRST);
+        var taskFilters = createModelForFilters();
         taskChart = createModelForChart()
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
@@ -1009,7 +944,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
     registerDashboard(viewId, this);
 
     this.initWidgets = function () {
-        var filtersConfig = createModelForFilters(DURATION_INDEX_FILTER_FIRST);
+        var filtersConfig = createModelForFilters();
         filtersConfig.unshift({
             id:  "_max_cycle_time",
             filterType: 'NumberRangeFilter',
@@ -1022,12 +957,12 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
         // Defining columns that should be displayed on Bar Chart depending on Events in Config (duration Nb = events
         // Nb -1)
-        var durationsColumns = [2];
+        var durationsColumns = [TASK_INDEX_STATIC_REFERENCE];
         for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
             durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
         }
         tasksDurationColumnChart = buildTasksDurationColumnChart(viewId, durationsColumns);
-        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [DURATION_INDEX_STATIC_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
+        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [TASK_INDEX_EVENTS_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
         tasksDurationDashboard = buildFilteredDashboard(viewId, tasksDurationColumnChart, buildFilters(viewId, filtersConfig), updateTable);
         tasksDurationStatsTable = buildDurationStatsTable(viewId);
         tasksListTable = buildTasksListTable(viewId);
@@ -1080,7 +1015,7 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
 
     var startDate;
     var endDate;
-    var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
+    var reduceColumn = TASK_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
     registerDashboard(config.id, this);
 

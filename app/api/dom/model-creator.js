@@ -1,11 +1,11 @@
-function createModelForFilters(columnOffset) {
+function createModelForFilters() {
     var filtersConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
         for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
             filtersConfig.push({
                 id: ID_FILTER + ID_SEPARATOR + index,
                 filterType: RAW_DATA_COL.FILTERS[index].filterType,
-                columnIndex: columnOffset + index
+                columnIndex: TASK_INDEX_FILTER_FIRST + index
             });
         }
     }
@@ -15,17 +15,16 @@ function createModelForFilters(columnOffset) {
 function createModelForChart() {
     var chatsConfig = [];
     if (RAW_DATA_COL.FILTERS != null) {
-        for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-            var filter = RAW_DATA_COL.FILTERS[index];
+        RAW_DATA_COL.FILTERS.forEach(function(filter, index) {
             if(filter.filterType == 'CategoryFilter') {
                 chatsConfig.push({
                     id:  ID_CHART + ID_SEPARATOR + index,
                     filterType:  'PieChart',
-                    columnIndex: DISTRIBUTION_INDEX_FILTER_FIRST + index,
+                    columnIndex: TASK_INDEX_FILTER_FIRST + index,
                     label: filter.label
                 });
             }
-        }
+        });
     }
     return chatsConfig;
 }

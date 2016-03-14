@@ -24,3 +24,19 @@ function filterCreatedAfter(inputData, toDate) {
     }]));
     return view;
 }
+
+function columnBuilder(type, label, calc) {
+    return {type: type, label: label, calc: calc};
+}
+
+function constantColumnBuilder(type, label, value) {
+    return {
+        type: type, label: label, calc: function () {
+            return value;
+        }
+    };
+}
+
+function aggregatorBuilder(column, type, aggregation) {
+    return {column: column, type: type, aggregation: aggregation};
+}

@@ -1,5 +1,4 @@
 var RAW_DATA_URL = '14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA';
-var RAW_DATA_FIRST_ENTRY = "2015-06";
 
 var RAW_DATA_COL = {
     PROJECT: 0,

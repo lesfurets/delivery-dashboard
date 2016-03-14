@@ -10,7 +10,7 @@ function ReportDashboard(config) {
 
     var startDate;
     var endDate;
-    var reduceColumn = DURATION_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
+    var reduceColumn = TASK_INDEX_FILTER_FIRST + REPORT_CONFIG.projection[0].position;
 
     registerDashboard(config.id, this);
 

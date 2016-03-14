@@ -2,16 +2,6 @@
  *  Tasks Data
  **************************/
 
-var TASK_INDEX_STATIC_REFERENCE = 0;
-var TASK_INDEX_STATIC_SYMMARY = 1;
-var TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
-
-var TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
-var TASK_INDEX_EVENTS_LAST = TASK_INDEX_EVENTS_FIRST + RAW_DATA_COL.EVENTS.length;
-
-var TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
-var TASK_INDEX_FILTER_LAST = TASK_INDEX_FILTER_FIRST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
-
 function computeTaskData(driveData, jiraData) {
     // Listing all reference
     var taskRefs = [];
@@ -27,7 +17,7 @@ function computeTaskData(driveData, jiraData) {
 
     // Building the structure of the taskData
     var completedDataStruct = []
-    completedDataStruct.push(refColumnBuilder());
+    completedDataStruct.push(columnBuilder('string', 'Ref', calcRefValue));
     completedDataStruct.push(jiraColumnBuilder(jiraDataMap));
     RAW_DATA_COL.EVENTS.forEach(function(element) {
         completedDataStruct.push(element.columnIndex);
@@ -39,28 +29,19 @@ function computeTaskData(driveData, jiraData) {
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
 
-    return completedData;
+    return completedData.toDataTable();
 }
 
-function refColumnBuilder() {
-    return {
-        type: 'string', label: "Summary",
-        calc: function (table, row) {
-            return table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
-        }
-    };
+function calcRefValue(table, row) {
+    return table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
 }
 
 // Find the related line in jira-data and extrat field
 function jiraColumnBuilder(jiraDataMap) {
-    return {
-        type: 'string', label: "Summary",
-        calc: function (table, row) {
-            var jiraRef = table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
-            var issue = jiraDataMap[jiraRef];
-            return issue != null ? issue.fields.summary : "";
-        }
-    };
+    return columnBuilder('string', 'Ref', function(table, row) {
+        var issue = jiraDataMap[calcRefValue(table,row)];
+        return issue != null ? issue.fields.summary : "";
+    });
 }
 
 function filterOnId(taskRefs) {

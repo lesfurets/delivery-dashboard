@@ -17,15 +17,15 @@ function generateToggleFilter(viewId, dashboard) {
     //Manage the switch
     $('#' + choice1Id).click(function () {
         $("#" + viewId + ID_SWITCH).removeClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST);
+        dashboard.resetReduce(TASK_INDEX_FILTER_FIRST);
     });
     $('#' + choice2Id).click(function () {
         $("#" + viewId + ID_SWITCH).addClass("switched");
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + 1);
+        dashboard.resetReduce(TASK_INDEX_FILTER_FIRST + 1);
     });
     $('#' + widgetId).click(function () {
         $("#" + viewId + ID_SWITCH).toggleClass("switched");
         var filterIndex = $("#" + viewId + ID_SWITCH).hasClass("switched") ? 1 : 0;
-        dashboard.resetReduce(DURATION_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
+        dashboard.resetReduce(TASK_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
 }
