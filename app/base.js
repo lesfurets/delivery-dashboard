@@ -21,7 +21,9 @@ var DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
 var DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_DURATION_LAST + 1;
 var DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
 var DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
-var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;;function filterReleasedBefore(inputData, fromDate) {
+var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
+
+var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = TASK_INDEX_FILTER_LAST + 1;;function filterReleasedBefore(inputData, fromDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
         column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
@@ -67,11 +69,14 @@ function aggregatorBuilder(column, type, aggregation) {
  *  Distribution Data
  **************************/
 
-var DISTRIBUTION_INDEX_STATIC_COUNT = 2;
-var DISTRIBUTION_INDEX_STATIC_EVENT_LAST = 3;
-
 function computeDistributionData(inputData) {
-    return inputData;
+    var distributionDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
+    distributionDataStruct.push(constantColumnBuilder("number", "value", 0));
+
+    var distributionData = new google.visualization.DataView(inputData);
+    distributionData.setColumns(distributionDataStruct);
+
+    return distributionData.toDataTable();
 }
 
 ;/***************************
@@ -878,12 +883,13 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         taskChart = createModelForChart()
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
+        //generateDashboardElementsDom(viewId, [ID_SCATTER_CHART]);
         generateFiltersDom(viewId, taskFilters);
         generateChartDom(viewId, taskChart);
         createDomForTaskList(viewId);
 
         charts = buildSimpleCharts(viewId, taskChart);
-        timeDistributionChart = buildTasksDurationScatterChart(viewId ,[DISTRIBUTION_INDEX_STATIC_EVENT_LAST, DISTRIBUTION_INDEX_STATIC_COUNT]);
+        timeDistributionChart = buildTasksDurationScatterChart(viewId ,[TASK_INDEX_EVENTS_LAST, DISTRIBUTION_INDEX_STATIC_GROUP_ALL]);
         distributionDashboard = buildFilteredDashboard(viewId, timeDistributionChart, buildFilters(viewId, taskFilters), updateTable);
         tasksListTable = buildTasksListTable(viewId);
 
@@ -1153,7 +1159,9 @@ CONFIG_MONTH_SELECTOR = "month_selector";
 CONFIG_PERIOD_SELECTOR = "pediod_selector";;function initApp() {
     parseUrl()
     currentDashboards.forEach(function (element) {
-        element.initWidgets();
+        if (!element.isInitialized()) {
+            element.initWidgets();
+        }
     })
     loadRawData(currentDashboards);
 }

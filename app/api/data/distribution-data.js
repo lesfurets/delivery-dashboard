@@ -2,10 +2,13 @@
  *  Distribution Data
  **************************/
 
-var DISTRIBUTION_INDEX_STATIC_COUNT = 2;
-var DISTRIBUTION_INDEX_STATIC_EVENT_LAST = 3;
-
 function computeDistributionData(inputData) {
-    return inputData;
+    var distributionDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
+    distributionDataStruct.push(constantColumnBuilder("number", "value", 0));
+
+    var distributionData = new google.visualization.DataView(inputData);
+    distributionData.setColumns(distributionDataStruct);
+
+    return distributionData.toDataTable();
 }
 

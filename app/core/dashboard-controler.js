@@ -1,7 +1,9 @@
 function initApp() {
     parseUrl()
     currentDashboards.forEach(function (element) {
-        element.initWidgets();
+        if (!element.isInitialized()) {
+            element.initWidgets();
+        }
     })
     loadRawData(currentDashboards);
 }

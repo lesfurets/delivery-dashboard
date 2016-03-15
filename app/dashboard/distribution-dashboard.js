@@ -17,12 +17,13 @@ function DistributionDashboard(viewId) {
         taskChart = createModelForChart()
 
         generateDashboardElementsDom(viewId, [ID_FILTERS, ID_SCATTER_CHART]);
+        //generateDashboardElementsDom(viewId, [ID_SCATTER_CHART]);
         generateFiltersDom(viewId, taskFilters);
         generateChartDom(viewId, taskChart);
         createDomForTaskList(viewId);
 
         charts = buildSimpleCharts(viewId, taskChart);
-        timeDistributionChart = buildTasksDurationScatterChart(viewId ,[DISTRIBUTION_INDEX_STATIC_EVENT_LAST, DISTRIBUTION_INDEX_STATIC_COUNT]);
+        timeDistributionChart = buildTasksDurationScatterChart(viewId ,[TASK_INDEX_EVENTS_LAST, DISTRIBUTION_INDEX_STATIC_GROUP_ALL]);
         distributionDashboard = buildFilteredDashboard(viewId, timeDistributionChart, buildFilters(viewId, taskFilters), updateTable);
         tasksListTable = buildTasksListTable(viewId);
 
