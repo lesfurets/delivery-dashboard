@@ -24,13 +24,11 @@ var app = express();
 
 app.use(express.static('public'));
 
-var JIRA_URL = "http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000";
+var JIRA_URL = "http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary,fixVersions&startAt=0&maxResults=5000";
 
 app.get('/jira-search', function(req, res) {
     request(JIRA_URL, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            var info = JSON.parse(body)
-            console.log(info);
             res.setHeader('Content-Type', 'application/json');
             res.send(body);
         }

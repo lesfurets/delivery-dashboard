@@ -6,7 +6,7 @@ var TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
 var TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
 
 var TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
-var TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+var TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + 1 + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
 
 var DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;
@@ -261,20 +261,21 @@ function computeTaskData(driveData, jiraData) {
 
     // Filtering Jira data
     var jiraDataMap = {};
-    jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function(element) {
+    jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function (element) {
         jiraDataMap[element.key] = element;
     });
 
     // Building the structure of the taskData
     var completedDataStruct = []
     completedDataStruct.push(columnBuilder('string', 'Ref', calcRefValue));
-    completedDataStruct.push(jiraColumnBuilder(jiraDataMap));
-    RAW_DATA_COL.EVENTS.forEach(function(element) {
+    completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Summary", ["fields", "summary"]));
+    RAW_DATA_COL.EVENTS.forEach(function (element) {
         completedDataStruct.push(element.columnIndex);
     });
-    RAW_DATA_COL.FILTERS.forEach(function(element) {
+    RAW_DATA_COL.FILTERS.forEach(function (element) {
         completedDataStruct.push(element.columnIndex);
     });
+    completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Fix Version", ["fields", "fixVersions", 0, "name"]));
 
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
@@ -287,11 +288,24 @@ function calcRefValue(table, row) {
 }
 
 // Find the related line in jira-data and extrat field
-function jiraColumnBuilder(jiraDataMap) {
-    return columnBuilder('string', 'Ref', function(table, row) {
-        var issue = jiraDataMap[calcRefValue(table,row)];
-        return issue != null ? issue.fields.summary : "";
+function jiraColumnBuilder(jiraDataMap, columnLabel, fields) {
+    return columnBuilder('string', columnLabel, function (table, row) {
+        var issue = jiraDataMap[calcRefValue(table, row)];
+        return getJsonData(issue, fields)
     });
+}
+
+function getJsonData(jsonObject, fields, index) {
+    index = index != null ? index : 0;
+    if (jsonObject == null) {
+        return "";
+    }
+    var fieldValue = jsonObject[fields[index]];
+    if (index == fields.length - 1) {
+        return typeof fieldValue !== 'undefined' ? fieldValue : "";
+    } else {
+        return getJsonData(fieldValue, fields, ++index)
+    }
 }
 
 function filterOnId(taskRefs) {
@@ -1179,7 +1193,7 @@ function QueryResponseHandler(dataConsumer) {
 
         if(typeof JIRA_DATA !== 'undefined'){
             //http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000
-            $.getJSON("/hakuna", function (jiraData) {
+            $.getJSON("/jira-search", function (jiraData) {
                 setUpConsumer(dataConsumer, computeTaskData(driveData, jiraData));
             });
         } else {
