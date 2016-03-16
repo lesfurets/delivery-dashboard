@@ -13,7 +13,7 @@ module.exports = function (grunt) {
                     optimization: 2
                 },
                 files: {
-                    "styles/css/main.css": "styles/less/main.less"
+                    "styles/css/main.css": "public/styles/less/main.less"
                 }
             }
         },
@@ -22,7 +22,7 @@ module.exports = function (grunt) {
                 browsers: ['last 2 versions', 'ie 8', 'ie 9', '> 1%']
             },
             main: {
-                src: 'styles/css/*.css'
+                src: 'public/styles/css/*.css'
             }
         },
         concat: {
@@ -30,30 +30,30 @@ module.exports = function (grunt) {
                 separator: ';',
             },
             dist: {
-                src: ['app/api/**/*.js','app/dashboard/**/*.js','app/core/**/*.js'],
-                dest: 'app/base.js'
+                src: ['public/app/api/**/*.js','public/app/dashboard/**/*.js','public/app/core/**/*.js'],
+                dest: 'public/app/base.js'
             },
         },
         watch: {
             less: {
-                files: ['styles/less/**/*.less'],
+                files: ['public/styles/less/**/*.less'],
                 tasks: ['styles'],
             },
             css: {
-                files: ['styles/css/main.css'],
+                files: ['public/styles/css/main.css'],
                 options: {
                     livereload: true
                 }
             },
             js: {
-                files: ['app/api/**/*.js','app/dashboard/**/*.js','app/core/**/*.js'],
+                files: ['public/app/api/**/*.js','public/app/dashboard/**/*.js','public/app/core/**/*.js'],
                 tasks: ['app'],
                 options: {
                     livereload: true
                 }
             },
             html: {
-                files: ['html/**/*.html'],
+                files: ['public/html/**/*.html'],
                 options: {
                     livereload: true
                 }

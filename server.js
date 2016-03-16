@@ -1,0 +1,40 @@
+//var http = require('http');
+//var url = require('url');
+//var querystring = require('querystring');
+//
+//var server = http.createServer(function(req, res) {
+//    var params = querystring.parse(url.parse(req.url).query);
+//    res.writeHead(200, {"Content-Type": "text/plain"});
+//    if ('prenom' in params && 'nom' in params) {
+//        res.write('Vous vous appelez ' + params['prenom'] + ' ' + params['nom']);
+//    }
+//    else {
+//        res.write('Vous devez bien avoir un prénom et un nom, non ?');
+//    }
+//    res.end();
+//});
+//server.listen(8080);
+
+var express = require('express');
+var request = require('request');
+
+
+
+var app = express();
+
+app.use(express.static('public'));
+
+var JIRA_URL = "http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000";
+
+app.get('/jira-search', function(req, res) {
+    request(JIRA_URL, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var info = JSON.parse(body)
+            console.log(info);
+            res.setHeader('Content-Type', 'application/json');
+            res.send(body);
+        }
+    })
+});
+
+app.listen(8080);

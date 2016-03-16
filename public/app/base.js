@@ -1179,7 +1179,7 @@ function QueryResponseHandler(dataConsumer) {
 
         if(typeof JIRA_DATA !== 'undefined'){
             //http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000
-            $.getJSON("../resources/"+JIRA_DATA, function (jiraData) {
+            $.getJSON("/hakuna", function (jiraData) {
                 setUpConsumer(dataConsumer, computeTaskData(driveData, jiraData));
             });
         } else {
