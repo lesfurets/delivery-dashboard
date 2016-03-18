@@ -4,9 +4,9 @@ var RAW_DATA_COL = {
     PROJECT: 0,
     REF: 1,
     EVENTS: [
-        {columnIndex: 5, status: 'Backlog', correction: - 1},
-        {columnIndex: 6, status: 'Analysis', correction: - 0.5},
-        {columnIndex: 7, status: 'Development', correction: - 0.5},
-        {columnIndex: 8, status: 'Ready To Release', correction: - 1}
+        {columnIndex: 5, label: 'Backlog', correction: - 1},
+        {columnIndex: 6, label: 'Analysis', correction: - 0.5},
+        {columnIndex: 7, label: 'Development', correction: - 0.5},
+        {columnIndex: 8, label: 'Ready To Release', correction: - 1}
     ]
 };

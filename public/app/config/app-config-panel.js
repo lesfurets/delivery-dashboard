@@ -4,11 +4,11 @@ var RAW_DATA_COL = {
     PROJECT: 0,
     REF: 1,
     EVENTS: [
-        {columnIndex: 6, status: 'Backlog', correction: - 1},
-        {columnIndex: 7, status: 'Analysis', correction: - 0.5},
-        {columnIndex: 8, status: 'Development', correction: - 0.5},
-        {columnIndex: 9, status: 'Ready to release', correction: - 1},
-        {columnIndex: 10, status: 'Released', correction: - 1}
+        {columnIndex: 6, label: 'Backlog', correction: - 1},
+        {columnIndex: 7, label: 'Analysis', correction: - 0.5},
+        {columnIndex: 8, label: 'Development', correction: - 0.5},
+        {columnIndex: 9, label: 'Ready to release', correction: - 1},
+        {columnIndex: 10, label: 'Released', correction: - 1}
     ],
     FILTERS: [
         {columnIndex: 2, filterType: 'CategoryFilter'},

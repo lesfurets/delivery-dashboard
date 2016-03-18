@@ -9,7 +9,7 @@ function computeDurationData(inputData) {
     for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
         var element = RAW_DATA_COL.EVENTS[index];
         var eventIndex = TASK_INDEX_EVENTS_FIRST + index;
-        durationDataStruct.push(durationColumnBuilder(element.status, eventIndex, eventIndex + 1, element.correction));
+        durationDataStruct.push(durationColumnBuilder(element.label, eventIndex, eventIndex + 1, element.correction));
     }
     durationDataStruct.push(durationColumnBuilder("Cycle Time", TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, 0));
 

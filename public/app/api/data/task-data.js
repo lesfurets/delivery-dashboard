@@ -11,26 +11,34 @@ function computeTaskData(driveData, jiraData) {
 
     // Filtering Jira data
     var jiraDataMap = {};
-    jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function (element) {
-        jiraDataMap[element.key] = element;
-    });
+    if(jiraData != null){
+        jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function (element) {
+            jiraDataMap[element.key] = element;
+        });
+    }
 
     // Building the structure of the taskData
     var completedDataStruct = []
     completedDataStruct.push(columnBuilder('string', 'Ref', calcRefValue));
     completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Summary", ["fields", "summary"]));
     RAW_DATA_COL.EVENTS.forEach(function (element) {
-        completedDataStruct.push(element.columnIndex);
+        completedDataStruct.push(taskDateColumnBuilder(element, jiraDataMap));
     });
-    RAW_DATA_COL.FILTERS.forEach(function (element) {
-        completedDataStruct.push(element.columnIndex);
-    });
-    completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Fix Version", ["fields", "fixVersions", 0, "name"]));
+    if(RAW_DATA_COL.FILTERS != null){
+        RAW_DATA_COL.FILTERS.forEach(function (element) {
+            completedDataStruct.push(taskColumnBuilder(element, jiraDataMap));
+        });
+    }
 
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
 
-    return completedData.toDataTable();
+    var colpleteDataTable = completedData.toDataTable();
+
+    //var formatter_short = new google.visualization.DateFormat({formatType: 'short'});
+    //formatter_short.format(colpleteDataTable, 15);
+
+    return colpleteDataTable;
 }
 
 function calcRefValue(table, row) {
@@ -40,9 +48,39 @@ function calcRefValue(table, row) {
 // Find the related line in jira-data and extrat field
 function jiraColumnBuilder(jiraDataMap, columnLabel, fields) {
     return columnBuilder('string', columnLabel, function (table, row) {
-        var issue = jiraDataMap[calcRefValue(table, row)];
-        return getJsonData(issue, fields)
+        return getJsonData(jiraDataMap[calcRefValue(table, row)], fields);
     });
+}
+
+// Find the related line in jira-data and extrat field
+function jiraDateColumnBuilder(jiraDataMap, columnLabel, fields) {
+    return columnBuilder('date', columnLabel, function (table, row) {
+        return new Date(getJsonData(jiraDataMap[calcRefValue(table, row)], fields));
+    });
+}
+
+function taskDateColumnBuilder(element, jiraDataMap) {
+    var column;
+    if (typeof element.jiraField != 'undefined') {
+        column = jiraDateColumnBuilder(jiraDataMap, element.label, element.jiraField);
+    } else {
+        column = element.columnIndex;
+    }
+    return column;
+}
+
+function taskColumnBuilder(element, jiraDataMap) {
+    var column;
+    if (typeof element.jiraField != 'undefined') {
+        if (element.filterType == 'DateRangeFilter') {
+            column = jiraDateColumnBuilder(jiraDataMap, element.label, element.jiraField);
+        } else {
+            column = jiraColumnBuilder(jiraDataMap, element.label, element.jiraField);
+        }
+    } else {
+        column = element.columnIndex;
+    }
+    return column;
 }
 
 function getJsonData(jsonObject, fields, index) {

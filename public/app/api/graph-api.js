@@ -171,7 +171,7 @@ function setTaskSelectListener(element) {
     google.visualization.events.addListener(element, 'select', function () {
         var rowNumber = element.getChart().getSelection()[0].row;
         var data = element.getDataTable();
-        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, DURATION_INDEX_STATIC_PROJECT) + '-' + data.getValue(rowNumber, DURATION_INDEX_STATIC_REF), '_blank');
+        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
     });
 }
 

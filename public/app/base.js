@@ -6,7 +6,7 @@ var TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
 var TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
 
 var TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
-var TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + 1 + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+var TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
 
 var DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;
@@ -90,7 +90,7 @@ function computeDurationData(inputData) {
     for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
         var element = RAW_DATA_COL.EVENTS[index];
         var eventIndex = TASK_INDEX_EVENTS_FIRST + index;
-        durationDataStruct.push(durationColumnBuilder(element.status, eventIndex, eventIndex + 1, element.correction));
+        durationDataStruct.push(durationColumnBuilder(element.label, eventIndex, eventIndex + 1, element.correction));
     }
     durationDataStruct.push(durationColumnBuilder("Cycle Time", TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, 0));
 
@@ -261,26 +261,34 @@ function computeTaskData(driveData, jiraData) {
 
     // Filtering Jira data
     var jiraDataMap = {};
-    jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function (element) {
-        jiraDataMap[element.key] = element;
-    });
+    if(jiraData != null){
+        jiraData.issues.filter(new filterOnId(taskRefs).filter).forEach(function (element) {
+            jiraDataMap[element.key] = element;
+        });
+    }
 
     // Building the structure of the taskData
     var completedDataStruct = []
     completedDataStruct.push(columnBuilder('string', 'Ref', calcRefValue));
     completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Summary", ["fields", "summary"]));
     RAW_DATA_COL.EVENTS.forEach(function (element) {
-        completedDataStruct.push(element.columnIndex);
+        completedDataStruct.push(taskDateColumnBuilder(element, jiraDataMap));
     });
-    RAW_DATA_COL.FILTERS.forEach(function (element) {
-        completedDataStruct.push(element.columnIndex);
-    });
-    completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Fix Version", ["fields", "fixVersions", 0, "name"]));
+    if(RAW_DATA_COL.FILTERS != null){
+        RAW_DATA_COL.FILTERS.forEach(function (element) {
+            completedDataStruct.push(taskColumnBuilder(element, jiraDataMap));
+        });
+    }
 
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
 
-    return completedData.toDataTable();
+    var colpleteDataTable = completedData.toDataTable();
+
+    //var formatter_short = new google.visualization.DateFormat({formatType: 'short'});
+    //formatter_short.format(colpleteDataTable, 15);
+
+    return colpleteDataTable;
 }
 
 function calcRefValue(table, row) {
@@ -290,9 +298,39 @@ function calcRefValue(table, row) {
 // Find the related line in jira-data and extrat field
 function jiraColumnBuilder(jiraDataMap, columnLabel, fields) {
     return columnBuilder('string', columnLabel, function (table, row) {
-        var issue = jiraDataMap[calcRefValue(table, row)];
-        return getJsonData(issue, fields)
+        return getJsonData(jiraDataMap[calcRefValue(table, row)], fields);
     });
+}
+
+// Find the related line in jira-data and extrat field
+function jiraDateColumnBuilder(jiraDataMap, columnLabel, fields) {
+    return columnBuilder('date', columnLabel, function (table, row) {
+        return new Date(getJsonData(jiraDataMap[calcRefValue(table, row)], fields));
+    });
+}
+
+function taskDateColumnBuilder(element, jiraDataMap) {
+    var column;
+    if (typeof element.jiraField != 'undefined') {
+        column = jiraDateColumnBuilder(jiraDataMap, element.label, element.jiraField);
+    } else {
+        column = element.columnIndex;
+    }
+    return column;
+}
+
+function taskColumnBuilder(element, jiraDataMap) {
+    var column;
+    if (typeof element.jiraField != 'undefined') {
+        if (element.filterType == 'DateRangeFilter') {
+            column = jiraDateColumnBuilder(jiraDataMap, element.label, element.jiraField);
+        } else {
+            column = jiraColumnBuilder(jiraDataMap, element.label, element.jiraField);
+        }
+    } else {
+        column = element.columnIndex;
+    }
+    return column;
 }
 
 function getJsonData(jsonObject, fields, index) {
@@ -778,7 +816,7 @@ function setTaskSelectListener(element) {
     google.visualization.events.addListener(element, 'select', function () {
         var rowNumber = element.getChart().getSelection()[0].row;
         var data = element.getDataTable();
-        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, DURATION_INDEX_STATIC_PROJECT) + '-' + data.getValue(rowNumber, DURATION_INDEX_STATIC_REF), '_blank');
+        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
     });
 }
 
