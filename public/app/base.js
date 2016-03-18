@@ -256,7 +256,7 @@ function computeTaskData(driveData, jiraData) {
     // Listing all reference
     var taskRefs = [];
     for (var i = 0; i < driveData.getNumberOfRows(); i++) {
-        taskRefs.push(driveData.getValue(i, RAW_DATA_COL.PROJECT) + '-' + driveData.getValue(i, RAW_DATA_COL.REF));
+        taskRefs.push(calcRefValue(driveData, i));
     }
 
     // Filtering Jira data
@@ -270,9 +270,9 @@ function computeTaskData(driveData, jiraData) {
     // Building the structure of the taskData
     var completedDataStruct = []
     completedDataStruct.push(columnBuilder('string', 'Ref', calcRefValue));
-    completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Summary", ["fields", "summary"]));
+    completedDataStruct.push(jiraColumnBuilder(jiraDataMap, "Summary", ["fields", "summary"], DATA_STRING));
     RAW_DATA_COL.EVENTS.forEach(function (element) {
-        completedDataStruct.push(taskDateColumnBuilder(element, jiraDataMap));
+        completedDataStruct.push(taskColumnBuilder(element, jiraDataMap));
     });
     if(RAW_DATA_COL.FILTERS != null){
         RAW_DATA_COL.FILTERS.forEach(function (element) {
@@ -283,56 +283,28 @@ function computeTaskData(driveData, jiraData) {
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
 
-    var colpleteDataTable = completedData.toDataTable();
-
-    //var formatter_short = new google.visualization.DateFormat({formatType: 'short'});
-    //formatter_short.format(colpleteDataTable, 15);
-
-    return colpleteDataTable;
+    return completedData.toDataTable();
 }
 
 function calcRefValue(table, row) {
     return table.getValue(row, RAW_DATA_COL.PROJECT) + '-' + table.getValue(row, RAW_DATA_COL.REF);
 }
 
-// Find the related line in jira-data and extrat field
-function jiraColumnBuilder(jiraDataMap, columnLabel, fields) {
-    return columnBuilder('string', columnLabel, function (table, row) {
-        return getJsonData(jiraDataMap[calcRefValue(table, row)], fields);
-    });
-}
-
-// Find the related line in jira-data and extrat field
-function jiraDateColumnBuilder(jiraDataMap, columnLabel, fields) {
-    return columnBuilder('date', columnLabel, function (table, row) {
-        return new Date(getJsonData(jiraDataMap[calcRefValue(table, row)], fields));
-    });
-}
-
-function taskDateColumnBuilder(element, jiraDataMap) {
-    var column;
-    if (typeof element.jiraField != 'undefined') {
-        column = jiraDateColumnBuilder(jiraDataMap, element.label, element.jiraField);
-    } else {
-        column = element.columnIndex;
-    }
-    return column;
-}
-
+// Get data from source defined in config drive/jira
 function taskColumnBuilder(element, jiraDataMap) {
-    var column;
-    if (typeof element.jiraField != 'undefined') {
-        if (element.filterType == 'DateRangeFilter') {
-            column = jiraDateColumnBuilder(jiraDataMap, element.label, element.jiraField);
-        } else {
-            column = jiraColumnBuilder(jiraDataMap, element.label, element.jiraField);
-        }
-    } else {
-        column = element.columnIndex;
-    }
-    return column;
+    return (typeof element.jiraField == 'undefined') ? element.columnIndex :
+        jiraColumnBuilder(jiraDataMap, element.label, element.jiraField, element.dataType);
 }
 
+// Find the related line in jira-data and extrat field
+function jiraColumnBuilder(jiraDataMap, columnLabel, fields, type) {
+    return columnBuilder(type, columnLabel, function (table, row) {
+        var jiraValue = getJsonData(jiraDataMap[calcRefValue(table, row)], fields);
+        return type == DATA_DATE ? new Date(jiraValue) : jiraValue;
+    });
+}
+
+// Recursively parse json to find required field [lvl1,lvl2,...]
 function getJsonData(jsonObject, fields, index) {
     index = index != null ? index : 0;
     if (jsonObject == null) {
@@ -1170,6 +1142,7 @@ var currentDashboards = [];
 
 // Requesting the load of all elements (element="<element_template>")
 google.setOnLoadCallback(function () {
+    completeConfig();
     containerToLoad = $("a[element]").size();
     $("a[element]").each(function (index) {
         $(".tab-content").append($("<div>")
@@ -1187,28 +1160,51 @@ function registerDashboard(tabId, dashboard) {
     if (containerToLoad == 0) {
         initApp()
     }
-};ID_SEPARATOR = "_";
-ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
-ID_DASHBOARD = ID_SEPARATOR + "dashboard";
-ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
-ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+}
+
+// Completing configs
+function completeConfig() {
+    RAW_DATA_COL.EVENTS.forEach(function (element) {
+        element.dataType = DATA_DATE;
+        element.filterType = FILTER_DATE
+    });
+//if(RAW_DATA_COL.FILTERS != null){
+//    RAW_DATA_COL.FILTERS.forEach(function (element) {
+//        completedDataStruct.push(taskColumnBuilder(element, jiraDataMap));
+//    });
+//}
+}
+;ID_SEPARATOR = "_";
 ID_CHART = ID_SEPARATOR + 'chart';
 ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
 ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
 ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
+
 ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';
 ID_FILTER = ID_SEPARATOR + 'filter';
 ID_FILTERS = ID_SEPARATOR + 'filters';
 ID_FILTERS_RANGE = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'range';
 ID_FILTERS_CATEGORY = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'category';
+
+ID_DASHBOARD = ID_SEPARATOR + "dashboard";
+ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
+ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
+ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
+
 ID_SWITCH = ID_SEPARATOR + 'switch';
 ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
 ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
 ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
-ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
 
 CONFIG_MONTH_SELECTOR = "month_selector";
-CONFIG_PERIOD_SELECTOR = "pediod_selector";;function initApp() {
+CONFIG_PERIOD_SELECTOR = "pediod_selector";
+
+DATA_DATE = "date";
+DATA_STRING = "string";
+
+FILTER_CATEGORY = "CategoryFilter";
+FILTER_DATE = "DateRangeFilter";;function initApp() {
     parseUrl()
     currentDashboards.forEach(function (element) {
         if (!element.isInitialized()) {
@@ -1229,9 +1225,9 @@ function QueryResponseHandler(dataConsumer) {
     this.handleResponse = function (response) {
         var driveData = response.getDataTable();
 
-        if(typeof JIRA_DATA !== 'undefined'){
-            //http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000
-            $.getJSON("/jira-search", function (jiraData) {
+        if (typeof JIRA_DATA != null) {
+            var jiraUrl = "/rest/api/2/search?jql=" + JIRA_DATA.jql + "&fields=" + JIRA_DATA.fields + "&startAt=0&maxResults=5000";
+            $.getJSON(jiraUrl, function (jiraData) {
                 setUpConsumer(dataConsumer, computeTaskData(driveData, jiraData));
             });
         } else {

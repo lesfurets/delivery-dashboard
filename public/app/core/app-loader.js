@@ -5,6 +5,7 @@ var currentDashboards = [];
 
 // Requesting the load of all elements (element="<element_template>")
 google.setOnLoadCallback(function () {
+    completeConfig();
     containerToLoad = $("a[element]").size();
     $("a[element]").each(function (index) {
         $(".tab-content").append($("<div>")
@@ -22,4 +23,17 @@ function registerDashboard(tabId, dashboard) {
     if (containerToLoad == 0) {
         initApp()
     }
+}
+
+// Completing configs
+function completeConfig() {
+    RAW_DATA_COL.EVENTS.forEach(function (element) {
+        element.dataType = DATA_DATE;
+        element.filterType = FILTER_DATE
+    });
+//if(RAW_DATA_COL.FILTERS != null){
+//    RAW_DATA_COL.FILTERS.forEach(function (element) {
+//        completedDataStruct.push(taskColumnBuilder(element, jiraDataMap));
+//    });
+//}
 }

@@ -19,9 +19,9 @@ function QueryResponseHandler(dataConsumer) {
     this.handleResponse = function (response) {
         var driveData = response.getDataTable();
 
-        if(typeof JIRA_DATA !== 'undefined'){
-            //http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary&startAt=0&maxResults=5000
-            $.getJSON("/jira-search", function (jiraData) {
+        if (typeof JIRA_DATA != null) {
+            var jiraUrl = "/rest/api/2/search?jql=" + JIRA_DATA.jql + "&fields=" + JIRA_DATA.fields + "&startAt=0&maxResults=5000";
+            $.getJSON(jiraUrl, function (jiraData) {
                 setUpConsumer(dataConsumer, computeTaskData(driveData, jiraData));
             });
         } else {

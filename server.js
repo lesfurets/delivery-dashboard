@@ -18,16 +18,14 @@
 var express = require('express');
 var request = require('request');
 
-
-
 var app = express();
 
 app.use(express.static('public'));
 
-var JIRA_URL = "http://jira.lan.courtanet.net/rest/api/2/search?jql=Workstream=Traffic&fields=id,key,summary,fixVersions&startAt=0&maxResults=5000";
+var JIRA_URL = "http://jira.lan.courtanet.net";
 
-app.get('/jira-search', function(req, res) {
-    request(JIRA_URL, function (error, response, body) {
+app.get('/rest/api/2/search', function(req, res) {
+    request(JIRA_URL + req.url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             res.setHeader('Content-Type', 'application/json');
             res.send(body);
