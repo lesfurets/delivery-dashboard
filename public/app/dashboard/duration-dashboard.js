@@ -29,9 +29,10 @@ function DurationDashboard(viewId) {
         var durationsColumns = [TASK_INDEX_STATIC_REFERENCE];
         for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
             durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
+            durationsColumns.push(DURATION_INDEX_TOOLTIP);
         }
         tasksDurationColumnChart = buildTasksDurationColumnChart(viewId, durationsColumns);
-        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [TASK_INDEX_EVENTS_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
+        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [TASK_INDEX_EVENTS_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_TOOLTIP, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
         tasksDurationDashboard = buildFilteredDashboard(viewId, tasksDurationColumnChart, buildFilters(viewId, filtersConfig), updateTable);
         tasksDurationStatsTable = buildDurationStatsTable(viewId);
         tasksListTable = buildTasksListTable(viewId);

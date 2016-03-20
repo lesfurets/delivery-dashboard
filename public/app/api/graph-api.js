@@ -58,6 +58,8 @@ function buildTasksDurationColumnChart(viewId, columns) {
         'containerId': viewId + ID_COLUMN_CHART,
         'view': {'columns': columns},
         'options': {
+            'tooltip': { isHtml: true },
+            'height': 400,
             'isStacked': true,
             'hAxis': {
                 'title': 'Jira Tickets',
@@ -73,7 +75,7 @@ function buildTasksDurationColumnChart(viewId, columns) {
             'chartArea': {
                 'width': '90%',
                 'height': '100%'
-            }
+            },
         }
     });
     setTaskSelectListener(durationChart);
@@ -86,6 +88,7 @@ function buildTasksDurationScatterChart(viewId, columns) {
         'containerId': viewId + ID_SCATTER_CHART,
         'view': {'columns': columns},
         'options': {
+            'tooltip': { isHtml: true },
             'height': 400,
             'hAxis': {
                 'title': 'Dates',
@@ -112,7 +115,7 @@ function buildTasksDurationScatterChart(viewId, columns) {
                 1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
                 2: {labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
                 3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
-            },
+            }
         }
     });
     setTaskSelectListener(durationChart);

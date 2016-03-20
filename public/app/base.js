@@ -17,8 +17,9 @@ var DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
 var DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
 var DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
 var DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
+var DURATION_INDEX_TOOLTIP = DURATION_INDEX_DURATION_LAST + 1;
 
-var DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_DURATION_LAST + 1;
+var DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_TOOLTIP + 1;
 var DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
 var DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
 var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
@@ -97,13 +98,26 @@ function computeDurationData(inputData) {
     var durationData = new google.visualization.DataView(inputData);
     durationData.setColumns(durationDataStruct);
 
-    return durationData.toDataTable();
-}
+    var dataAndTooltipStruct = Array.apply(null, {length: durationData.getNumberOfColumns()}).map(Number.call, Number);
+    dataAndTooltipStruct.push(tooltipColumnBuilder());
 
+    var dataAndTooltip = new google.visualization.DataView(durationData.toDataTable());
+    dataAndTooltip.setColumns(dataAndTooltipStruct);
+
+    return dataAndTooltip.toDataTable();
+}
 function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
-    return columnBuilder('number', label, function (table, row) {
+    return columnBuilder(DATA_NUMBER, label, function (table, row) {
         return table.getValue(row, firstEventIndex).getWorkDaysUntil(table.getValue(row, lastEventIndex)) + correction;
     });
+}
+
+function tooltipColumnBuilder() {
+    var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", durationTooltipGenerator);
+    tooltipColumn.role = "tooltip";
+    tooltipColumn.p = {'html': true};
+    return tooltipColumn;
+
 }
 
 function computeDurationStats(inputData) {
@@ -173,7 +187,7 @@ function getQuartileFunction(ration) {
 
 function groupDurationDataBy(inputData, groupBy) {
     var columns = [];
-    RAW_DATA_COL.EVENTS.forEach(function(element, index) {
+    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
         columns.push(aggregatorBuilder(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
     });
     columns.unshift(aggregatorBuilder(DURATION_INDEX_STATIC_COUNT, 'number', google.visualization.data.count));
@@ -185,7 +199,44 @@ function groupDurationDataBy(inputData, groupBy) {
         formatter.format(data, 2 + index);
     }
     return data
-};/***************************
+}
+
+//
+
+//function tooltipColumnBuilder() {
+//    var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", function (table, row) {
+//        var html = [];
+//        html.push("<h4>" + table.getValue(row, TASK_INDEX_STATIC_REFERENCE) + "</h4>");
+//        html.push("<p>" + table.getValue(row, TASK_INDEX_STATIC_SYMMARY) + "</p>");
+//
+//        html.push("<table class='table table-striped'>");
+//        html.push("<thead>" + createArrayLine(["Status", "Day(s)"]) + "</thead>")
+//        html.push("<tbody>");
+//        RAW_DATA_COL.EVENTS.forEach(function (element, index) {
+//            html.push(createArrayLine(["</i>" + element.label + "</i>", table.getValue(row, DURATION_INDEX_DURATION_FIRST + index)]));
+//        });
+//        html.push("</tbody>");
+//        html.push("</table>");
+//
+//        return "<div class='chartTooltip'>" + html.join("") + "</div>";
+//    });
+//    tooltipColumn.role = "tooltip";
+//    tooltipColumn.p = {'html': true};
+//    return tooltipColumn;
+//
+//}
+
+//      <tr>
+//        <th>Firstname</th>
+//        <th>Lastname</th>
+//        <th>Email</th>
+//      </tr>
+//function createArrayLine(values) {
+//    return "<tr>" + values.map(function (el) {
+//            return "<td>" + el + "</td>";
+//        }).join("") + "</tr>";
+//}
+;/***************************
  *  Event Data
  **************************/
 
@@ -415,7 +466,7 @@ var generateDashboardElementsDom = function (viewId, suffixList) {
  **************************/
 
 function generateFiltersDom(viewId, filtersConfig) {
-    $("#" + viewId + ID_FILTERS)
+    $("#" + viewId + ID_FILTERS).addClass("row")
         .append($('<div>').attr('id', viewId + ID_FILTERS_RANGE).addClass("col-md-7 text-center"))
         .append($('<div>').attr('id', viewId + ID_FILTERS_CATEGORY).addClass("col-md-5 text-center"));
     for (var index = 0; index < filtersConfig.length; index++) {
@@ -615,7 +666,20 @@ function generateToggleFilter(viewId, dashboard) {
         dashboard.resetReduce(TASK_INDEX_FILTER_FIRST + (REPORT_CONFIG.projection[filterIndex].position));
     });
 }
-;/***************************
+;var durationTooltipGenerator = function(table, row) {
+    var html = [];
+    html.push("<h4>" + table.getValue(row, TASK_INDEX_STATIC_REFERENCE) + "</h4>");
+    html.push("<p>" + table.getValue(row, TASK_INDEX_STATIC_SYMMARY) + "</p>");
+
+    html.push("<p>");
+    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
+        html.push("<i>" + table.getColumnLabel(DURATION_INDEX_DURATION_FIRST + index) + "</i>" + " : "
+            + table.getValue(row, DURATION_INDEX_DURATION_FIRST + index) + "<br>");
+    });
+    html.push("</p>");
+
+    return "<div class='chart-tooltip'>" + html.join("") + "</div>";
+};;/***************************
  *     Charts Factory
  **************************/
 
@@ -675,6 +739,8 @@ function buildTasksDurationColumnChart(viewId, columns) {
         'containerId': viewId + ID_COLUMN_CHART,
         'view': {'columns': columns},
         'options': {
+            'tooltip': { isHtml: true },
+            'height': 400,
             'isStacked': true,
             'hAxis': {
                 'title': 'Jira Tickets',
@@ -690,7 +756,7 @@ function buildTasksDurationColumnChart(viewId, columns) {
             'chartArea': {
                 'width': '90%',
                 'height': '100%'
-            }
+            },
         }
     });
     setTaskSelectListener(durationChart);
@@ -703,6 +769,7 @@ function buildTasksDurationScatterChart(viewId, columns) {
         'containerId': viewId + ID_SCATTER_CHART,
         'view': {'columns': columns},
         'options': {
+            'tooltip': { isHtml: true },
             'height': 400,
             'hAxis': {
                 'title': 'Dates',
@@ -729,7 +796,7 @@ function buildTasksDurationScatterChart(viewId, columns) {
                 1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
                 2: {labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
                 3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
-            },
+            }
         }
     });
     setTaskSelectListener(durationChart);
@@ -990,9 +1057,10 @@ function buildFilteredDashboard(viewId, charts, filters, filterListener) {
         var durationsColumns = [TASK_INDEX_STATIC_REFERENCE];
         for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
             durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);
+            durationsColumns.push(DURATION_INDEX_TOOLTIP);
         }
         tasksDurationColumnChart = buildTasksDurationColumnChart(viewId, durationsColumns);
-        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [TASK_INDEX_EVENTS_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
+        tasksDurationScatterChart = buildTasksDurationScatterChart(viewId, [TASK_INDEX_EVENTS_LAST, DURATION_INDEX_DURATION_LAST, DURATION_INDEX_TOOLTIP, DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT, DURATION_INDEX_STATITICS_90PCT]);
         tasksDurationDashboard = buildFilteredDashboard(viewId, tasksDurationColumnChart, buildFilters(viewId, filtersConfig), updateTable);
         tasksDurationStatsTable = buildDurationStatsTable(viewId);
         tasksListTable = buildTasksListTable(viewId);
@@ -1202,6 +1270,7 @@ CONFIG_PERIOD_SELECTOR = "pediod_selector";
 
 DATA_DATE = "date";
 DATA_STRING = "string";
+DATA_NUMBER = "number";
 
 FILTER_CATEGORY = "CategoryFilter";
 FILTER_DATE = "DateRangeFilter";;function initApp() {

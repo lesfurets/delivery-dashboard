@@ -22,7 +22,7 @@ var generateDashboardElementsDom = function (viewId, suffixList) {
  **************************/
 
 function generateFiltersDom(viewId, filtersConfig) {
-    $("#" + viewId + ID_FILTERS)
+    $("#" + viewId + ID_FILTERS).addClass("row")
         .append($('<div>').attr('id', viewId + ID_FILTERS_RANGE).addClass("col-md-7 text-center"))
         .append($('<div>').attr('id', viewId + ID_FILTERS_CATEGORY).addClass("col-md-5 text-center"));
     for (var index = 0; index < filtersConfig.length; index++) {

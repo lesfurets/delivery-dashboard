@@ -16,13 +16,26 @@ function computeDurationData(inputData) {
     var durationData = new google.visualization.DataView(inputData);
     durationData.setColumns(durationDataStruct);
 
-    return durationData.toDataTable();
-}
+    var dataAndTooltipStruct = Array.apply(null, {length: durationData.getNumberOfColumns()}).map(Number.call, Number);
+    dataAndTooltipStruct.push(tooltipColumnBuilder());
 
+    var dataAndTooltip = new google.visualization.DataView(durationData.toDataTable());
+    dataAndTooltip.setColumns(dataAndTooltipStruct);
+
+    return dataAndTooltip.toDataTable();
+}
 function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
-    return columnBuilder('number', label, function (table, row) {
+    return columnBuilder(DATA_NUMBER, label, function (table, row) {
         return table.getValue(row, firstEventIndex).getWorkDaysUntil(table.getValue(row, lastEventIndex)) + correction;
     });
+}
+
+function tooltipColumnBuilder() {
+    var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", durationTooltipGenerator);
+    tooltipColumn.role = "tooltip";
+    tooltipColumn.p = {'html': true};
+    return tooltipColumn;
+
 }
 
 function computeDurationStats(inputData) {
@@ -92,7 +105,7 @@ function getQuartileFunction(ration) {
 
 function groupDurationDataBy(inputData, groupBy) {
     var columns = [];
-    RAW_DATA_COL.EVENTS.forEach(function(element, index) {
+    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
         columns.push(aggregatorBuilder(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
     });
     columns.unshift(aggregatorBuilder(DURATION_INDEX_STATIC_COUNT, 'number', google.visualization.data.count));
@@ -105,3 +118,39 @@ function groupDurationDataBy(inputData, groupBy) {
     }
     return data
 }
+
+//
+
+//function tooltipColumnBuilder() {
+//    var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", function (table, row) {
+//        var html = [];
+//        html.push("<h4>" + table.getValue(row, TASK_INDEX_STATIC_REFERENCE) + "</h4>");
+//        html.push("<p>" + table.getValue(row, TASK_INDEX_STATIC_SYMMARY) + "</p>");
+//
+//        html.push("<table class='table table-striped'>");
+//        html.push("<thead>" + createArrayLine(["Status", "Day(s)"]) + "</thead>")
+//        html.push("<tbody>");
+//        RAW_DATA_COL.EVENTS.forEach(function (element, index) {
+//            html.push(createArrayLine(["</i>" + element.label + "</i>", table.getValue(row, DURATION_INDEX_DURATION_FIRST + index)]));
+//        });
+//        html.push("</tbody>");
+//        html.push("</table>");
+//
+//        return "<div class='chartTooltip'>" + html.join("") + "</div>";
+//    });
+//    tooltipColumn.role = "tooltip";
+//    tooltipColumn.p = {'html': true};
+//    return tooltipColumn;
+//
+//}
+
+//      <tr>
+//        <th>Firstname</th>
+//        <th>Lastname</th>
+//        <th>Email</th>
+//      </tr>
+//function createArrayLine(values) {
+//    return "<tr>" + values.map(function (el) {
+//            return "<td>" + el + "</td>";
+//        }).join("") + "</tr>";
+//}

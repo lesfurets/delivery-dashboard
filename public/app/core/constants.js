@@ -26,6 +26,7 @@ CONFIG_PERIOD_SELECTOR = "pediod_selector";
 
 DATA_DATE = "date";
 DATA_STRING = "string";
+DATA_NUMBER = "number";
 
 FILTER_CATEGORY = "CategoryFilter";
 FILTER_DATE = "DateRangeFilter";
