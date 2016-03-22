@@ -17,7 +17,8 @@ var RAW_DATA_COL = {
         {columnIndex: 0, dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
         {columnIndex: 5, dataType: "date", filterType: 'DateRangeFilter', label: 'Creation'},
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release'},
-        {jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string" , filterType: 'CategoryFilter', label: 'Version'}
+        {jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string" , filterType: 'CategoryFilter', label: 'Version'},
+        {jiraField: ["fields", "assignee", "key"], dataType: "string" , filterType: 'CategoryFilter', label: 'Assignee'}
     ]
 };
 
@@ -31,5 +32,5 @@ var REPORT_CONFIG = {
 
 var JIRA_DATA = {
     jql: "Workstream=Traffic",
-    fields: "id,key,summary,fixVersions"
+    fields: "id,key,summary,fixVersions,assignee"
 }
