@@ -118,39 +118,3 @@ function groupDurationDataBy(inputData, groupBy) {
     }
     return data
 }
-
-//
-
-//function tooltipColumnBuilder() {
-//    var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", function (table, row) {
-//        var html = [];
-//        html.push("<h4>" + table.getValue(row, TASK_INDEX_STATIC_REFERENCE) + "</h4>");
-//        html.push("<p>" + table.getValue(row, TASK_INDEX_STATIC_SYMMARY) + "</p>");
-//
-//        html.push("<table class='table table-striped'>");
-//        html.push("<thead>" + createArrayLine(["Status", "Day(s)"]) + "</thead>")
-//        html.push("<tbody>");
-//        RAW_DATA_COL.EVENTS.forEach(function (element, index) {
-//            html.push(createArrayLine(["</i>" + element.label + "</i>", table.getValue(row, DURATION_INDEX_DURATION_FIRST + index)]));
-//        });
-//        html.push("</tbody>");
-//        html.push("</table>");
-//
-//        return "<div class='chartTooltip'>" + html.join("") + "</div>";
-//    });
-//    tooltipColumn.role = "tooltip";
-//    tooltipColumn.p = {'html': true};
-//    return tooltipColumn;
-//
-//}
-
-//      <tr>
-//        <th>Firstname</th>
-//        <th>Lastname</th>
-//        <th>Email</th>
-//      </tr>
-//function createArrayLine(values) {
-//    return "<tr>" + values.map(function (el) {
-//            return "<td>" + el + "</td>";
-//        }).join("") + "</tr>";
-//}

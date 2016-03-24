@@ -27,7 +27,7 @@ var DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
 var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = TASK_INDEX_FILTER_LAST + 1;;function filterReleasedBefore(inputData, fromDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
+        column: TASK_INDEX_EVENTS_LAST,
         minValue: fromDate
     }]));
     return view;
@@ -36,7 +36,7 @@ var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = TASK_INDEX_FILTER_LAST + 1;;function f
 function filterReleasedAfter(inputData, toDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[RAW_DATA_COL.EVENTS.length - 1].columnIndex,
+        column: TASK_INDEX_EVENTS_LAST,
         maxValue: toDate
     }]));
     return view;
@@ -45,7 +45,7 @@ function filterReleasedAfter(inputData, toDate) {
 function filterCreatedAfter(inputData, toDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
-        column: RAW_DATA_COL.EVENTS[0].columnIndex,
+        column: TASK_INDEX_EVENTS_FIRST,
         maxValue: toDate
     }]));
     return view;
@@ -200,42 +200,6 @@ function groupDurationDataBy(inputData, groupBy) {
     }
     return data
 }
-
-//
-
-//function tooltipColumnBuilder() {
-//    var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", function (table, row) {
-//        var html = [];
-//        html.push("<h4>" + table.getValue(row, TASK_INDEX_STATIC_REFERENCE) + "</h4>");
-//        html.push("<p>" + table.getValue(row, TASK_INDEX_STATIC_SYMMARY) + "</p>");
-//
-//        html.push("<table class='table table-striped'>");
-//        html.push("<thead>" + createArrayLine(["Status", "Day(s)"]) + "</thead>")
-//        html.push("<tbody>");
-//        RAW_DATA_COL.EVENTS.forEach(function (element, index) {
-//            html.push(createArrayLine(["</i>" + element.label + "</i>", table.getValue(row, DURATION_INDEX_DURATION_FIRST + index)]));
-//        });
-//        html.push("</tbody>");
-//        html.push("</table>");
-//
-//        return "<div class='chartTooltip'>" + html.join("") + "</div>";
-//    });
-//    tooltipColumn.role = "tooltip";
-//    tooltipColumn.p = {'html': true};
-//    return tooltipColumn;
-//
-//}
-
-//      <tr>
-//        <th>Firstname</th>
-//        <th>Lastname</th>
-//        <th>Email</th>
-//      </tr>
-//function createArrayLine(values) {
-//    return "<tr>" + values.map(function (el) {
-//            return "<td>" + el + "</td>";
-//        }).join("") + "</tr>";
-//}
 ;/***************************
  *  Event Data
  **************************/
