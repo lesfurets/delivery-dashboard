@@ -30,6 +30,7 @@ function computeTaskData(driveData, jiraData) {
         });
     }
 
+
     var completedData = new google.visualization.DataView(driveData);
     completedData.setColumns(completedDataStruct);
 
@@ -42,7 +43,7 @@ function calcRefValue(table, row) {
 
 // Get data from source defined in config drive/jira
 function taskColumnBuilder(element, jiraDataMap) {
-    return (typeof element.jiraField == 'undefined') ? element.columnIndex :
+    return (typeof element.jiraField == 'undefined') ? driveColumnBuilder(element.label,element.columnIndex, element.dataType) :
         jiraColumnBuilder(jiraDataMap, element.label, element.jiraField, element.dataType);
 }
 
@@ -50,7 +51,14 @@ function taskColumnBuilder(element, jiraDataMap) {
 function jiraColumnBuilder(jiraDataMap, columnLabel, fields, type) {
     return columnBuilder(type, columnLabel, function (table, row) {
         var jiraValue = getJsonData(jiraDataMap[calcRefValue(table, row)], fields);
-        return type == DATA_DATE ? new Date(jiraValue) : jiraValue;
+        return type == DATA_DATE ? new Date(jiraValue+".00:00") : jiraValue;
+    });
+}
+
+// Find the related line in jira-data and extrat field
+function driveColumnBuilder(columnLabel, column, type) {
+    return columnBuilder(type, columnLabel, function (table, row) {
+        return table.getValue(row,column)
     });
 }
 

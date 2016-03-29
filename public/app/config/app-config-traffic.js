@@ -4,10 +4,10 @@ var RAW_DATA_COL = {
     PROJECT: 0,
     REF: 1,
     EVENTS: [
-        {columnIndex: 5, label: 'Backlog', correction: -1},
-        {columnIndex: 6, label: 'Analysis', correction: -0.5},
-        {columnIndex: 7, label: 'Development', correction: -0.5},
-        {columnIndex: 8, label: 'Ready To Release', correction: -1},
+        {jiraField: ["fields", "customfield_11729"], label: 'Backlog', correction: -1},
+        {jiraField: ["fields", "customfield_11730"], label: 'Analysis', correction: -0.5},
+        {jiraField: ["fields", "customfield_11731"], label: 'Development', correction: -0.5},
+        {jiraField: ["fields", "customfield_11732"], label: 'Ready To Release', correction: -1},
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], label: 'Released', correction: -1}
     ],
     FILTERS: [
@@ -32,5 +32,5 @@ var REPORT_CONFIG = {
 
 var JIRA_DATA = {
     jql: "Workstream=Traffic",
-    fields: "id,key,summary,fixVersions,assignee"
+    fields: "id,key,summary,fixVersions,assignee,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732"
 }
