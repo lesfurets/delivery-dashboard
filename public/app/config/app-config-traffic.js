@@ -15,7 +15,7 @@ var RAW_DATA_COL = {
         {columnIndex: 3, dataType: "string" ,filterType: 'CategoryFilter', label: 'Effort'},
         {columnIndex: 4, dataType: "string" ,filterType: 'CategoryFilter', label: 'Value'},
         {columnIndex: 0, dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
-        {columnIndex: 5, dataType: "date", filterType: 'DateRangeFilter', label: 'Creation'},
+        {jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation'},
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release'},
         {jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string" , filterType: 'CategoryFilter', label: 'Version'},
         {jiraField: ["fields", "assignee", "key"], dataType: "string" , filterType: 'CategoryFilter', label: 'Assignee'}
