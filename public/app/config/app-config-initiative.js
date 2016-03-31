@@ -11,7 +11,7 @@ var RAW_DATA_COL = {
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], label: 'Released', correction: -1}
     ],
     FILTERS: [
-        {jiraField: ["fields", "issuetype", "name"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Type'},
+        {columnIndex: 2, dataType: "string" ,filterType: 'CategoryFilter', label: 'Type'},
         {columnIndex: 3, dataType: "string" ,filterType: 'CategoryFilter', label: 'Effort'},
         {columnIndex: 4, dataType: "string" ,filterType: 'CategoryFilter', label: 'Value'},
         {columnIndex: 0, dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
@@ -32,5 +32,5 @@ var REPORT_CONFIG = {
 
 var JIRA_DATA = {
     jql: "Workstream=Traffic",
-    fields: "id,key,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732"
+    fields: "id,key,summary,fixVersions,assignee,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732"
 }
