@@ -1,8 +1,51 @@
 /***************************
- *  Tasks Data
+ *  Tasks Data From Jira
  **************************/
 
-function computeTaskData(driveData, jiraData) {
+function jiraToTaskData(jiraData) {
+    var taskData = new google.visualization.DataTable();
+
+    // Defining table structure
+    taskData.addColumn(DATA_STRING, "Key");
+    taskData.addColumn(DATA_STRING, "Summary");
+    RAW_DATA_COL.EVENTS.forEach(function (element) {
+        taskData.addColumn(element.dataType, element.label);
+    });
+    if(RAW_DATA_COL.FILTERS != null){
+        RAW_DATA_COL.FILTERS.forEach(function (element) {
+            taskData.addColumn(element.dataType, element.label);
+        });
+    }
+
+    // Adding jira data in the table
+    jiraData.issues.forEach(function (issue) {
+        var row =[];
+        row.push(getJiraValue(issue, RAW_DATA_COL.KEY));
+        row.push(getJiraValue(issue, RAW_DATA_COL.SUMMARY));
+        RAW_DATA_COL.EVENTS.forEach(function (element) {
+            row.push(getJiraValue(issue, element.jiraField, element.dataType));
+        });
+        if(RAW_DATA_COL.FILTERS != null){
+            RAW_DATA_COL.FILTERS.forEach(function (element) {
+                row.push(getJiraValue(issue, element.jiraField, element.dataType));
+            });
+        }
+        taskData.addRow(row);
+    });
+
+    return taskData;
+}
+
+function getJiraValue(jiraData, fieldPath, fieldType){
+    var jiraValue = getJsonData(jiraData, fieldPath);
+    return fieldType == DATA_DATE ? new Date(jiraValue+".00:00") : jiraValue;
+}
+
+/***************************
+ *  Tasks Data From Drive
+ **************************/
+
+function driveToTaskData(driveData, jiraData) {
     // Listing all reference
     var taskRefs = [];
     for (var i = 0; i < driveData.getNumberOfRows(); i++) {

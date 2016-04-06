@@ -31,9 +31,4 @@ function completeConfig() {
         element.dataType = DATA_DATE;
         element.filterType = FILTER_DATE
     });
-//if(RAW_DATA_COL.FILTERS != null){
-//    RAW_DATA_COL.FILTERS.forEach(function (element) {
-//        completedDataStruct.push(taskColumnBuilder(element, jiraDataMap));
-//    });
-//}
 }

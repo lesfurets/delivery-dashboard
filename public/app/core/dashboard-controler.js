@@ -9,23 +9,46 @@ function initApp() {
 }
 
 function loadRawData(dataConsumer) {
-    var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/" + RAW_DATA_URL + "/gviz/tq?sheet=RawData&headers=1");
-    var handler = new QueryResponseHandler(dataConsumer);
-    query.send(handler.handleResponse);
+    if (typeof JIRA_DATA != null) {
+        var jiraUrl = "/rest/api/2/search?jql=" + JIRA_DATA.jql + "&fields=" + JIRA_DATA.fields + "&startAt=0&maxResults=5000";
+        $.getJSON(jiraUrl, function (jiraData) {
+            setUpConsumer(dataConsumer, jiraToTaskData(jiraData));
+        });
+    } else {
+        var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/" + RAW_DATA_URL + "/gviz/tq?sheet=RawData&headers=1");
+        var handler = new DriveResponseHandler(dataConsumer);
+        query.send(handler.handleResponse);
+    }
 }
 
-// Completing spreadsheed data with jira if possible
-function QueryResponseHandler(dataConsumer) {
+// building data with jira
+function DriveResponseHandler(dataConsumer) {
     this.handleResponse = function (response) {
         var driveData = response.getDataTable();
 
         if (typeof JIRA_DATA != null) {
             var jiraUrl = "/rest/api/2/search?jql=" + JIRA_DATA.jql + "&fields=" + JIRA_DATA.fields + "&startAt=0&maxResults=5000";
             $.getJSON(jiraUrl, function (jiraData) {
-                setUpConsumer(dataConsumer, computeTaskData(driveData, jiraData));
+                setUpConsumer(dataConsumer, driveToTaskData(driveData, jiraData));
             });
         } else {
-            setUpConsumer(dataConsumer, computeTaskData(driveData));
+            setUpConsumer(dataConsumer, driveToTaskData(driveData));
+        }
+    }
+}
+
+// Completing spreadsheed data with jira if possible
+function DriveResponseHandler(dataConsumer) {
+    this.handleResponse = function (response) {
+        var driveData = response.getDataTable();
+
+        if (typeof JIRA_DATA != null) {
+            var jiraUrl = "/rest/api/2/search?jql=" + JIRA_DATA.jql + "&fields=" + JIRA_DATA.fields + "&startAt=0&maxResults=5000";
+            $.getJSON(jiraUrl, function (jiraData) {
+                setUpConsumer(dataConsumer, driveToTaskData(driveData, jiraData));
+            });
+        } else {
+            setUpConsumer(dataConsumer, driveToTaskData(driveData));
         }
     }
 }

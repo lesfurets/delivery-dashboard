@@ -1,8 +1,6 @@
-var RAW_DATA_URL = '14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA';
-
 var RAW_DATA_COL = {
-    PROJECT: 0,
-    REF: 1,
+    KEY: ["key"],
+    SUMMARY: ["fields", "summary"],
     EVENTS: [
         {jiraField: ["fields", "customfield_11729"], label: 'Backlog', correction: -1},
         {jiraField: ["fields", "customfield_11730"], label: 'Analysis', correction: -0.5},
@@ -31,6 +29,6 @@ var REPORT_CONFIG = {
 }
 
 var JIRA_DATA = {
-    jql: "Workstream=Traffic",
+    jql: "Workstream=Traffic%20and%20\"Kanban%20Validation\"%20is%20not%20null%20and%20value%20is%20not%20null",
     fields: "id,key,project,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732,customfield_10621,customfield_11010"
 }
