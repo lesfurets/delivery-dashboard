@@ -12,9 +12,9 @@ var RAW_DATA_COL = {
     ],
     FILTERS: [
         {jiraField: ["fields", "issuetype", "name"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Type'},
-        {columnIndex: 3, dataType: "string" ,filterType: 'CategoryFilter', label: 'Effort'},
-        {columnIndex: 4, dataType: "string" ,filterType: 'CategoryFilter', label: 'Value'},
-        {columnIndex: 0, dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
+        {jiraField: ["fields", "customfield_10621","value"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Effort'},
+        {jiraField: ["fields", "customfield_11010","value"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Value'},
+        {jiraField: ["fields", "project","key"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
         {jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation'},
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release'},
         {jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string" , filterType: 'CategoryFilter', label: 'Version'},
@@ -32,5 +32,5 @@ var REPORT_CONFIG = {
 
 var JIRA_DATA = {
     jql: "Workstream=Traffic",
-    fields: "id,key,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732"
+    fields: "id,key,project,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732,customfield_10621,customfield_11010"
 }
