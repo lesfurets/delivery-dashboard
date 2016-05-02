@@ -26,7 +26,12 @@ function computeDurationData(inputData) {
 }
 function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
     return columnBuilder(DATA_NUMBER, label, function (table, row) {
-        return table.getValue(row, firstEventIndex).getWorkDaysUntil(table.getValue(row, lastEventIndex)) + correction;
+        var startDate = table.getValue(row, firstEventIndex);
+        var endDate = table.getValue(row, lastEventIndex);
+        if(startDate == null){
+            return null;
+        }
+        return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
     });
 }
 

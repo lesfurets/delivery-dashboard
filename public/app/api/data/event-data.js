@@ -35,11 +35,15 @@ function computeEventData(inputData) {
     var eventsByDateMap = {};
     for (var index = 0; index < inputData.getNumberOfRows(); index++) {
         for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
-            var eventDate = inputData.getValue(index, TASK_INDEX_EVENTS_FIRST + eventIndex).formatYYYYMMDD();
-            if (!(eventDate in eventsByDateMap)) {
-                eventsByDateMap[eventDate] = Array.apply(null, {length: eventsNb}).map(Number.prototype.valueOf, 0);
+            var eventDate = inputData.getValue(index, TASK_INDEX_EVENTS_FIRST + eventIndex);
+            if (eventDate != null) {
+                var indexDate = eventDate.formatYYYYMMDD();
+                if (!(indexDate in eventsByDateMap)) {
+                    eventsByDateMap[indexDate] = Array.apply(null, {length: eventsNb}).map(Number.prototype.valueOf, 0);
+                }
+                eventsByDateMap[indexDate][eventIndex]++;
+
             }
-            eventsByDateMap[eventDate][eventIndex]++;
         }
     }
 
@@ -50,9 +54,9 @@ function computeEventData(inputData) {
         cumulativeData.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
     }
 
-    Object.keys(eventsByDateMap).sort().forEach(function(dateString,dateIndex) {
-        var row =[new Date(dateString)];
-        eventsByDateMap[dateString].forEach(function(counter, counterIndex) {
+    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
+        var row = [new Date(dateString)];
+        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
             row.push((dateIndex == 0) ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
         })
         cumulativeData.addRow(row);

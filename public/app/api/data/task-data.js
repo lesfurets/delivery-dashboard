@@ -38,7 +38,10 @@ function jiraToTaskData(jiraData) {
 
 function getJiraValue(jiraData, fieldPath, fieldType){
     var jiraValue = getJsonData(jiraData, fieldPath);
-    return fieldType == DATA_DATE ? new Date(jiraValue+".00:00") : jiraValue;
+    if (fieldType != DATA_DATE){
+        return jiraValue;
+    }
+    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue+".00:00");
 }
 
 /***************************

@@ -108,7 +108,12 @@ function computeDurationData(inputData) {
 }
 function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
     return columnBuilder(DATA_NUMBER, label, function (table, row) {
-        return table.getValue(row, firstEventIndex).getWorkDaysUntil(table.getValue(row, lastEventIndex)) + correction;
+        var startDate = table.getValue(row, firstEventIndex);
+        var endDate = table.getValue(row, lastEventIndex);
+        if(startDate == null){
+            return null;
+        }
+        return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
     });
 }
 
@@ -237,11 +242,15 @@ function computeEventData(inputData) {
     var eventsByDateMap = {};
     for (var index = 0; index < inputData.getNumberOfRows(); index++) {
         for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
-            var eventDate = inputData.getValue(index, TASK_INDEX_EVENTS_FIRST + eventIndex).formatYYYYMMDD();
-            if (!(eventDate in eventsByDateMap)) {
-                eventsByDateMap[eventDate] = Array.apply(null, {length: eventsNb}).map(Number.prototype.valueOf, 0);
+            var eventDate = inputData.getValue(index, TASK_INDEX_EVENTS_FIRST + eventIndex);
+            if (eventDate != null) {
+                var indexDate = eventDate.formatYYYYMMDD();
+                if (!(indexDate in eventsByDateMap)) {
+                    eventsByDateMap[indexDate] = Array.apply(null, {length: eventsNb}).map(Number.prototype.valueOf, 0);
+                }
+                eventsByDateMap[indexDate][eventIndex]++;
+
             }
-            eventsByDateMap[eventDate][eventIndex]++;
         }
     }
 
@@ -252,9 +261,9 @@ function computeEventData(inputData) {
         cumulativeData.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
     }
 
-    Object.keys(eventsByDateMap).sort().forEach(function(dateString,dateIndex) {
-        var row =[new Date(dateString)];
-        eventsByDateMap[dateString].forEach(function(counter, counterIndex) {
+    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
+        var row = [new Date(dateString)];
+        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
             row.push((dateIndex == 0) ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
         })
         cumulativeData.addRow(row);
@@ -303,7 +312,10 @@ function jiraToTaskData(jiraData) {
 
 function getJiraValue(jiraData, fieldPath, fieldType){
     var jiraValue = getJsonData(jiraData, fieldPath);
-    return fieldType == DATA_DATE ? new Date(jiraValue+".00:00") : jiraValue;
+    if (fieldType != DATA_DATE){
+        return jiraValue;
+    }
+    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue+".00:00");
 }
 
 /***************************
