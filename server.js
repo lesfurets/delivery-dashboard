@@ -17,6 +17,7 @@
 
 var express = require('express');
 var request = require('request');
+var path = require('path');
 
 var app = express();
 
@@ -31,6 +32,11 @@ app.get('/rest/api/2/search', function(req, res) {
             res.send(body);
         }
     })
+});
+
+app.all('*', function(req, res){
+    //res.sendFile("./public/index.html");
+    res.sendFile(path.join(__dirname, './public', 'index.html'));
 });
 
 app.listen(8080);
