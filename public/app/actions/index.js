@@ -1,3 +1,5 @@
+import jiraParser from '../api/jiraParser'
+
 let nextTodoId = 0
 export const addTodo = (text) => {
     return {
@@ -22,9 +24,8 @@ export const toggleTodo = (id) => {
 }
 
 export const fetchDataAction = (data) => {
-    console.log(data)
     return {
         type: 'SET_RAW_DATA',
-        rawData: data
+        rawData: jiraParser(data)
     }
 }

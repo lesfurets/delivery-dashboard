@@ -11,6 +11,7 @@ import reducer from './reducers';
 import AppTest from './components/AppTest';
 import Page1 from './components/Page1';
 import Page2 from './components/Page2';
+import TaskManager from './dashboard/TaskManager';
 
 
 google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
@@ -25,6 +26,7 @@ google.setOnLoadCallback(function () {
                     <IndexRedirect to="/home"/>
                     <Route path="/home" component={Page1}/>
                     <Route path="/histogram" component={Page2}/>
+                    <Route path="/task-manager" component={TaskManager}/>
                 </Route>
             </Router>
         </Provider>, document.getElementById('app'))

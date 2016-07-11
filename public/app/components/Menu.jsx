@@ -33,7 +33,7 @@ export default class Menu extends React.Component {
                                         <li><a data-toggle="tab" href="#tab_monthly_report_view" element="elements/monthly-report-view.html">Monthly Report</a></li>
                                     </ul>
                                 </li>
-                                <li><a data-toggle="tab" href="#tab_tasks_manager_jira" element="elements/task-manager-jira.html">Manage Tasks</a></li>
+                                <li><Link to={'/task-manager'} styleName="title"> Manage Tasks </Link></li>
                             </ul>
                             <ul className="nav navbar-nav navbar-right">
                                 <li><a href="#"><span className="glyphicon glyphicon-plus"></span></a></li>
