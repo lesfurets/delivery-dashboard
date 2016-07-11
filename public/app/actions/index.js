@@ -22,6 +22,7 @@ export const toggleTodo = (id) => {
 }
 
 export const fetchDataAction = (data) => {
+    console.log(data)
     return {
         type: 'SET_RAW_DATA',
         rawData: data
