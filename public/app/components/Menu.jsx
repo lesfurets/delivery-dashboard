@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router';
 
 export default class Menu extends React.Component {
-
     render() {
         return (
                 <nav className="navbar navbar-inverse navbar-fixed-top">
@@ -21,23 +20,22 @@ export default class Menu extends React.Component {
                                 <li className="dropdown active">
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Task Data<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
-                                        <li><Link to={'/'} styleName="title"> Cumulative Flow </Link></li>
-                                        <li><Link to={'/home'} styleName="title"> Duration </Link></li>
-                                        <li><Link to={'/histogram'} styleName="title"> Distribution </Link></li>
+                                        <li><Link to={'/'} styleName="title">Cumulative Flow</Link></li>
+                                        <li><Link to={'/'} styleName="title">Duration</Link></li>
+                                        <li><Link to={'/'} styleName="title">Distribution</Link></li>
                                     </ul>
                                 </li>
                                 <li className="dropdown">
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Reports<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
-                                        <li><a data-toggle="tab" href="#tab_period_report_view" element='elements/period-report-view.html'>Period Report</a></li>
-                                        <li><a data-toggle="tab" href="#tab_monthly_report_view" element="elements/monthly-report-view.html">Monthly Report</a></li>
+                                        <li><Link to={'/'} styleName="title">Period Report</Link></li>
+                                        <li><Link to={'/'} styleName="title">Monthly Report</Link></li>
                                     </ul>
                                 </li>
                                 <li><Link to={'/task-manager'} styleName="title"> Manage Tasks </Link></li>
                             </ul>
                             <ul className="nav navbar-nav navbar-right">
-                                <li><a href="#"><span className="glyphicon glyphicon-plus"></span></a></li>
-                                <li><a href="#" onclick="reloadRawData()"><span className="glyphicon glyphicon-refresh"></span></a></li>
+                                <li><a href="#"><span className="glyphicon glyphicon-refresh"></span></a></li>
                             </ul>
                         </div>
                     </div>

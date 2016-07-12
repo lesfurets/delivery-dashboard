@@ -72,19 +72,15 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _AppTest = __webpack_require__(260);
+	var _DeliveryDashboard = __webpack_require__(258);
 
-	var _AppTest2 = _interopRequireDefault(_AppTest);
+	var _DeliveryDashboard2 = _interopRequireDefault(_DeliveryDashboard);
 
-	var _Page = __webpack_require__(262);
+	var _Page = __webpack_require__(260);
 
 	var _Page2 = _interopRequireDefault(_Page);
 
-	var _Page3 = __webpack_require__(263);
-
-	var _Page4 = _interopRequireDefault(_Page3);
-
-	var _TaskManager = __webpack_require__(277);
+	var _TaskManager = __webpack_require__(261);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -103,10 +99,9 @@
 	            { history: _reactRouter.browserHistory },
 	            _react2.default.createElement(
 	                _reactRouter.Route,
-	                { path: '/', component: _AppTest2.default },
-	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/home' }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/home', component: _Page2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/histogram', component: _Page4.default }),
+	                { path: '/', component: _DeliveryDashboard2.default },
+	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/todo' }),
+	                _react2.default.createElement(_reactRouter.Route, { path: '/todo', component: _Page2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/task-manager', component: _TaskManager2.default })
 	            )
 	        )
@@ -37443,23 +37438,13 @@
 
 	var _redux = __webpack_require__(228);
 
-	var _todos = __webpack_require__(257);
-
-	var _todos2 = _interopRequireDefault(_todos);
-
-	var _visibilityFilter = __webpack_require__(258);
-
-	var _visibilityFilter2 = _interopRequireDefault(_visibilityFilter);
-
-	var _rawData = __webpack_require__(259);
+	var _rawData = __webpack_require__(257);
 
 	var _rawData2 = _interopRequireDefault(_rawData);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var todoApp = (0, _redux.combineReducers)({
-	    todos: _todos2.default,
-	    visibilityFilter: _visibilityFilter2.default,
 	    rawData: _rawData2.default
 	});
 
@@ -37467,81 +37452,6 @@
 
 /***/ },
 /* 257 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	var todo = function todo(state, action) {
-	    switch (action.type) {
-	        case 'ADD_TODO':
-	            return {
-	                id: action.id,
-	                text: action.text,
-	                completed: false
-	            };
-	        case 'TOGGLE_TODO':
-	            if (state.id !== action.id) {
-	                return state;
-	            }
-
-	            return Object.assign({}, state, {
-	                completed: !state.completed
-	            });
-
-	        default:
-	            return state;
-	    }
-	};
-
-	var todos = function todos() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case 'ADD_TODO':
-	            return [].concat(_toConsumableArray(state), [todo(undefined, action)]);
-	        case 'TOGGLE_TODO':
-	            return state.map(function (t) {
-	                return todo(t, action);
-	            });
-	        default:
-	            return state;
-	    }
-	};
-
-	exports.default = todos;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var visibilityFilter = function visibilityFilter() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? 'SHOW_ALL' : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case 'SET_VISIBILITY_FILTER':
-	            return action.filter;
-	        default:
-	            return state;
-	    }
-	};
-
-	exports.default = visibilityFilter;
-
-/***/ },
-/* 259 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -37564,7 +37474,7 @@
 	exports.default = rawData;
 
 /***/ },
-/* 260 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37579,7 +37489,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Menu = __webpack_require__(261);
+	var _Menu = __webpack_require__(259);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
@@ -37635,7 +37545,7 @@
 	exports.default = Application;
 
 /***/ },
-/* 261 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37719,7 +37629,7 @@
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
 	                                            { to: '/', styleName: 'title' },
-	                                            ' Cumulative Flow '
+	                                            'Cumulative Flow'
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
@@ -37727,8 +37637,8 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/home', styleName: 'title' },
-	                                            ' Duration '
+	                                            { to: '/', styleName: 'title' },
+	                                            'Duration'
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
@@ -37736,8 +37646,8 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/histogram', styleName: 'title' },
-	                                            ' Distribution '
+	                                            { to: '/', styleName: 'title' },
+	                                            'Distribution'
 	                                        )
 	                                    )
 	                                )
@@ -37758,8 +37668,8 @@
 	                                        'li',
 	                                        null,
 	                                        _react2.default.createElement(
-	                                            'a',
-	                                            { 'data-toggle': 'tab', href: '#tab_period_report_view', element: 'elements/period-report-view.html' },
+	                                            _reactRouter.Link,
+	                                            { to: '/', styleName: 'title' },
 	                                            'Period Report'
 	                                        )
 	                                    ),
@@ -37767,8 +37677,8 @@
 	                                        'li',
 	                                        null,
 	                                        _react2.default.createElement(
-	                                            'a',
-	                                            { 'data-toggle': 'tab', href: '#tab_monthly_report_view', element: 'elements/monthly-report-view.html' },
+	                                            _reactRouter.Link,
+	                                            { to: '/', styleName: 'title' },
 	                                            'Monthly Report'
 	                                        )
 	                                    )
@@ -37793,15 +37703,6 @@
 	                                _react2.default.createElement(
 	                                    'a',
 	                                    { href: '#' },
-	                                    _react2.default.createElement('span', { className: 'glyphicon glyphicon-plus' })
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'li',
-	                                null,
-	                                _react2.default.createElement(
-	                                    'a',
-	                                    { href: '#', onclick: 'reloadRawData()' },
 	                                    _react2.default.createElement('span', { className: 'glyphicon glyphicon-refresh' })
 	                                )
 	                            )
@@ -37818,7 +37719,7 @@
 	exports.default = Menu;
 
 /***/ },
-/* 262 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -37867,541 +37768,7 @@
 	exports.default = Page1;
 
 /***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Footer = __webpack_require__(264);
-
-	var _Footer2 = _interopRequireDefault(_Footer);
-
-	var _AddTodo = __webpack_require__(270);
-
-	var _AddTodo2 = _interopRequireDefault(_AddTodo);
-
-	var _VisibleTodoList = __webpack_require__(271);
-
-	var _VisibleTodoList2 = _interopRequireDefault(_VisibleTodoList);
-
-	var _RawDataPanel = __webpack_require__(274);
-
-	var _RawDataPanel2 = _interopRequireDefault(_RawDataPanel);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page2 = function Page2() {
-	    return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(_AddTodo2.default, null),
-	        _react2.default.createElement(_VisibleTodoList2.default, null),
-	        _react2.default.createElement(_Footer2.default, null),
-	        _react2.default.createElement(_RawDataPanel2.default, null)
-	    );
-	};
-
-	exports.default = Page2;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _FilterLink = __webpack_require__(265);
-
-	var _FilterLink2 = _interopRequireDefault(_FilterLink);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Footer = function Footer() {
-	    return _react2.default.createElement(
-	        'p',
-	        null,
-	        'Show:',
-	        " ",
-	        _react2.default.createElement(
-	            _FilterLink2.default,
-	            { filter: 'SHOW_ALL' },
-	            'All'
-	        ),
-	        ", ",
-	        _react2.default.createElement(
-	            _FilterLink2.default,
-	            { filter: 'SHOW_ACTIVE' },
-	            'Active'
-	        ),
-	        ", ",
-	        _react2.default.createElement(
-	            _FilterLink2.default,
-	            { filter: 'SHOW_COMPLETED' },
-	            'Completed'
-	        )
-	    );
-	};
-
-	exports.default = Footer;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _reactRedux = __webpack_require__(241);
-
-	var _actions = __webpack_require__(266);
-
-	var _Link = __webpack_require__(269);
-
-	var _Link2 = _interopRequireDefault(_Link);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state, ownProps) {
-	    return {
-	        active: ownProps.filter === state.visibilityFilter
-	    };
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
-	    return {
-	        onClick: function onClick() {
-	            dispatch((0, _actions.setVisibilityFilter)(ownProps.filter));
-	        }
-	    };
-	};
-
-	var FilterLink = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Link2.default);
-
-	exports.default = FilterLink;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.fetchDataAction = exports.toggleTodo = exports.setVisibilityFilter = exports.addTodo = undefined;
-
-	var _jiraParser = __webpack_require__(267);
-
-	var _jiraParser2 = _interopRequireDefault(_jiraParser);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var nextTodoId = 0;
-	var addTodo = exports.addTodo = function addTodo(text) {
-	    return {
-	        type: 'ADD_TODO',
-	        id: nextTodoId++,
-	        text: text
-	    };
-	};
-
-	var setVisibilityFilter = exports.setVisibilityFilter = function setVisibilityFilter(filter) {
-	    return {
-	        type: 'SET_VISIBILITY_FILTER',
-	        filter: filter
-	    };
-	};
-
-	var toggleTodo = exports.toggleTodo = function toggleTodo(id) {
-	    return {
-	        type: 'TOGGLE_TODO',
-	        id: id
-	    };
-	};
-
-	var fetchDataAction = exports.fetchDataAction = function fetchDataAction(data) {
-	    return {
-	        type: 'SET_RAW_DATA',
-	        rawData: (0, _jiraParser2.default)(data)
-	    };
-	};
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (jiraData) {
-	    var taskData = new google.visualization.DataTable();
-	    completeConfig();
-
-	    // Defining table structure
-	    taskData.addColumn(DATA_STRING, "Key");
-	    taskData.addColumn(DATA_STRING, "Summary");
-	    RAW_DATA_COL.EVENTS.forEach(function (element) {
-	        taskData.addColumn(element.dataType, element.label);
-	    });
-	    if (RAW_DATA_COL.FILTERS != null) {
-	        RAW_DATA_COL.FILTERS.forEach(function (element) {
-	            taskData.addColumn(element.dataType, element.label);
-	        });
-	    }
-
-	    // Adding jira data in the table
-	    jiraData.issues.forEach(function (issue) {
-	        var row = [];
-	        row.push(getJiraValue(issue, RAW_DATA_COL.KEY));
-	        row.push(getJiraValue(issue, RAW_DATA_COL.SUMMARY));
-	        RAW_DATA_COL.EVENTS.forEach(function (element) {
-	            row.push(getJiraValue(issue, element.jiraField, element.dataType));
-	        });
-	        if (RAW_DATA_COL.FILTERS != null) {
-	            RAW_DATA_COL.FILTERS.forEach(function (element) {
-	                row.push(getJiraValue(issue, element.jiraField, element.dataType));
-	            });
-	        }
-	        taskData.addRow(row);
-	    });
-
-	    return taskData;
-	};
-
-	var _jsonParser = __webpack_require__(268);
-
-	var _jsonParser2 = _interopRequireDefault(_jsonParser);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var RAW_DATA_COL = {
-	    KEY: ["key"],
-	    SUMMARY: ["fields", "summary"],
-	    EVENTS: [{ jiraField: ["fields", "customfield_11729"], label: 'Backlog', correction: -1 }, { jiraField: ["fields", "customfield_11730"], label: 'Analysis', correction: -0.5 }, { jiraField: ["fields", "customfield_11731"], label: 'Development', correction: -0.5 }, { jiraField: ["fields", "customfield_11732"], label: 'Ready To Release', correction: -1 }, { jiraField: ["fields", "fixVersions", 0, "releaseDate"], label: 'Released', correction: -1 }],
-	    FILTERS: [{ jiraField: ["fields", "issuetype", "name"], dataType: "string", filterType: 'CategoryFilter', label: 'Type' }, { jiraField: ["fields", "customfield_10621", "value"], dataType: "string", filterType: 'CategoryFilter', label: 'Effort' }, { jiraField: ["fields", "customfield_11010", "value"], dataType: "string", filterType: 'CategoryFilter', label: 'Value' }, { jiraField: ["fields", "project", "key"], dataType: "string", filterType: 'CategoryFilter', label: 'Project' }, { jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation' }, { jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release' }, { jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string", filterType: 'CategoryFilter', label: 'Version' }, { jiraField: ["fields", "assignee", "key"], dataType: "string", filterType: 'CategoryFilter', label: 'Assignee' }]
-	};
-
-	var DATA_DATE = "date";
-	var DATA_STRING = "string";
-	var DATA_NUMBER = "number";
-
-	var FILTER_CATEGORY = "CategoryFilter";
-	var FILTER_DATE = "DateRangeFilter";
-
-	function completeConfig() {
-	    RAW_DATA_COL.EVENTS.forEach(function (element) {
-	        element.dataType = DATA_DATE;
-	        element.filterType = FILTER_DATE;
-	    });
-	}
-
-	function getJiraValue(jiraData, fieldPath, fieldType) {
-	    var jiraValue = (0, _jsonParser2.default)(jiraData, fieldPath);
-	    if (fieldType != DATA_DATE) {
-	        return jiraValue;
-	    }
-	    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
-	}
-
-/***/ },
-/* 268 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (jsonObject, fields) {
-	    return jsonParser(jsonObject, fields, 0);
-	};
-
-	// Recursively parse json to find required field [lvl1,lvl2,...]
-	function jsonParser(jsonObject, fields, index) {
-	    index = index != null ? index : 0;
-	    if (jsonObject == null) {
-	        return "";
-	    }
-	    var fieldValue = jsonObject[fields[index]];
-	    if (index == fields.length - 1) {
-	        return typeof fieldValue !== 'undefined' ? fieldValue : "";
-	    } else {
-	        return jsonParser(fieldValue, fields, ++index);
-	    }
-	};
-
-	;
-
-/***/ },
-/* 269 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Link = function Link(_ref) {
-	    var active = _ref.active;
-	    var children = _ref.children;
-	    var _onClick = _ref.onClick;
-
-	    if (active) {
-	        return _react2.default.createElement(
-	            "span",
-	            null,
-	            children
-	        );
-	    }
-
-	    return _react2.default.createElement(
-	        "a",
-	        { href: "#",
-	            onClick: function onClick(e) {
-	                e.preventDefault();
-	                _onClick();
-	            }
-	        },
-	        children
-	    );
-	};
-
-	Link.propTypes = {
-	    active: _react.PropTypes.bool.isRequired,
-	    children: _react.PropTypes.node.isRequired,
-	    onClick: _react.PropTypes.func.isRequired
-	};
-
-	exports.default = Link;
-
-/***/ },
-/* 270 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(241);
-
-	var _actions = __webpack_require__(266);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var AddTodo = function AddTodo(_ref) {
-	    var dispatch = _ref.dispatch;
-
-	    var input = void 0;
-
-	    return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	            'form',
-	            { onSubmit: function onSubmit(e) {
-	                    e.preventDefault();
-	                    if (!input.value.trim()) {
-	                        return;
-	                    }
-	                    dispatch((0, _actions.addTodo)(input.value));
-	                    input.value = '';
-	                } },
-	            _react2.default.createElement('input', { ref: function ref(node) {
-	                    input = node;
-	                } }),
-	            _react2.default.createElement(
-	                'button',
-	                { type: 'submit' },
-	                'Add Todo'
-	            )
-	        )
-	    );
-	};
-	AddTodo = (0, _reactRedux.connect)()(AddTodo);
-
-	exports.default = AddTodo;
-
-/***/ },
-/* 271 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _reactRedux = __webpack_require__(241);
-
-	var _actions = __webpack_require__(266);
-
-	var _TodoList = __webpack_require__(272);
-
-	var _TodoList2 = _interopRequireDefault(_TodoList);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var getVisibleTodos = function getVisibleTodos(todos, filter) {
-	    switch (filter) {
-	        case 'SHOW_ALL':
-	            return todos;
-	        case 'SHOW_COMPLETED':
-	            return todos.filter(function (t) {
-	                return t.completed;
-	            });
-	        case 'SHOW_ACTIVE':
-	            return todos.filter(function (t) {
-	                return !t.completed;
-	            });
-	    }
-	};
-
-	var mapStateToProps = function mapStateToProps(state) {
-	    return {
-	        todos: getVisibleTodos(state.todos, state.visibilityFilter)
-	    };
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	    return {
-	        onTodoClick: function onTodoClick(id) {
-	            dispatch((0, _actions.toggleTodo)(id));
-	        }
-	    };
-	};
-
-	var VisibleTodoList = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_TodoList2.default);
-
-	exports.default = VisibleTodoList;
-
-/***/ },
-/* 272 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Todo = __webpack_require__(273);
-
-	var _Todo2 = _interopRequireDefault(_Todo);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var TodoList = function TodoList(_ref) {
-	    var todos = _ref.todos;
-	    var onTodoClick = _ref.onTodoClick;
-	    return _react2.default.createElement(
-	        'ul',
-	        null,
-	        todos.map(function (todo) {
-	            return _react2.default.createElement(_Todo2.default, _extends({
-	                key: todo.id
-	            }, todo, {
-	                onClick: function onClick() {
-	                    return onTodoClick(todo.id);
-	                }
-	            }));
-	        })
-	    );
-	};
-
-	TodoList.propTypes = {
-	    todos: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-	        id: _react.PropTypes.number.isRequired,
-	        completed: _react.PropTypes.bool.isRequired,
-	        text: _react.PropTypes.string.isRequired
-	    }).isRequired).isRequired,
-	    onTodoClick: _react.PropTypes.func.isRequired
-	};
-
-	exports.default = TodoList;
-
-/***/ },
-/* 273 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Todo = function Todo(_ref) {
-	    var onClick = _ref.onClick;
-	    var completed = _ref.completed;
-	    var text = _ref.text;
-	    return _react2.default.createElement(
-	        'li',
-	        {
-	            onClick: onClick,
-	            style: {
-	                textDecoration: completed ? 'line-through' : 'none'
-	            }
-	        },
-	        text
-	    );
-	};
-
-	Todo.propTypes = {
-	    onClick: _react.PropTypes.func.isRequired,
-	    completed: _react.PropTypes.bool.isRequired,
-	    text: _react.PropTypes.string.isRequired
-	};
-
-	exports.default = Todo;
-
-/***/ },
-/* 274 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38418,11 +37785,11 @@
 
 	var _reactRedux = __webpack_require__(241);
 
-	var _isomorphicFetch = __webpack_require__(275);
+	var _isomorphicFetch = __webpack_require__(262);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _actions = __webpack_require__(266);
+	var _actions = __webpack_require__(264);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38432,38 +37799,73 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var RawDataPanel = function (_React$Component) {
-	    _inherits(RawDataPanel, _React$Component);
+	var TaskManager = function (_React$Component) {
+	    _inherits(TaskManager, _React$Component);
 
-	    function RawDataPanel() {
-	        _classCallCheck(this, RawDataPanel);
+	    function TaskManager() {
+	        _classCallCheck(this, TaskManager);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(RawDataPanel).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+
+	        _this.state = { chart: null };
+	        _this.update = _this.update.bind(_this);
+	        return _this;
 	    }
 
-	    _createClass(RawDataPanel, [{
+	    _createClass(TaskManager, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.props.fetchData();
+	            var tasksListTable = new google.visualization.ChartWrapper({
+	                'chartType': 'Table',
+	                'containerId': "table_div",
+	                'options': {
+	                    width: '100%'
+	                }
+	            });
+	            tasksListTable.setOption('height', '100%');
+	            tasksListTable.setOption('showRowNumber', true);
+	            google.visualization.events.addListener(tasksListTable, 'select', function () {
+	                var rowNumber = tasksListTable.getChart().getSelection()[0].row;
+	                var data = tasksListTable.getDataTable();
+	                window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, 0), '_blank');
+	            });
+	            this.setState({ chart: tasksListTable });
+	        }
+	    }, {
+	        key: 'update',
+	        value: function update(e) {
+	            this.state.chart.setDataTable(this.props.rawData);
+	            this.state.chart.draw();
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+	            if (this.state.chart != null) {
+	                this.state.chart.setDataTable(this.props.rawData);
+	                this.state.chart.draw();
+	            }
 	            return _react2.default.createElement(
 	                'div',
 	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.update },
+	                    'Load Table'
+	                ),
+	                _react2.default.createElement('div', { id: 'table_div', 'class': 'col-md-12 card-block card' }),
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
 	                    ' Here is the test : ',
 	                    JSON.stringify(this.props.rawData),
 	                    ' '
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.props.fetchData },
-	                    'load data'
 	                )
 	            );
 	        }
 	    }]);
 
-	    return RawDataPanel;
+	    return TaskManager;
 	}(_react2.default.Component);
 
 	var mapStateToProps = function mapStateToProps(state) {
@@ -38487,24 +37889,24 @@
 	    };
 	};
 
-	RawDataPanel = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(RawDataPanel);
+	TaskManager = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TaskManager);
 
-	exports.default = RawDataPanel;
+	exports.default = TaskManager;
 
 /***/ },
-/* 275 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(276);
+	__webpack_require__(263);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 276 */
+/* 263 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -38943,7 +38345,7 @@
 
 
 /***/ },
-/* 277 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38951,122 +38353,130 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.fetchDataAction = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _jiraParser = __webpack_require__(265);
 
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(241);
-
-	var _isomorphicFetch = __webpack_require__(275);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _actions = __webpack_require__(266);
+	var _jiraParser2 = _interopRequireDefault(_jiraParser);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var fetchDataAction = exports.fetchDataAction = function fetchDataAction(data) {
+	    return {
+	        type: 'SET_RAW_DATA',
+	        rawData: (0, _jiraParser2.default)(data)
+	    };
+	};
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	"use strict";
 
-	var TaskManager = function (_React$Component) {
-	    _inherits(TaskManager, _React$Component);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	    function TaskManager() {
-	        _classCallCheck(this, TaskManager);
+	exports.default = function (jiraData) {
+	    var taskData = new google.visualization.DataTable();
+	    completeConfig();
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
-
-	        _this.state = { chart: null };
-	        _this.update = _this.update.bind(_this);
-	        return _this;
+	    // Defining table structure
+	    taskData.addColumn(DATA_STRING, "Key");
+	    taskData.addColumn(DATA_STRING, "Summary");
+	    RAW_DATA_COL.EVENTS.forEach(function (element) {
+	        taskData.addColumn(element.dataType, element.label);
+	    });
+	    if (RAW_DATA_COL.FILTERS != null) {
+	        RAW_DATA_COL.FILTERS.forEach(function (element) {
+	            taskData.addColumn(element.dataType, element.label);
+	        });
 	    }
 
-	    _createClass(TaskManager, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.props.fetchData();
-	            var tasksListTable = new google.visualization.ChartWrapper({
-	                'chartType': 'Table',
-	                'containerId': "table_div",
-	                'options': {
-	                    width: '100%'
-	                }
+	    // Adding jira data in the table
+	    jiraData.issues.forEach(function (issue) {
+	        var row = [];
+	        row.push(getJiraValue(issue, RAW_DATA_COL.KEY));
+	        row.push(getJiraValue(issue, RAW_DATA_COL.SUMMARY));
+	        RAW_DATA_COL.EVENTS.forEach(function (element) {
+	            row.push(getJiraValue(issue, element.jiraField, element.dataType));
+	        });
+	        if (RAW_DATA_COL.FILTERS != null) {
+	            RAW_DATA_COL.FILTERS.forEach(function (element) {
+	                row.push(getJiraValue(issue, element.jiraField, element.dataType));
 	            });
-	            tasksListTable.setOption('height', '100%');
-	            tasksListTable.setOption('showRowNumber', true);
-	            google.visualization.events.addListener(tasksListTable, 'select', function () {
-	                var rowNumber = tasksListTable.getChart().getSelection()[0].row;
-	                var data = tasksListTable.getDataTable();
-	                window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, 0), '_blank');
-	            });
-	            this.setState({ chart: tasksListTable });
 	        }
-	    }, {
-	        key: 'update',
-	        value: function update(e) {
-	            this.state.chart.setDataTable(this.props.rawData);
-	            this.state.chart.draw();
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            if (this.state.chart != null) {
-	                this.state.chart.setDataTable(this.props.rawData);
-	                this.state.chart.draw();
-	            }
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.update },
-	                    'Load Table'
-	                ),
-	                _react2.default.createElement('div', { id: 'table_div', 'class': 'col-md-12 card-block card' }),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    ' Here is the test : ',
-	                    JSON.stringify(this.props.rawData),
-	                    ' '
-	                )
-	            );
-	        }
-	    }]);
+	        taskData.addRow(row);
+	    });
 
-	    return TaskManager;
-	}(_react2.default.Component);
-
-	var mapStateToProps = function mapStateToProps(state) {
-	    return {
-	        rawData: state.rawData
-	    };
+	    return taskData;
 	};
 
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	    return {
-	        fetchData: function fetchData() {
-	            var fields = "id,key,project,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732,customfield_10621,customfield_11010";
-	            var jql = "Workstream=Digital%20and%20cf%5B11729%5D%20is%20not%20null%20and%20value%20is%20not%20null";
-	            var url = "/rest/api/2/search?jql=" + jql + "&fields=" + fields + "&startAt=0&maxResults=5000";
-	            (0, _isomorphicFetch2.default)(url).then(function (response) {
-	                return response.json();
-	            }).then(function (data) {
-	                return dispatch((0, _actions.fetchDataAction)(data));
-	            });
-	        }
-	    };
+	var _jsonParser = __webpack_require__(266);
+
+	var _jsonParser2 = _interopRequireDefault(_jsonParser);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var RAW_DATA_COL = {
+	    KEY: ["key"],
+	    SUMMARY: ["fields", "summary"],
+	    EVENTS: [{ jiraField: ["fields", "customfield_11729"], label: 'Backlog', correction: -1 }, { jiraField: ["fields", "customfield_11730"], label: 'Analysis', correction: -0.5 }, { jiraField: ["fields", "customfield_11731"], label: 'Development', correction: -0.5 }, { jiraField: ["fields", "customfield_11732"], label: 'Ready To Release', correction: -1 }, { jiraField: ["fields", "fixVersions", 0, "releaseDate"], label: 'Released', correction: -1 }],
+	    FILTERS: [{ jiraField: ["fields", "issuetype", "name"], dataType: "string", filterType: 'CategoryFilter', label: 'Type' }, { jiraField: ["fields", "customfield_10621", "value"], dataType: "string", filterType: 'CategoryFilter', label: 'Effort' }, { jiraField: ["fields", "customfield_11010", "value"], dataType: "string", filterType: 'CategoryFilter', label: 'Value' }, { jiraField: ["fields", "project", "key"], dataType: "string", filterType: 'CategoryFilter', label: 'Project' }, { jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation' }, { jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release' }, { jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string", filterType: 'CategoryFilter', label: 'Version' }, { jiraField: ["fields", "assignee", "key"], dataType: "string", filterType: 'CategoryFilter', label: 'Assignee' }]
 	};
 
-	TaskManager = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TaskManager);
+	var DATA_DATE = "date";
+	var DATA_STRING = "string";
+	var DATA_NUMBER = "number";
 
-	exports.default = TaskManager;
+	var FILTER_CATEGORY = "CategoryFilter";
+	var FILTER_DATE = "DateRangeFilter";
+
+	function completeConfig() {
+	    RAW_DATA_COL.EVENTS.forEach(function (element) {
+	        element.dataType = DATA_DATE;
+	        element.filterType = FILTER_DATE;
+	    });
+	}
+
+	function getJiraValue(jiraData, fieldPath, fieldType) {
+	    var jiraValue = (0, _jsonParser2.default)(jiraData, fieldPath);
+	    if (fieldType != DATA_DATE) {
+	        return jiraValue;
+	    }
+	    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
+	}
+
+/***/ },
+/* 266 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (jsonObject, fields) {
+	    return jsonParser(jsonObject, fields, 0);
+	};
+
+	// Recursively parse json to find required field [lvl1,lvl2,...]
+	function jsonParser(jsonObject, fields, index) {
+	    index = index != null ? index : 0;
+	    if (jsonObject == null) {
+	        return "";
+	    }
+	    var fieldValue = jsonObject[fields[index]];
+	    if (index == fields.length - 1) {
+	        return typeof fieldValue !== 'undefined' ? fieldValue : "";
+	    } else {
+	        return jsonParser(fieldValue, fields, ++index);
+	    }
+	};
+
+	;
 
 /***/ }
 /******/ ]);
