@@ -37783,13 +37783,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRedux = __webpack_require__(241);
+	var _jiraConnect = __webpack_require__(262);
 
-	var _isomorphicFetch = __webpack_require__(262);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _actions = __webpack_require__(264);
+	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37868,6 +37864,28 @@
 	    return TaskManager;
 	}(_react2.default.Component);
 
+	exports.default = (0, _jiraConnect2.default)(TaskManager);
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(263);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _actions = __webpack_require__(265);
+
+	var _reactRedux = __webpack_require__(241);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var mapStateToProps = function mapStateToProps(state) {
 	    return {
 	        rawData: state.rawData
@@ -37889,24 +37907,24 @@
 	    };
 	};
 
-	TaskManager = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TaskManager);
-
-	exports.default = TaskManager;
+	exports.default = function (Element) {
+	    return (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Element);
+	};
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(263);
+	__webpack_require__(264);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -38345,7 +38363,7 @@
 
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38355,7 +38373,7 @@
 	});
 	exports.fetchDataAction = undefined;
 
-	var _jiraParser = __webpack_require__(265);
+	var _jiraParser = __webpack_require__(266);
 
 	var _jiraParser2 = _interopRequireDefault(_jiraParser);
 
@@ -38369,7 +38387,7 @@
 	};
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -38413,7 +38431,7 @@
 	    return taskData;
 	};
 
-	var _jsonParser = __webpack_require__(266);
+	var _jsonParser = __webpack_require__(267);
 
 	var _jsonParser2 = _interopRequireDefault(_jsonParser);
 
@@ -38449,7 +38467,7 @@
 	}
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports) {
 
 	"use strict";
