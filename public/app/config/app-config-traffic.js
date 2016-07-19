@@ -29,6 +29,6 @@ var REPORT_CONFIG = {
 }
 
 var JIRA_DATA = {
-    jql: "Workstream=Traffic%20and%20cf%5B11729%5D%20is%20not%20null%20and%20value%20is%20not%20null",
+    jql: "Workstream=Digital%20and%20cf%5B11729%5D%20is%20not%20null%20and%20value%20is%20not%20null",
     fields: "id,key,project,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732,customfield_10621,customfield_11010"
 }
