@@ -88,7 +88,11 @@
 
 	var _CumulativeFlow2 = _interopRequireDefault(_CumulativeFlow);
 
-	var _TaskManager = __webpack_require__(274);
+	var _Duration = __webpack_require__(274);
+
+	var _Duration2 = _interopRequireDefault(_Duration);
+
+	var _TaskManager = __webpack_require__(279);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -111,6 +115,7 @@
 	                { path: '/', component: _DeliveryDashboard2.default },
 	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/todo' }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/cumulative-flow', component: _CumulativeFlow2.default }),
+	                _react2.default.createElement(_reactRouter.Route, { path: '/duration', component: _Duration2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/todo', component: _Page2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/task-manager', component: _TaskManager2.default })
 	            )
@@ -37799,7 +37804,7 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/', styleName: 'title' },
+	                                            { to: '/duration', styleName: 'title' },
 	                                            'Duration'
 	                                        )
 	                                    ),
@@ -38636,32 +38641,34 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = undefined;
+	exports.buildFilteredDashboard = exports.buildFilters = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = exports.buildDataTable = undefined;
 
 	var _definition = __webpack_require__(260);
 
-	function buildDataTable(viewId) {
+	var _taskData = __webpack_require__(269);
+
+	var buildDataTable = exports.buildDataTable = function buildDataTable(elementId) {
 	    return new google.visualization.ChartWrapper({
 	        'chartType': 'Table',
-	        'containerId': viewId,
+	        'containerId': elementId,
 	        'options': {
 	            width: '100%'
 	        }
 	    });
-	}
+	};
 
-	var buildTasksListTable = exports.buildTasksListTable = function buildTasksListTable(viewId) {
-	    var tasksListTable = buildDataTable(viewId);
+	var buildTasksListTable = exports.buildTasksListTable = function buildTasksListTable(elementId) {
+	    var tasksListTable = buildDataTable(elementId);
 	    tasksListTable.setOption('height', '100%');
 	    tasksListTable.setOption('showRowNumber', true);
 	    setTaskSelectListener(tasksListTable);
 	    return tasksListTable;
 	};
 
-	var buildCumulativeFlowChart = exports.buildCumulativeFlowChart = function buildCumulativeFlowChart(viewId, height) {
+	var buildCumulativeFlowChart = exports.buildCumulativeFlowChart = function buildCumulativeFlowChart(elementId, height) {
 	    return new google.visualization.ChartWrapper({
 	        'chartType': 'AreaChart',
-	        'containerId': viewId,
+	        'containerId': elementId,
 	        'options': {
 	            'animation': {
 	                'startup': true
@@ -38706,17 +38713,13 @@
 	};
 
 	/***************************
-	 *         Unused
+	 * TasksDurationDashboard
 	 **************************/
 
-	function buildDurationStatsTable(viewId) {
-	    return buildDataTable(viewId + ID_DURATION_STATS);
-	}
-
-	function buildTasksDurationColumnChart(viewId, columns) {
+	var buildDurationColumnChart = exports.buildDurationColumnChart = function buildDurationColumnChart(elementId, columns) {
 	    var durationChart = new google.visualization.ChartWrapper({
 	        'chartType': 'ColumnChart',
-	        'containerId': viewId + ID_COLUMN_CHART,
+	        'containerId': elementId,
 	        'view': { 'columns': columns },
 	        'options': {
 	            'tooltip': { isHtml: true },
@@ -38741,12 +38744,12 @@
 	    });
 	    setTaskSelectListener(durationChart);
 	    return durationChart;
-	}
+	};
 
-	function buildTasksDurationScatterChart(viewId, columns) {
+	var buildDurationScatterChart = exports.buildDurationScatterChart = function buildDurationScatterChart(elementId, columns) {
 	    var durationChart = new google.visualization.ChartWrapper({
 	        'chartType': 'ScatterChart',
-	        'containerId': viewId + ID_SCATTER_CHART,
+	        'containerId': elementId,
 	        'view': { 'columns': columns },
 	        'options': {
 	            'tooltip': { isHtml: true },
@@ -38781,6 +38784,67 @@
 	    });
 	    setTaskSelectListener(durationChart);
 	    return durationChart;
+	};
+
+	var buildFilters = exports.buildFilters = function buildFilters() {
+	    var filters = [];
+	    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+	        filters.push(buildFilter("filter_" + index, RAW_DATA_COL.FILTERS[index].filterType, _taskData.TASK_INDEX_FILTER_FIRST + index));
+	    }
+	    return filters;
+	};
+
+	var buildFilteredDashboard = exports.buildFilteredDashboard = function buildFilteredDashboard(elementId, charts, filters, filterListener) {
+	    google.visualization.events.addListener(charts, 'ready', filterListener);
+	    var dashboard = new google.visualization.Dashboard(document.getElementById(elementId));
+	    dashboard.bind(filters, charts);
+	    return dashboard;
+	};
+
+	/***************************
+	 *     Event Manager
+	 **************************/
+
+	function setTaskSelectListener(element) {
+	    google.visualization.events.addListener(element, 'select', function () {
+	        var rowNumber = element.getChart().getSelection()[0].row;
+	        var data = element.getDataTable();
+	        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, _taskData.TASK_INDEX_STATIC_REFERENCE), '_blank');
+	    });
+	}
+
+	/***************************
+	 *         Unused
+	 **************************/
+
+	function buildTasksDurationColumnChart(viewId, columns) {
+	    var durationChart = new google.visualization.ChartWrapper({
+	        'chartType': 'ColumnChart',
+	        'containerId': viewId + ID_COLUMN_CHART,
+	        'view': { 'columns': columns },
+	        'options': {
+	            'tooltip': { isHtml: true },
+	            'height': 400,
+	            'isStacked': true,
+	            'hAxis': {
+	                'title': 'Jira Tickets',
+	                'textPosition': 'none'
+	            },
+	            'vAxis': {
+	                'title': 'Duration (days)',
+	                'textPosition': 'in'
+	            },
+	            'legend': {
+	                'position': 'in'
+	            },
+	            'chartArea': {
+	                'width': '90%',
+	                'height': '100%'
+	            }
+	        }
+	    });
+	    setTaskSelectListener(durationChart);
+	    return durationChart;
 	}
 
 	function buildSimpleChart(elementId, chartType, title) {
@@ -38806,18 +38870,6 @@
 	        }
 	    });
 	    return filter;
-	}
-
-	/***************************
-	 *     Event Manager
-	 **************************/
-
-	function setTaskSelectListener(element) {
-	    google.visualization.events.addListener(element, 'select', function () {
-	        var rowNumber = element.getChart().getSelection()[0].row;
-	        var data = element.getDataTable();
-	        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
-	    });
 	}
 
 	/***************************
@@ -38848,19 +38900,6 @@
 	    return dashboard;
 	}
 
-	/***************************
-	 * TasksDurationDashboard
-	 **************************/
-
-	function buildFilters(viewId, filtersConfig) {
-	    var filters = [];
-	    for (var index = 0; index < filtersConfig.length; index++) {
-	        var filterConfig = filtersConfig[index];
-	        filters.push(buildFilter(viewId + filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
-	    }
-	    return filters;
-	}
-
 	function buildSimpleCharts(viewId, chartsConfig) {
 	    var charts = [];
 	    for (var index = 0; index < chartsConfig.length; index++) {
@@ -38868,13 +38907,6 @@
 	        charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
 	    }
 	    return charts;
-	}
-
-	function buildFilteredDashboard(viewId, charts, filters, filterListener) {
-	    google.visualization.events.addListener(charts, 'ready', filterListener);
-	    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_DASHBOARD));
-	    dashboard.bind(filters, charts);
-	    return dashboard;
 	}
 
 /***/ },
@@ -39027,6 +39059,447 @@
 
 /***/ },
 /* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jiraConnect = __webpack_require__(265);
+
+	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
+
+	var _chartFactory = __webpack_require__(271);
+
+	var _eventData = __webpack_require__(272);
+
+	var _taskData = __webpack_require__(269);
+
+	var _durationData = __webpack_require__(275);
+
+	var _Card = __webpack_require__(273);
+
+	var _Card2 = _interopRequireDefault(_Card);
+
+	var _Filters = __webpack_require__(278);
+
+	var _Filters2 = _interopRequireDefault(_Filters);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TaskManager = function (_React$Component) {
+	    _inherits(TaskManager, _React$Component);
+
+	    function TaskManager() {
+	        _classCallCheck(this, TaskManager);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+
+	        _this.state = {
+	            columnChart: null,
+	            scatterChart: null,
+	            dashboard: null,
+	            statTable: null
+	        };
+	        _this.updateTable = _this.updateTable.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(TaskManager, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.props.fetchData();
+
+	            var durationsColumns = [_taskData.TASK_INDEX_STATIC_REFERENCE];
+	            for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+	                durationsColumns.push(_durationData.DURATION_INDEX_DURATION_FIRST + i);
+	                durationsColumns.push(_durationData.DURATION_INDEX_TOOLTIP);
+	            }
+
+	            var tasksDurationColumnChart = (0, _chartFactory.buildDurationColumnChart)("column_chart", durationsColumns);
+	            var tasksDurationScatterChart = (0, _chartFactory.buildDurationScatterChart)("scatter_chart", [_taskData.TASK_INDEX_EVENTS_LAST, _durationData.DURATION_INDEX_DURATION_LAST, _durationData.DURATION_INDEX_TOOLTIP, _durationData.DURATION_INDEX_STATITICS_AVERAGE, _durationData.DURATION_INDEX_STATITICS_50PCT, _durationData.DURATION_INDEX_STATITICS_90PCT]);
+	            var tasksDurationDashboard = (0, _chartFactory.buildFilteredDashboard)("dashboard", tasksDurationColumnChart, (0, _chartFactory.buildFilters)(), this.updateTable);
+	            var tasksDurationStatsTable = (0, _chartFactory.buildDataTable)("duration_stats");
+	            this.setState({
+	                columnChart: tasksDurationColumnChart,
+	                scatterChart: tasksDurationScatterChart,
+	                dashboard: tasksDurationDashboard,
+	                statTable: tasksDurationStatsTable
+	            });
+	        }
+	    }, {
+	        key: 'updateTable',
+	        value: function updateTable() {
+	            var durationChartData = this.state.columnChart.getDataTable();
+	            var dataToDisplay = durationChartData != null ? durationChartData : (0, _durationData.computeDurationData)(this.props.rawData);
+
+	            if (dataToDisplay != null) {
+	                this.state.scatterChart.setDataTable((0, _durationData.computeDurationStats)(dataToDisplay));
+	                this.state.scatterChart.draw();
+
+	                this.state.statTable.setDataTable((0, _durationData.groupDurationDataBy)(dataToDisplay, _durationData.DURATION_INDEX_STATIC_GROUP_ALL));
+	                this.state.statTable.draw();
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (this.state.columnChart != null) {
+	                var durationData = (0, _durationData.computeDurationData)(this.props.rawData);
+	                this.state.dashboard.draw(durationData);
+	                var durationChartData = this.state.columnChart.getDataTable();
+	                var dataToDisplay = durationChartData != null ? durationChartData : durationData;
+
+	                this.updateTable();
+	            }
+	            return _react2.default.createElement(
+	                _Card2.default,
+	                { cardTitle: 'Duration' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { id: 'dashboard' },
+	                    _react2.default.createElement(_Filters2.default, null),
+	                    _react2.default.createElement('div', { id: 'duration_stats' }),
+	                    _react2.default.createElement('div', { id: 'column_chart' }),
+	                    _react2.default.createElement('div', { id: 'scatter_chart' })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return TaskManager;
+	}(_react2.default.Component);
+
+	exports.default = (0, _jiraConnect2.default)(TaskManager);
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = undefined;
+
+	var _taskData = __webpack_require__(269);
+
+	var _definition = __webpack_require__(260);
+
+	var _tooltip = __webpack_require__(276);
+
+	var _tooltip2 = _interopRequireDefault(_tooltip);
+
+	var _dataUtils = __webpack_require__(277);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var DURATION_INDEX_STATIC_FIRST = exports.DURATION_INDEX_STATIC_FIRST = _taskData.TASK_INDEX_FILTER_LAST + 1;
+	var DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
+	var DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_COUNT = DURATION_INDEX_STATIC_GROUP_ALL + 1;
+	var DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
+
+	var DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
+	var DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+	var DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
+	var DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_TOOLTIP = DURATION_INDEX_DURATION_LAST + 1;
+
+	var DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_TOOLTIP + 1;
+	var DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
+	var DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
+	var DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
+
+	var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = _taskData.TASK_INDEX_FILTER_LAST + 1;
+
+	var computeDurationData = exports.computeDurationData = function computeDurationData(inputData) {
+	    var durationDataStruct = Array.apply(null, { length: inputData.getNumberOfColumns() }).map(Number.call, Number);
+	    durationDataStruct.push((0, _dataUtils.constantColumnBuilder)("string", "", "Selection"));
+	    durationDataStruct.push((0, _dataUtils.constantColumnBuilder)("number", "Count", 1));
+	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
+	        var element = RAW_DATA_COL.EVENTS[index];
+	        var eventIndex = _taskData.TASK_INDEX_EVENTS_FIRST + index;
+	        durationDataStruct.push(durationColumnBuilder(element.label, eventIndex, eventIndex + 1, element.correction));
+	    }
+	    durationDataStruct.push(durationColumnBuilder("Cycle Time", _taskData.TASK_INDEX_EVENTS_FIRST, _taskData.TASK_INDEX_EVENTS_LAST, 0));
+
+	    var durationData = new google.visualization.DataView(inputData);
+	    durationData.setColumns(durationDataStruct);
+
+	    var dataAndTooltipStruct = Array.apply(null, { length: durationData.getNumberOfColumns() }).map(Number.call, Number);
+	    dataAndTooltipStruct.push(tooltipColumnBuilder());
+
+	    var dataAndTooltip = new google.visualization.DataView(durationData.toDataTable());
+	    dataAndTooltip.setColumns(dataAndTooltipStruct);
+
+	    return dataAndTooltip.toDataTable();
+	};
+
+	function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
+	    return (0, _dataUtils.columnBuilder)(_definition.DATA_NUMBER, label, function (table, row) {
+	        var startDate = table.getValue(row, firstEventIndex);
+	        var endDate = table.getValue(row, lastEventIndex);
+	        if (startDate == null) {
+	            return null;
+	        }
+	        return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
+	    });
+	}
+
+	function tooltipColumnBuilder() {
+	    var tooltipColumn = (0, _dataUtils.columnBuilder)(_definition.DATA_STRING, "Tooltip", _tooltip2.default);
+	    tooltipColumn.role = "tooltip";
+	    tooltipColumn.p = { 'html': true };
+	    return tooltipColumn;
+	}
+
+	var computeDurationStats = exports.computeDurationStats = function computeDurationStats(inputData) {
+	    // Using group method to find Avg, 50% and 90% values
+	    var group = google.visualization.data.group(inputData, [DURATION_INDEX_STATIC_GROUP_ALL], [createAggregationColumn(google.visualization.data.avg), createAggregationColumn(getQuartileFunction(0.75)), createAggregationColumn(getQuartileFunction(0.9))]);
+
+	    // Adding statistics
+	    // To have tendlines to show specific values (average, 50% and 90% lines), we only need to display 2 points
+	    // in a new serie and to draw a trendline between them.
+	    // That's why we are addind 3 columns at the end of the DataView.
+	    // We feel these columns with the required value only if date is min date or max date (to have our points at
+	    // the edge of the chart).
+	    // ╔═══════╦═════════╦═════╦════════════╦═════════╗
+	    // ║ Date  ║ Project ║ Ref ║ Cycle Time ║ Average ║
+	    // ╠═══════╬═════════╬═════╬════════════╬═════════╣
+	    // ║ 01/01 ║ TEST    ║   1 ║         16 ║      19 ║
+	    // ║ 01/02 ║ TEST    ║   2 ║         18 ║         ║ ╗
+	    // ║ 01/03 ║ TEST    ║   2 ║         18 ║         ║ ║> We Don't need to fill the value as we need 2 points
+	    // ║ 01/04 ║ TEST    ║   3 ║         20 ║         ║ ╝
+	    // ║ 01/05 ║ TEST    ║   4 ║         22 ║      19 ║
+	    // ╚════════════════════════════════════╩═════════╝
+	    //                    V                      V
+	    //               Actual Data             Statistics
+	    // We will then add new data series with these columns defining point size to 2 and adding a linear trend line.
+
+	    var minDate = inputData.getColumnRange(_taskData.TASK_INDEX_EVENTS_FIRST).min;
+	    var maxDate = inputData.getColumnRange(_taskData.TASK_INDEX_EVENTS_LAST).max;
+
+	    // Creating a structure [0, 1, 2 ... inputData.size] to keep all original columns
+	    var dataStatisticsStruct = Array.apply(null, { length: inputData.getNumberOfColumns() }).map(Number.call, Number);
+	    // Adding new columns, setting satistics data only on edge dates
+	    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, 'Average', group.getValue(0, 1)));
+	    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, '75%', group.getValue(0, 2)));
+	    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, '90%', group.getValue(0, 3)));
+
+	    var dataWithStatistics = new google.visualization.DataView(inputData);
+	    dataWithStatistics.setColumns(dataStatisticsStruct);
+
+	    return dataWithStatistics;
+	};
+
+	function statColumnBuilder(minDate, maxDate, label, value) {
+	    return (0, _dataUtils.columnBuilder)('number', label, function (table, row) {
+	        return table.getValue(row, _taskData.TASK_INDEX_EVENTS_FIRST) == minDate || table.getValue(row, _taskData.TASK_INDEX_EVENTS_LAST) == maxDate ? value : null;
+	    });
+	}
+
+	function createAggregationColumn(aggregationFunction) {
+	    return {
+	        column: DURATION_INDEX_DURATION_CYCLE_TIME,
+	        aggregation: aggregationFunction,
+	        'type': 'number'
+	    };
+	}
+
+	function getQuartileFunction(ration) {
+	    return function getQuartile(values) {
+	        return values.sort(function (a, b) {
+	            return a - b;
+	        })[Math.floor(values.length * ration)];
+	    };
+	}
+
+	var groupDurationDataBy = exports.groupDurationDataBy = function groupDurationDataBy(inputData, groupBy) {
+	    var columns = [];
+	    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
+	        columns.push((0, _dataUtils.aggregatorBuilder)(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
+	    });
+	    columns.unshift((0, _dataUtils.aggregatorBuilder)(DURATION_INDEX_STATIC_COUNT, 'number', google.visualization.data.count));
+
+	    var data = google.visualization.data.group(inputData, [groupBy], columns);
+
+	    var formatter = new google.visualization.NumberFormat({ suffix: ' day(s)' });
+	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
+	        formatter.format(data, 2 + index);
+	    }
+	    return data;
+	};
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (table, row) {
+	    var html = [];
+	    html.push("<h4>" + table.getValue(row, _taskData.TASK_INDEX_STATIC_REFERENCE) + "</h4>");
+	    html.push("<p>" + table.getValue(row, _taskData.TASK_INDEX_STATIC_SYMMARY) + "</p>");
+
+	    html.push("<p>");
+	    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
+	        html.push("<i>" + table.getColumnLabel(_durationData.DURATION_INDEX_DURATION_FIRST + index) + "</i>" + " : " + table.getValue(row, _durationData.DURATION_INDEX_DURATION_FIRST + index) + "<br>");
+	    });
+	    html.push("</p>");
+
+	    return "<div class='chart-tooltip'>" + html.join("") + "</div>";
+	};
+
+	var _taskData = __webpack_require__(269);
+
+	var _durationData = __webpack_require__(275);
+
+	;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	function filterReleasedBefore(inputData, fromDate) {
+	    var view = new google.visualization.DataView(inputData);
+	    view.setRows(view.getFilteredRows([{
+	        column: TASK_INDEX_EVENTS_LAST,
+	        minValue: fromDate
+	    }]));
+	    return view;
+	}
+
+	function filterReleasedAfter(inputData, toDate) {
+	    var view = new google.visualization.DataView(inputData);
+	    view.setRows(view.getFilteredRows([{
+	        column: TASK_INDEX_EVENTS_LAST,
+	        maxValue: toDate
+	    }]));
+	    return view;
+	}
+
+	function filterCreatedAfter(inputData, toDate) {
+	    var view = new google.visualization.DataView(inputData);
+	    view.setRows(view.getFilteredRows([{
+	        column: TASK_INDEX_EVENTS_FIRST,
+	        maxValue: toDate
+	    }]));
+	    return view;
+	}
+
+	var columnBuilder = exports.columnBuilder = function columnBuilder(type, label, calc) {
+	    return { type: type, label: label, calc: calc };
+	};
+
+	var constantColumnBuilder = exports.constantColumnBuilder = function constantColumnBuilder(type, label, value) {
+	    return {
+	        type: type, label: label, calc: function calc() {
+	            return value;
+	        }
+	    };
+	};
+
+	var aggregatorBuilder = exports.aggregatorBuilder = function aggregatorBuilder(column, type, aggregation) {
+	    return { column: column, type: type, aggregation: aggregation };
+	};
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Filters = function (_React$Component) {
+	    _inherits(Filters, _React$Component);
+
+	    function Filters() {
+	        _classCallCheck(this, Filters);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Filters).apply(this, arguments));
+	    }
+
+	    _createClass(Filters, [{
+	        key: 'render',
+	        value: function render() {
+	            var rangeFilters = [];
+	            var categoryFilters = [];
+	            if (RAW_DATA_COL.FILTERS != null) {
+	                for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+
+	                    var element = _react2.default.createElement('div', { id: "filter_" + index, key: index });
+
+	                    if (RAW_DATA_COL.FILTERS[index].filterType == 'CategoryFilter') {
+	                        categoryFilters.push(element);
+	                    } else {
+	                        rangeFilters.push(element);
+	                    }
+	                }
+	            }
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'filters_block' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-md-7 text-center' },
+	                    rangeFilters
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-md-5 text-center' },
+	                    categoryFilters
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Filters;
+	}(_react2.default.Component);
+
+	exports.default = Filters;
+
+/***/ },
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

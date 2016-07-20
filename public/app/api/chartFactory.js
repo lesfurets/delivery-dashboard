@@ -1,27 +1,28 @@
 import { ID_TASK_LIST } from './definition'
+import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_FILTER_FIRST } from './taskData'
 
-function buildDataTable(viewId) {
+export const buildDataTable = function(elementId) {
     return new google.visualization.ChartWrapper({
         'chartType': 'Table',
-        'containerId': viewId,
+        'containerId': elementId,
         'options': {
             width: '100%'
         }
     });
 }
 
-export const buildTasksListTable = function(viewId) {
-    var tasksListTable = buildDataTable(viewId);
+export const buildTasksListTable = function(elementId) {
+    var tasksListTable = buildDataTable(elementId);
     tasksListTable.setOption('height', '100%');
     tasksListTable.setOption('showRowNumber', true);
     setTaskSelectListener(tasksListTable);
     return tasksListTable;
 }
 
-export const buildCumulativeFlowChart = function (viewId, height) {
+export const buildCumulativeFlowChart = function (elementId, height) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
-        'containerId': viewId,
+        'containerId': elementId,
         'options': {
             'animation': {
                 'startup': true
@@ -66,17 +67,13 @@ export const buildRangeFilter = function(elementId) {
 }
 
 /***************************
- *         Unused
+ * TasksDurationDashboard
  **************************/
 
-function buildDurationStatsTable(viewId) {
-    return buildDataTable(viewId + ID_DURATION_STATS);
-}
-
-function buildTasksDurationColumnChart(viewId, columns) {
+export const buildDurationColumnChart = function(elementId, columns) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ColumnChart',
-        'containerId': viewId + ID_COLUMN_CHART,
+        'containerId': elementId,
         'view': {'columns': columns},
         'options': {
             'tooltip': { isHtml: true },
@@ -103,10 +100,10 @@ function buildTasksDurationColumnChart(viewId, columns) {
     return durationChart;
 }
 
-function buildTasksDurationScatterChart(viewId, columns) {
+export const buildDurationScatterChart = function(elementId, columns) {
     var durationChart = new google.visualization.ChartWrapper({
         'chartType': 'ScatterChart',
-        'containerId': viewId + ID_SCATTER_CHART,
+        'containerId': elementId,
         'view': {'columns': columns},
         'options': {
             'tooltip': { isHtml: true },
@@ -143,6 +140,67 @@ function buildTasksDurationScatterChart(viewId, columns) {
     return durationChart;
 }
 
+export const buildFilters =  function() {
+    var filters = [];
+    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+        filters.push(buildFilter("filter_" + index, RAW_DATA_COL.FILTERS[index].filterType, TASK_INDEX_FILTER_FIRST + index));
+    }
+    return filters;
+}
+
+export const buildFilteredDashboard = function(elementId, charts, filters, filterListener) {
+    google.visualization.events.addListener(charts, 'ready', filterListener);
+    var dashboard = new google.visualization.Dashboard(document.getElementById(elementId));
+    dashboard.bind(filters, charts);
+    return dashboard;
+}
+
+/***************************
+ *     Event Manager
+ **************************/
+
+function setTaskSelectListener(element) {
+    google.visualization.events.addListener(element, 'select', function () {
+        var rowNumber = element.getChart().getSelection()[0].row;
+        var data = element.getDataTable();
+        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
+    });
+}
+
+/***************************
+ *         Unused
+ **************************/
+
+function buildTasksDurationColumnChart(viewId, columns) {
+    var durationChart = new google.visualization.ChartWrapper({
+        'chartType': 'ColumnChart',
+        'containerId': viewId + ID_COLUMN_CHART,
+        'view': {'columns': columns},
+        'options': {
+            'tooltip': { isHtml: true },
+            'height': 400,
+            'isStacked': true,
+            'hAxis': {
+                'title': 'Jira Tickets',
+                'textPosition': 'none'
+            },
+            'vAxis': {
+                'title': 'Duration (days)',
+                'textPosition': 'in'
+            },
+            'legend': {
+                'position': 'in'
+            },
+            'chartArea': {
+                'width': '90%',
+                'height': '100%'
+            },
+        }
+    });
+    setTaskSelectListener(durationChart);
+    return durationChart;
+}
+
 function buildSimpleChart(elementId, chartType, title) {
     return new google.visualization.ChartWrapper({
         'chartType': chartType,
@@ -166,18 +224,6 @@ function buildFilter(containerId, controlType, filterColumnIndex) {
         }
     });
     return filter;
-}
-
-/***************************
- *     Event Manager
- **************************/
-
-function setTaskSelectListener(element) {
-    google.visualization.events.addListener(element, 'select', function () {
-        var rowNumber = element.getChart().getSelection()[0].row;
-        var data = element.getDataTable();
-        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
-    });
 }
 
 /***************************
@@ -208,19 +254,6 @@ function buildCumulativFlowDashboard(viewId) {
     return dashboard;
 }
 
-/***************************
- * TasksDurationDashboard
- **************************/
-
-function buildFilters(viewId, filtersConfig) {
-    var filters = [];
-    for (var index = 0; index < filtersConfig.length; index++) {
-        var filterConfig = filtersConfig[index];
-        filters.push(buildFilter(viewId + filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
-    }
-    return filters;
-}
-
 function buildSimpleCharts(viewId, chartsConfig) {
     var charts = [];
     for (var index = 0; index < chartsConfig.length; index++) {
@@ -228,11 +261,4 @@ function buildSimpleCharts(viewId, chartsConfig) {
         charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
     }
     return charts;
-}
-
-function buildFilteredDashboard(viewId, charts, filters, filterListener) {
-    google.visualization.events.addListener(charts, 'ready', filterListener);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_DASHBOARD));
-    dashboard.bind(filters, charts);
-    return dashboard;
 }
