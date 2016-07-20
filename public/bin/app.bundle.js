@@ -37519,7 +37519,7 @@
 	                _react2.default.createElement(_Menu2.default, null),
 	                _react2.default.createElement(
 	                    'div',
-	                    { id: 'content-wrapper', className: 'content-wrapper' },
+	                    { id: 'content-wrapper', className: 'content-wrapper container-fluid' },
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'container-fluid row' },
@@ -37787,6 +37787,8 @@
 
 	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
+	var _chartFactory = __webpack_require__(268);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37812,21 +37814,7 @@
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.props.fetchData();
-	            var tasksListTable = new google.visualization.ChartWrapper({
-	                'chartType': 'Table',
-	                'containerId': "table_div",
-	                'options': {
-	                    width: '100%'
-	                }
-	            });
-	            tasksListTable.setOption('height', '100%');
-	            tasksListTable.setOption('showRowNumber', true);
-	            google.visualization.events.addListener(tasksListTable, 'select', function () {
-	                var rowNumber = tasksListTable.getChart().getSelection()[0].row;
-	                var data = tasksListTable.getDataTable();
-	                window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, 0), '_blank');
-	            });
-	            this.setState({ chart: tasksListTable });
+	            this.setState({ chart: (0, _chartFactory.buildTasksListTable)("test") });
 	        }
 	    }, {
 	        key: 'update',
@@ -37841,23 +37829,7 @@
 	                this.state.chart.setDataTable(this.props.rawData);
 	                this.state.chart.draw();
 	            }
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.update },
-	                    'Load Table'
-	                ),
-	                _react2.default.createElement('div', { id: 'table_div', 'class': 'col-md-12 card-block card' }),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    ' Here is the test : ',
-	                    JSON.stringify(this.props.rawData),
-	                    ' '
-	                )
-	            );
+	            return _react2.default.createElement('div', { id: 'test_tasks_list', className: 'col-md-12 card-block card' });
 	        }
 	    }]);
 
@@ -37895,9 +37867,7 @@
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	    return {
 	        fetchData: function fetchData() {
-	            var fields = "id,key,project,summary,fixVersions,assignee,issuetype,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732,customfield_10621,customfield_11010";
-	            var jql = "Workstream=Digital%20and%20cf%5B11729%5D%20is%20not%20null%20and%20value%20is%20not%20null";
-	            var url = "/rest/api/2/search?jql=" + jql + "&fields=" + fields + "&startAt=0&maxResults=5000";
+	            var url = "/rest/api/2/search?jql=" + JIRA_DATA.jql + "&fields=" + JIRA_DATA.fields + "&startAt=0&maxResults=5000";
 	            (0, _isomorphicFetch2.default)(url).then(function (response) {
 	                return response.json();
 	            }).then(function (data) {
@@ -38437,13 +38407,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var RAW_DATA_COL = {
-	    KEY: ["key"],
-	    SUMMARY: ["fields", "summary"],
-	    EVENTS: [{ jiraField: ["fields", "customfield_11729"], label: 'Backlog', correction: -1 }, { jiraField: ["fields", "customfield_11730"], label: 'Analysis', correction: -0.5 }, { jiraField: ["fields", "customfield_11731"], label: 'Development', correction: -0.5 }, { jiraField: ["fields", "customfield_11732"], label: 'Ready To Release', correction: -1 }, { jiraField: ["fields", "fixVersions", 0, "releaseDate"], label: 'Released', correction: -1 }],
-	    FILTERS: [{ jiraField: ["fields", "issuetype", "name"], dataType: "string", filterType: 'CategoryFilter', label: 'Type' }, { jiraField: ["fields", "customfield_10621", "value"], dataType: "string", filterType: 'CategoryFilter', label: 'Effort' }, { jiraField: ["fields", "customfield_11010", "value"], dataType: "string", filterType: 'CategoryFilter', label: 'Value' }, { jiraField: ["fields", "project", "key"], dataType: "string", filterType: 'CategoryFilter', label: 'Project' }, { jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation' }, { jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release' }, { jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string", filterType: 'CategoryFilter', label: 'Version' }, { jiraField: ["fields", "assignee", "key"], dataType: "string", filterType: 'CategoryFilter', label: 'Assignee' }]
-	};
-
 	var DATA_DATE = "date";
 	var DATA_STRING = "string";
 	var DATA_NUMBER = "number";
@@ -38495,6 +38458,298 @@
 	};
 
 	;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.buildTasksListTable = undefined;
+
+	var _definition = __webpack_require__(269);
+
+	function buildDataTable(viewId) {
+	    return new google.visualization.ChartWrapper({
+	        'chartType': 'Table',
+	        'containerId': viewId,
+	        'options': {
+	            width: '100%'
+	        }
+	    });
+	}
+
+	var buildTasksListTable = exports.buildTasksListTable = function buildTasksListTable(viewId) {
+	    var tasksListTable = buildDataTable(viewId + _definition.ID_TASK_LIST);
+	    tasksListTable.setOption('height', '100%');
+	    tasksListTable.setOption('showRowNumber', true);
+	    setTaskSelectListener(tasksListTable);
+	    return tasksListTable;
+	};
+
+	/***************************
+	 *         Unused
+	 **************************/
+
+	function buildDurationStatsTable(viewId) {
+	    return buildDataTable(viewId + ID_DURATION_STATS);
+	}
+
+	function buildCumulativeFlowChart(viewId, height) {
+	    return new google.visualization.ChartWrapper({
+	        'chartType': 'AreaChart',
+	        'containerId': viewId,
+	        'options': {
+	            'animation': {
+	                'startup': true
+	            },
+	            'height': height,
+	            'chartArea': {
+	                'width': '90%',
+	                'height': '100%'
+	            },
+	            'hAxis': {
+	                'textPosition': 'in'
+	            },
+	            'vAxis': {
+	                'title': 'Number of tasks',
+	                'textPosition': 'in',
+	                'gridlines': { count: 4 }
+	            },
+	            'legend': {
+	                'position': 'in'
+	            }
+	        }
+	    });
+	}
+
+	function buildTasksDurationColumnChart(viewId, columns) {
+	    var durationChart = new google.visualization.ChartWrapper({
+	        'chartType': 'ColumnChart',
+	        'containerId': viewId + ID_COLUMN_CHART,
+	        'view': { 'columns': columns },
+	        'options': {
+	            'tooltip': { isHtml: true },
+	            'height': 400,
+	            'isStacked': true,
+	            'hAxis': {
+	                'title': 'Jira Tickets',
+	                'textPosition': 'none'
+	            },
+	            'vAxis': {
+	                'title': 'Duration (days)',
+	                'textPosition': 'in'
+	            },
+	            'legend': {
+	                'position': 'in'
+	            },
+	            'chartArea': {
+	                'width': '90%',
+	                'height': '100%'
+	            }
+	        }
+	    });
+	    setTaskSelectListener(durationChart);
+	    return durationChart;
+	}
+
+	function buildTasksDurationScatterChart(viewId, columns) {
+	    var durationChart = new google.visualization.ChartWrapper({
+	        'chartType': 'ScatterChart',
+	        'containerId': viewId + ID_SCATTER_CHART,
+	        'view': { 'columns': columns },
+	        'options': {
+	            'tooltip': { isHtml: true },
+	            'height': 400,
+	            'hAxis': {
+	                'title': 'Dates',
+	                'textPosition': 'out'
+	            },
+	            'vAxis': {
+	                'title': 'Duration (days)',
+	                'textPosition': 'in'
+	            },
+	            'legend': {
+	                'position': 'in'
+	            },
+	            'chartArea': {
+	                'width': '90%',
+	                'height': '80%'
+	            },
+	            series: {
+	                0: { labelInLegend: 'Tasks' },
+	                1: { pointSize: 0, visibleInLegend: false },
+	                2: { pointSize: 0, visibleInLegend: false },
+	                3: { pointSize: 0, visibleInLegend: false }
+	            },
+	            trendlines: {
+	                1: { labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green' },
+	                2: { labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange' },
+	                3: { labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red' }
+	            }
+	        }
+	    });
+	    setTaskSelectListener(durationChart);
+	    return durationChart;
+	}
+
+	function buildRangeFilter(elementId) {
+	    return new google.visualization.ControlWrapper({
+	        'controlType': 'ChartRangeFilter',
+	        'containerId': elementId,
+	        'options': {
+	            'filterColumnIndex': 0,
+	            'ui': {
+	                'chartType': 'AreaChart',
+	                'chartOptions': {
+	                    'height': 100,
+	                    'chartArea': {
+	                        'width': '90%'
+	                    }
+	                }
+	            }
+	        }
+	    });
+	}
+
+	function buildSimpleChart(elementId, chartType, title) {
+	    return new google.visualization.ChartWrapper({
+	        'chartType': chartType,
+	        'containerId': elementId,
+	        'options': {
+	            'width': 400,
+	            'height': 400,
+	            'pieSliceText': 'label',
+	            'legend': 'none',
+	            'title': title
+	        }
+	    });
+	}
+
+	function buildFilter(containerId, controlType, filterColumnIndex) {
+	    var filter = new google.visualization.ControlWrapper({
+	        'controlType': controlType,
+	        'containerId': containerId,
+	        'options': {
+	            'filterColumnIndex': filterColumnIndex
+	        }
+	    });
+	    return filter;
+	}
+
+	/***************************
+	 *     Event Manager
+	 **************************/
+
+	function setTaskSelectListener(element) {
+	    google.visualization.events.addListener(element, 'select', function () {
+	        var rowNumber = element.getChart().getSelection()[0].row;
+	        var data = element.getDataTable();
+	        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
+	    });
+	}
+
+	/***************************
+	 * ExtractDashboard
+	 **************************/
+
+	function buildTimePeriodDashboard(viewId, startDate, endDate) {
+	    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 600);
+	    limitDashboardPeriod(areaChart, startDate, endDate);
+	    return areaChart;
+	}
+
+	function limitDashboardPeriod(areaChart, firstDay, lastDay) {
+	    areaChart.setOption('hAxis.viewWindow.min', firstDay);
+	    areaChart.setOption('hAxis.viewWindow.max', lastDay);
+	    return areaChart;
+	}
+
+	/***************************
+	 * CumulativFlowDashboard
+	 **************************/
+
+	function buildCumulativFlowDashboard(viewId) {
+	    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 400);
+	    var chartRangeFilter = buildRangeFilter(viewId + ID_RANGE_FILTER);
+	    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
+	    dashboard.bind([chartRangeFilter], areaChart);
+	    return dashboard;
+	}
+
+	/***************************
+	 * TasksDurationDashboard
+	 **************************/
+
+	function buildFilters(viewId, filtersConfig) {
+	    var filters = [];
+	    for (var index = 0; index < filtersConfig.length; index++) {
+	        var filterConfig = filtersConfig[index];
+	        filters.push(buildFilter(viewId + filterConfig.id, filterConfig.filterType, filterConfig.columnIndex));
+	    }
+	    return filters;
+	}
+
+	function buildSimpleCharts(viewId, chartsConfig) {
+	    var charts = [];
+	    for (var index = 0; index < chartsConfig.length; index++) {
+	        var chartConfig = chartsConfig[index];
+	        charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
+	    }
+	    return charts;
+	}
+
+	function buildFilteredDashboard(viewId, charts, filters, filterListener) {
+	    google.visualization.events.addListener(charts, 'ready', filterListener);
+	    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId + ID_DASHBOARD));
+	    dashboard.bind(filters, charts);
+	    return dashboard;
+	}
+
+/***/ },
+/* 269 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ID_SEPARATOR = exports.ID_SEPARATOR = "_";
+	var ID_CHART = exports.ID_CHART = ID_SEPARATOR + 'chart';
+	var ID_AREA_CHART = exports.ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
+	var ID_COLUMN_CHART = exports.ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
+	var ID_SCATTER_CHART = exports.ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
+
+	var ID_RANGE_FILTER = exports.ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';
+	var ID_FILTER = exports.ID_FILTER = ID_SEPARATOR + 'filter';
+	var ID_FILTERS = exports.ID_FILTERS = ID_SEPARATOR + 'filters';
+	var ID_FILTERS_RANGE = exports.ID_FILTERS_RANGE = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'range';
+	var ID_FILTERS_CATEGORY = exports.ID_FILTERS_CATEGORY = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'category';
+
+	var ID_DASHBOARD = exports.ID_DASHBOARD = ID_SEPARATOR + "dashboard";
+	var ID_TITLE_SUFFIX = exports.ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
+	var ID_TASK_LIST_MODAL = exports.ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+	var ID_TASK_LIST = exports.ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
+	var ID_DURATION_STATS = exports.ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
+
+	var ID_SWITCH = exports.ID_SWITCH = ID_SEPARATOR + 'switch';
+	var ID_TIME_SELECTOR = exports.ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
+	var ID_MONTH_SELECTOR_LABEL = exports.ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
+	var ID_MONTH_SELECTOR_LIST = exports.ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
+
+	var CONFIG_MONTH_SELECTOR = exports.CONFIG_MONTH_SELECTOR = "month_selector";
+	var CONFIG_PERIOD_SELECTOR = exports.CONFIG_PERIOD_SELECTOR = "pediod_selector";
+
+	var DATA_DATE = exports.DATA_DATE = "date";
+	var DATA_STRING = exports.DATA_STRING = "string";
+	var DATA_NUMBER = exports.DATA_NUMBER = "number";
+
+	var FILTER_CATEGORY = exports.FILTER_CATEGORY = "CategoryFilter";
+	var FILTER_DATE = exports.FILTER_DATE = "DateRangeFilter";
 
 /***/ }
 /******/ ]);

@@ -5,7 +5,7 @@ export default class Application extends React.Component {
     render() {
         return <div>
             <Menu />
-            <div id="content-wrapper" className="content-wrapper">
+            <div id="content-wrapper" className="content-wrapper container-fluid">
                 <div className="container-fluid row">
                     {this.props.children}
                 </div>
