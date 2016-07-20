@@ -1,8 +1,8 @@
-import jiraParser from '../api/jiraParser'
+import {parseJiraData} from '../api/taskData'
 
 export const fetchDataAction = (data) => {
     return {
         type: 'SET_RAW_DATA',
-        rawData: jiraParser(data)
+        rawData: parseJiraData(data)
     }
 }

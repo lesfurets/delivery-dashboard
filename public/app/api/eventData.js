@@ -1,4 +1,4 @@
-import {TASK_INDEX_EVENTS_FIRST} from './dataColumns'
+import {TASK_INDEX_EVENTS_FIRST} from './taskData'
 
 // We need one column with the date and as many columns with counters as there are events.
 // We want to mark the number tasks moving to a special state every days

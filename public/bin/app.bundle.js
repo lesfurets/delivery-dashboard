@@ -88,7 +88,7 @@
 
 	var _CumulativeFlow2 = _interopRequireDefault(_CumulativeFlow);
 
-	var _TaskManager = __webpack_require__(275);
+	var _TaskManager = __webpack_require__(274);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -37953,7 +37953,7 @@
 
 	var _eventData = __webpack_require__(272);
 
-	var _Card = __webpack_require__(274);
+	var _Card = __webpack_require__(273);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
@@ -38517,16 +38517,12 @@
 	});
 	exports.fetchDataAction = undefined;
 
-	var _jiraParser = __webpack_require__(269);
-
-	var _jiraParser2 = _interopRequireDefault(_jiraParser);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _taskData = __webpack_require__(269);
 
 	var fetchDataAction = exports.fetchDataAction = function fetchDataAction(data) {
 	    return {
 	        type: 'SET_RAW_DATA',
-	        rawData: (0, _jiraParser2.default)(data)
+	        rawData: (0, _taskData.parseJiraData)(data)
 	    };
 	};
 
@@ -38539,8 +38535,35 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.parseJiraData = exports.TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_REFERENCE = undefined;
 
-	exports.default = function (jiraData) {
+	var _jsonParser = __webpack_require__(270);
+
+	var _jsonParser2 = _interopRequireDefault(_jsonParser);
+
+	var _definition = __webpack_require__(260);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TASK_INDEX_STATIC_REFERENCE = exports.TASK_INDEX_STATIC_REFERENCE = 0;
+	var TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_SYMMARY = 1;
+	var TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
+
+	var TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
+	var TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+
+	var TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
+	var TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
+	function getJiraValue(jiraData, fieldPath, fieldType) {
+	    var jiraValue = (0, _jsonParser2.default)(jiraData, fieldPath);
+	    if (fieldType != _definition.DATA_DATE) {
+	        return jiraValue;
+	    }
+	    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
+	}
+
+	var parseJiraData = exports.parseJiraData = function parseJiraData(jiraData) {
 	    var taskData = new google.visualization.DataTable();
 
 	    // Defining table structure
@@ -38573,22 +38596,6 @@
 
 	    return taskData;
 	};
-
-	var _jsonParser = __webpack_require__(270);
-
-	var _jsonParser2 = _interopRequireDefault(_jsonParser);
-
-	var _definition = __webpack_require__(260);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getJiraValue(jiraData, fieldPath, fieldType) {
-	    var jiraValue = (0, _jsonParser2.default)(jiraData, fieldPath);
-	    if (fieldType != _definition.DATA_DATE) {
-	        return jiraValue;
-	    }
-	    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
-	}
 
 /***/ },
 /* 270 */
@@ -38881,7 +38888,7 @@
 	});
 	exports.computeEventData = undefined;
 
-	var _dataColumns = __webpack_require__(273);
+	var _taskData = __webpack_require__(269);
 
 	// We need one column with the date and as many columns with counters as there are events.
 	// We want to mark the number tasks moving to a special state every days
@@ -38916,7 +38923,7 @@
 	    var eventsByDateMap = {};
 	    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
 	        for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
-	            var eventDate = inputData.getValue(index, _dataColumns.TASK_INDEX_EVENTS_FIRST + eventIndex);
+	            var eventDate = inputData.getValue(index, _taskData.TASK_INDEX_EVENTS_FIRST + eventIndex);
 	            if (eventDate != null) {
 	                var indexDate = eventDate.formatYYYYMMDD();
 	                if (!(indexDate in eventsByDateMap)) {
@@ -38931,7 +38938,7 @@
 	    var cumulativeData = new google.visualization.DataTable();
 	    cumulativeData.addColumn('date', "EventDate");
 	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-	        cumulativeData.addColumn('number', inputData.getColumnLabel(_dataColumns.TASK_INDEX_EVENTS_FIRST + index));
+	        cumulativeData.addColumn('number', inputData.getColumnLabel(_taskData.TASK_INDEX_EVENTS_FIRST + index));
 	    }
 
 	    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
@@ -38947,42 +38954,6 @@
 
 /***/ },
 /* 273 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var TASK_INDEX_STATIC_REFERENCE = exports.TASK_INDEX_STATIC_REFERENCE = 0;
-	var TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_SYMMARY = 1;
-	var TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
-
-	var TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
-	var TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
-
-	var TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
-	var TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
-
-	var DURATION_INDEX_STATIC_FIRST = exports.DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;
-	var DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
-	var DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_COUNT = DURATION_INDEX_STATIC_GROUP_ALL + 1;
-	var DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
-
-	var DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
-	var DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
-	var DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
-	var DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_TOOLTIP = DURATION_INDEX_DURATION_LAST + 1;
-
-	var DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_TOOLTIP + 1;
-	var DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
-	var DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
-	var DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
-
-	var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = TASK_INDEX_FILTER_LAST + 1;
-
-/***/ },
-/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -39055,7 +39026,7 @@
 	};
 
 /***/ },
-/* 275 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

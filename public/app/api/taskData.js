@@ -1,6 +1,16 @@
 import jsonParser from '../api/jsonParser'
 import {DATA_DATE,DATA_STRING} from '../api/definition'
 
+export const TASK_INDEX_STATIC_REFERENCE = 0;
+export const TASK_INDEX_STATIC_SYMMARY = 1;
+export const TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
+
+export const TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
+export const TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+
+export const TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
+export const TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
+
 function getJiraValue(jiraData, fieldPath, fieldType){
     var jiraValue = jsonParser(jiraData, fieldPath);
     if (fieldType != DATA_DATE){
@@ -9,7 +19,7 @@ function getJiraValue(jiraData, fieldPath, fieldType){
     return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue+".00:00");
 }
 
-export default function(jiraData) {
+export const parseJiraData = function(jiraData) {
     var taskData = new google.visualization.DataTable();
 
     // Defining table structure
