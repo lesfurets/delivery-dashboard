@@ -12,6 +12,7 @@ import initApp from './core/initApp';
 import DeliveryDashboard from './components/DeliveryDashboard';
 import Page1 from './components/Page1';
 import CumulativeFlow from './dashboard/CumulativeFlow';
+import Duration from './dashboard/Duration';
 import TaskManager from './dashboard/TaskManager';
 
 
@@ -27,6 +28,7 @@ google.setOnLoadCallback(function () {
                 <Route path="/" component={DeliveryDashboard}>
                     <IndexRedirect to="/todo"/>
                     <Route path="/cumulative-flow" component={CumulativeFlow}/>
+                    <Route path="/duration" component={Duration}/>
                     <Route path="/todo" component={Page1}/>
                     <Route path="/task-manager" component={TaskManager}/>
                 </Route>
