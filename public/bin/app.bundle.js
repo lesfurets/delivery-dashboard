@@ -72,15 +72,23 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _DeliveryDashboard = __webpack_require__(258);
+	var _initApp = __webpack_require__(258);
+
+	var _initApp2 = _interopRequireDefault(_initApp);
+
+	var _DeliveryDashboard = __webpack_require__(261);
 
 	var _DeliveryDashboard2 = _interopRequireDefault(_DeliveryDashboard);
 
-	var _Page = __webpack_require__(260);
+	var _Page = __webpack_require__(263);
 
 	var _Page2 = _interopRequireDefault(_Page);
 
-	var _TaskManager = __webpack_require__(261);
+	var _CumulativeFlow = __webpack_require__(264);
+
+	var _CumulativeFlow2 = _interopRequireDefault(_CumulativeFlow);
+
+	var _TaskManager = __webpack_require__(275);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -90,6 +98,7 @@
 
 	google.setOnLoadCallback(function () {
 	    var store = (0, _redux.createStore)(_reducers2.default);
+	    (0, _initApp2.default)();
 
 	    _reactDom2.default.render(_react2.default.createElement(
 	        _reactRedux.Provider,
@@ -101,6 +110,7 @@
 	                _reactRouter.Route,
 	                { path: '/', component: _DeliveryDashboard2.default },
 	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/todo' }),
+	                _react2.default.createElement(_reactRouter.Route, { path: '/cumulative-flow', component: _CumulativeFlow2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/todo', component: _Page2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/task-manager', component: _TaskManager2.default })
 	            )
@@ -37483,13 +37493,165 @@
 	    value: true
 	});
 
+	exports.default = function () {
+	    (0, _dateApi.completeDatePrototype)();
+	    completeConfig();
+	};
+
+	var _dateApi = __webpack_require__(259);
+
+	var _definition = __webpack_require__(260);
+
+	function completeConfig() {
+	    RAW_DATA_COL.EVENTS.forEach(function (element) {
+	        element.dataType = _definition.DATA_DATE;
+	        element.filterType = _definition.FILTER_DATE;
+	    });
+	}
+
+/***/ },
+/* 259 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+	var completeDatePrototype = exports.completeDatePrototype = function completeDatePrototype() {
+	    Date.prototype.getMonthLabel = function () {
+	        return monthNames[this.getMonth()];
+	    };
+
+	    Date.prototype.formatDDMMYYYY = function () {
+	        var dd = this.getDate();
+	        dd = dd < 10 ? '0' + dd : dd;
+	        var mm = this.getMonth() + 1; //January is 0!
+	        mm = mm < 10 ? '0' + mm : mm;
+	        var yyyy = this.getFullYear();
+	        return dd + '/' + mm + '/' + yyyy;
+	    };
+
+	    Date.prototype.formatYYYYMMDD = function () {
+	        var dd = this.getDate();
+	        dd = dd < 10 ? '0' + dd : dd;
+	        var mm = this.getMonth() + 1; //January is 0!
+	        mm = mm < 10 ? '0' + mm : mm;
+	        var yyyy = this.getFullYear();
+	        return yyyy + '-' + mm + '-' + dd;
+	    };
+
+	    Date.prototype.getWeek = function () {
+	        var onejan = new Date(this.getFullYear(), 0, 1);
+	        return Math.ceil(((this - onejan) / 86400000 + onejan.getDay() + 1) / 7);
+	    };
+
+	    Date.prototype.getWorkDaysUntil = function (date) {
+	        return getWorkDaysBetween(this, date);
+	    };
+
+	    Date.prototype.getWorkDaysSince = function (date) {
+	        return getWorkDaysBetween(date, this);
+	    };
+	};
+
+	var getWorkDaysBetween = exports.getWorkDaysBetween = function getWorkDaysBetween(dDate1, dDate2) {
+	    // input given as Date objects
+
+	    var iWeeks,
+	        iDateDiff,
+	        iAdjust = 0;
+
+	    if (dDate2 < dDate1) {
+	        return -1; // error code if dates transposed
+	    }
+
+	    var iWeekday1 = dDate1.getDay(); // day of week
+	    var iWeekday2 = dDate2.getDay();
+
+	    iWeekday1 = iWeekday1 == 0 ? 7 : iWeekday1; // change Sunday from 0 to 7
+	    iWeekday2 = iWeekday2 == 0 ? 7 : iWeekday2;
+
+	    if (iWeekday1 > 5 && iWeekday2 > 5) iAdjust = 1; // adjustment if both days on weekend
+
+	    iWeekday1 = iWeekday1 > 5 ? 5 : iWeekday1; // only count weekdays
+	    iWeekday2 = iWeekday2 > 5 ? 5 : iWeekday2;
+
+	    // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
+	    iWeeks = Math.floor((dDate2.getTime() - dDate1.getTime()) / 604800000);
+
+	    if (iWeekday1 <= iWeekday2) {
+	        iDateDiff = iWeeks * 5 + (iWeekday2 - iWeekday1);
+	    } else {
+	        iDateDiff = (iWeeks + 1) * 5 - (iWeekday1 - iWeekday2);
+	    }
+
+	    iDateDiff -= iAdjust; // take into account both days on weekend
+
+	    return iDateDiff + 1; // add 1 because dates are inclusive
+	};
+
+/***/ },
+/* 260 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ID_SEPARATOR = exports.ID_SEPARATOR = "_";
+	var ID_CHART = exports.ID_CHART = ID_SEPARATOR + 'chart';
+	var ID_AREA_CHART = exports.ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
+	var ID_COLUMN_CHART = exports.ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
+	var ID_SCATTER_CHART = exports.ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
+
+	var ID_RANGE_FILTER = exports.ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';
+	var ID_FILTER = exports.ID_FILTER = ID_SEPARATOR + 'filter';
+	var ID_FILTERS = exports.ID_FILTERS = ID_SEPARATOR + 'filters';
+	var ID_FILTERS_RANGE = exports.ID_FILTERS_RANGE = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'range';
+	var ID_FILTERS_CATEGORY = exports.ID_FILTERS_CATEGORY = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'category';
+
+	var ID_DASHBOARD = exports.ID_DASHBOARD = ID_SEPARATOR + "dashboard";
+	var ID_TITLE_SUFFIX = exports.ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
+	var ID_TASK_LIST_MODAL = exports.ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
+	var ID_TASK_LIST = exports.ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
+	var ID_DURATION_STATS = exports.ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
+
+	var ID_SWITCH = exports.ID_SWITCH = ID_SEPARATOR + 'switch';
+	var ID_TIME_SELECTOR = exports.ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
+	var ID_MONTH_SELECTOR_LABEL = exports.ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
+	var ID_MONTH_SELECTOR_LIST = exports.ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
+
+	var CONFIG_MONTH_SELECTOR = exports.CONFIG_MONTH_SELECTOR = "month_selector";
+	var CONFIG_PERIOD_SELECTOR = exports.CONFIG_PERIOD_SELECTOR = "pediod_selector";
+
+	var DATA_DATE = exports.DATA_DATE = "date";
+	var DATA_STRING = exports.DATA_STRING = "string";
+	var DATA_NUMBER = exports.DATA_NUMBER = "number";
+
+	var FILTER_CATEGORY = exports.FILTER_CATEGORY = "CategoryFilter";
+	var FILTER_DATE = exports.FILTER_DATE = "DateRangeFilter";
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Menu = __webpack_require__(259);
+	var _Menu = __webpack_require__(262);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
@@ -37545,7 +37707,7 @@
 	exports.default = Application;
 
 /***/ },
-/* 259 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37628,7 +37790,7 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/', styleName: 'title' },
+	                                            { to: '/cumulative-flow', styleName: 'title' },
 	                                            'Cumulative Flow'
 	                                        )
 	                                    ),
@@ -37719,7 +37881,7 @@
 	exports.default = Menu;
 
 /***/ },
-/* 260 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -37768,7 +37930,7 @@
 	exports.default = Page1;
 
 /***/ },
-/* 261 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37783,11 +37945,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jiraConnect = __webpack_require__(262);
+	var _jiraConnect = __webpack_require__(265);
 
 	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
-	var _chartFactory = __webpack_require__(268);
+	var _chartFactory = __webpack_require__(271);
+
+	var _eventData = __webpack_require__(272);
+
+	var _Card = __webpack_require__(274);
+
+	var _Card2 = _interopRequireDefault(_Card);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37805,8 +37973,7 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
 
-	        _this.state = { chart: null };
-	        _this.update = _this.update.bind(_this);
+	        _this.state = { dashboard: null };
 	        return _this;
 	    }
 
@@ -37814,22 +37981,29 @@
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.props.fetchData();
-	            this.setState({ chart: (0, _chartFactory.buildTasksListTable)("test") });
-	        }
-	    }, {
-	        key: 'update',
-	        value: function update(e) {
-	            this.state.chart.setDataTable(this.props.rawData);
-	            this.state.chart.draw();
+
+	            var areaChart = (0, _chartFactory.buildCumulativeFlowChart)("cumulative_flow_area_chart", 400);
+	            var chartRangeFilter = (0, _chartFactory.buildRangeFilter)("cumulative_flow_range_filter");
+	            var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));
+	            dashboard.bind([chartRangeFilter], areaChart);
+	            this.setState({ dashboard: dashboard });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            if (this.state.chart != null) {
-	                this.state.chart.setDataTable(this.props.rawData);
-	                this.state.chart.draw();
+	            if (this.state.dashboard != null) {
+	                this.state.dashboard.draw((0, _eventData.computeEventData)(this.props.rawData));
 	            }
-	            return _react2.default.createElement('div', { id: 'test_tasks_list', className: 'col-md-12 card-block card' });
+	            return _react2.default.createElement(
+	                _Card2.default,
+	                { cardTitle: 'Cumulative Flow' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { id: 'cumulative_flow_dashboard', 'class': 'col-md-12 card-block' },
+	                    _react2.default.createElement('div', { id: 'cumulative_flow_area_chart', className: 'col-md-12 card-block' }),
+	                    _react2.default.createElement('div', { id: 'cumulative_flow_range_filter', className: 'col-md-12 card-block' })
+	                )
+	            );
 	        }
 	    }]);
 
@@ -37839,7 +38013,7 @@
 	exports.default = (0, _jiraConnect2.default)(TaskManager);
 
 /***/ },
-/* 262 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37848,11 +38022,11 @@
 	    value: true
 	});
 
-	var _isomorphicFetch = __webpack_require__(263);
+	var _isomorphicFetch = __webpack_require__(266);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _actions = __webpack_require__(265);
+	var _actions = __webpack_require__(268);
 
 	var _reactRedux = __webpack_require__(241);
 
@@ -37882,19 +38056,19 @@
 	};
 
 /***/ },
-/* 263 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(264);
+	__webpack_require__(267);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 264 */
+/* 267 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -38333,7 +38507,7 @@
 
 
 /***/ },
-/* 265 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38343,7 +38517,7 @@
 	});
 	exports.fetchDataAction = undefined;
 
-	var _jiraParser = __webpack_require__(266);
+	var _jiraParser = __webpack_require__(269);
 
 	var _jiraParser2 = _interopRequireDefault(_jiraParser);
 
@@ -38357,10 +38531,10 @@
 	};
 
 /***/ },
-/* 266 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -38368,11 +38542,10 @@
 
 	exports.default = function (jiraData) {
 	    var taskData = new google.visualization.DataTable();
-	    completeConfig();
 
 	    // Defining table structure
-	    taskData.addColumn(DATA_STRING, "Key");
-	    taskData.addColumn(DATA_STRING, "Summary");
+	    taskData.addColumn(_definition.DATA_STRING, "Key");
+	    taskData.addColumn(_definition.DATA_STRING, "Summary");
 	    RAW_DATA_COL.EVENTS.forEach(function (element) {
 	        taskData.addColumn(element.dataType, element.label);
 	    });
@@ -38401,36 +38574,24 @@
 	    return taskData;
 	};
 
-	var _jsonParser = __webpack_require__(267);
+	var _jsonParser = __webpack_require__(270);
 
 	var _jsonParser2 = _interopRequireDefault(_jsonParser);
 
+	var _definition = __webpack_require__(260);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var DATA_DATE = "date";
-	var DATA_STRING = "string";
-	var DATA_NUMBER = "number";
-
-	var FILTER_CATEGORY = "CategoryFilter";
-	var FILTER_DATE = "DateRangeFilter";
-
-	function completeConfig() {
-	    RAW_DATA_COL.EVENTS.forEach(function (element) {
-	        element.dataType = DATA_DATE;
-	        element.filterType = FILTER_DATE;
-	    });
-	}
 
 	function getJiraValue(jiraData, fieldPath, fieldType) {
 	    var jiraValue = (0, _jsonParser2.default)(jiraData, fieldPath);
-	    if (fieldType != DATA_DATE) {
+	    if (fieldType != _definition.DATA_DATE) {
 	        return jiraValue;
 	    }
 	    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
 	}
 
 /***/ },
-/* 267 */
+/* 270 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -38460,7 +38621,7 @@
 	;
 
 /***/ },
-/* 268 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38468,9 +38629,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.buildTasksListTable = undefined;
+	exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = undefined;
 
-	var _definition = __webpack_require__(269);
+	var _definition = __webpack_require__(260);
 
 	function buildDataTable(viewId) {
 	    return new google.visualization.ChartWrapper({
@@ -38483,22 +38644,14 @@
 	}
 
 	var buildTasksListTable = exports.buildTasksListTable = function buildTasksListTable(viewId) {
-	    var tasksListTable = buildDataTable(viewId + _definition.ID_TASK_LIST);
+	    var tasksListTable = buildDataTable(viewId);
 	    tasksListTable.setOption('height', '100%');
 	    tasksListTable.setOption('showRowNumber', true);
 	    setTaskSelectListener(tasksListTable);
 	    return tasksListTable;
 	};
 
-	/***************************
-	 *         Unused
-	 **************************/
-
-	function buildDurationStatsTable(viewId) {
-	    return buildDataTable(viewId + ID_DURATION_STATS);
-	}
-
-	function buildCumulativeFlowChart(viewId, height) {
+	var buildCumulativeFlowChart = exports.buildCumulativeFlowChart = function buildCumulativeFlowChart(viewId, height) {
 	    return new google.visualization.ChartWrapper({
 	        'chartType': 'AreaChart',
 	        'containerId': viewId,
@@ -38524,6 +38677,33 @@
 	            }
 	        }
 	    });
+	};
+
+	var buildRangeFilter = exports.buildRangeFilter = function buildRangeFilter(elementId) {
+	    return new google.visualization.ControlWrapper({
+	        'controlType': 'ChartRangeFilter',
+	        'containerId': elementId,
+	        'options': {
+	            'filterColumnIndex': 0,
+	            'ui': {
+	                'chartType': 'AreaChart',
+	                'chartOptions': {
+	                    'height': 100,
+	                    'chartArea': {
+	                        'width': '90%'
+	                    }
+	                }
+	            }
+	        }
+	    });
+	};
+
+	/***************************
+	 *         Unused
+	 **************************/
+
+	function buildDurationStatsTable(viewId) {
+	    return buildDataTable(viewId + ID_DURATION_STATS);
 	}
 
 	function buildTasksDurationColumnChart(viewId, columns) {
@@ -38594,25 +38774,6 @@
 	    });
 	    setTaskSelectListener(durationChart);
 	    return durationChart;
-	}
-
-	function buildRangeFilter(elementId) {
-	    return new google.visualization.ControlWrapper({
-	        'controlType': 'ChartRangeFilter',
-	        'containerId': elementId,
-	        'options': {
-	            'filterColumnIndex': 0,
-	            'ui': {
-	                'chartType': 'AreaChart',
-	                'chartOptions': {
-	                    'height': 100,
-	                    'chartArea': {
-	                        'width': '90%'
-	                    }
-	                }
-	            }
-	        }
-	    });
 	}
 
 	function buildSimpleChart(elementId, chartType, title) {
@@ -38710,46 +38871,259 @@
 	}
 
 /***/ },
-/* 269 */
-/***/ function(module, exports) {
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.computeEventData = undefined;
+
+	var _dataColumns = __webpack_require__(273);
+
+	// We need one column with the date and as many columns with counters as there are events.
+	// We want to mark the number tasks moving to a special state every days
+	// So these lines :
+	// ╔═══════╦═════════╦═════════╦═════════╗
+	// ║ Ref   ║ Event 1 ║ Event 2 ║ Event 3 ║
+	// ╠═══════╬═════════╬═════════╬═════════╣
+	// ║Task 1 ║ 01/01   ║ 01/02   ║ 01/03   ║
+	// ║Task 2 ║ 01/01   ║ 01/04   ║ 01/04   ║
+	// ╚═══════╩═════════╩═════════╩═════════╝
+	// Should lead to this table :
+	// ╔═══════╦═════════╦═════════╦═════════╗
+	// ║ Date  ║ Event 1 ║ Event 2 ║ Event 3 ║
+	// ╠═══════╬═════════╬═════════╬═════════╣
+	// ║ 01/01 ║       2 ║       0 ║       0 ║
+	// ║ 01/02 ║       0 ║       1 ║       0 ║
+	// ║ 01/03 ║       0 ║       0 ║       1 ║
+	// ║ 01/04 ║       0 ║       1 ║       1 ║
+	// ╚═══════╩═════════╩═════════╩═════════╝
+	// Then we build a cumulative table
+	// ╔═══════╦═════════╦═════════╦═════════╗
+	// ║ Date  ║ Event 1 ║ Event 2 ║ Event 3 ║
+	// ╠═══════╬═════════╬═════════╬═════════╣
+	// ║ 01/01 ║       2 ║       0 ║       0 ║
+	// ║ 01/02 ║       2 ║       1 ║       0 ║
+	// ║ 01/03 ║       2 ║       2 ║       1 ║
+	// ║ 01/04 ║       2 ║       2 ║       2 ║
+	// ╚═══════╩═════════╩═════════╩═════════╝
+	var computeEventData = exports.computeEventData = function computeEventData(inputData) {
+	    // Count the number of events at each day
+	    var eventsNb = RAW_DATA_COL.EVENTS.length;
+	    var eventsByDateMap = {};
+	    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
+	        for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
+	            var eventDate = inputData.getValue(index, _dataColumns.TASK_INDEX_EVENTS_FIRST + eventIndex);
+	            if (eventDate != null) {
+	                var indexDate = eventDate.formatYYYYMMDD();
+	                if (!(indexDate in eventsByDateMap)) {
+	                    eventsByDateMap[indexDate] = Array.apply(null, { length: eventsNb }).map(Number.prototype.valueOf, 0);
+	                }
+	                eventsByDateMap[indexDate][eventIndex]++;
+	            }
+	        }
+	    }
+
+	    // Order by date and add in a table with a cumulative count
+	    var cumulativeData = new google.visualization.DataTable();
+	    cumulativeData.addColumn('date', "EventDate");
+	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
+	        cumulativeData.addColumn('number', inputData.getColumnLabel(_dataColumns.TASK_INDEX_EVENTS_FIRST + index));
+	    }
+
+	    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
+	        var row = [new Date(dateString)];
+	        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
+	            row.push(dateIndex == 0 ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
+	        });
+	        cumulativeData.addRow(row);
+	    });
+
+	    return cumulativeData;
+	};
+
+/***/ },
+/* 273 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var ID_SEPARATOR = exports.ID_SEPARATOR = "_";
-	var ID_CHART = exports.ID_CHART = ID_SEPARATOR + 'chart';
-	var ID_AREA_CHART = exports.ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
-	var ID_COLUMN_CHART = exports.ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
-	var ID_SCATTER_CHART = exports.ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
+	var TASK_INDEX_STATIC_REFERENCE = exports.TASK_INDEX_STATIC_REFERENCE = 0;
+	var TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_SYMMARY = 1;
+	var TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
 
-	var ID_RANGE_FILTER = exports.ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';
-	var ID_FILTER = exports.ID_FILTER = ID_SEPARATOR + 'filter';
-	var ID_FILTERS = exports.ID_FILTERS = ID_SEPARATOR + 'filters';
-	var ID_FILTERS_RANGE = exports.ID_FILTERS_RANGE = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'range';
-	var ID_FILTERS_CATEGORY = exports.ID_FILTERS_CATEGORY = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'category';
+	var TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
+	var TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
 
-	var ID_DASHBOARD = exports.ID_DASHBOARD = ID_SEPARATOR + "dashboard";
-	var ID_TITLE_SUFFIX = exports.ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
-	var ID_TASK_LIST_MODAL = exports.ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
-	var ID_TASK_LIST = exports.ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
-	var ID_DURATION_STATS = exports.ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
+	var TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
+	var TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
-	var ID_SWITCH = exports.ID_SWITCH = ID_SEPARATOR + 'switch';
-	var ID_TIME_SELECTOR = exports.ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
-	var ID_MONTH_SELECTOR_LABEL = exports.ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
-	var ID_MONTH_SELECTOR_LIST = exports.ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
+	var DURATION_INDEX_STATIC_FIRST = exports.DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;
+	var DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
+	var DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_COUNT = DURATION_INDEX_STATIC_GROUP_ALL + 1;
+	var DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
 
-	var CONFIG_MONTH_SELECTOR = exports.CONFIG_MONTH_SELECTOR = "month_selector";
-	var CONFIG_PERIOD_SELECTOR = exports.CONFIG_PERIOD_SELECTOR = "pediod_selector";
+	var DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
+	var DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
+	var DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
+	var DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_TOOLTIP = DURATION_INDEX_DURATION_LAST + 1;
 
-	var DATA_DATE = exports.DATA_DATE = "date";
-	var DATA_STRING = exports.DATA_STRING = "string";
-	var DATA_NUMBER = exports.DATA_NUMBER = "number";
+	var DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_TOOLTIP + 1;
+	var DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
+	var DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
+	var DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
 
-	var FILTER_CATEGORY = exports.FILTER_CATEGORY = "CategoryFilter";
-	var FILTER_DATE = exports.FILTER_DATE = "DateRangeFilter";
+	var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = TASK_INDEX_FILTER_LAST + 1;
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Card = function (_React$Component) {
+	    _inherits(Card, _React$Component);
+
+	    function Card() {
+	        _classCallCheck(this, Card);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Card).apply(this, arguments));
+	    }
+
+	    _createClass(Card, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "card" },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    _react2.default.createElement(
+	                        "h2",
+	                        { className: "col-md-12 card-title" },
+	                        this.props.cardTitle,
+	                        _react2.default.createElement(
+	                            "a",
+	                            { href: "#" },
+	                            " ",
+	                            _react2.default.createElement("span", { className: "glyphicon glyphicon-th-list pull-right", "data-toggle": "modal", "data-target": "#tab_cumulative_view_tasks_list_modal" })
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    this.props.children
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Card;
+	}(_react2.default.Component);
+
+	exports.default = Card;
+
+
+	Card.defaultProps = {
+	    cardTitle: "Dashboard"
+	};
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jiraConnect = __webpack_require__(265);
+
+	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
+
+	var _chartFactory = __webpack_require__(271);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TaskManager = function (_React$Component) {
+	    _inherits(TaskManager, _React$Component);
+
+	    function TaskManager() {
+	        _classCallCheck(this, TaskManager);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+
+	        _this.state = { chart: null };
+	        _this.update = _this.update.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(TaskManager, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.props.fetchData();
+	            this.setState({ chart: (0, _chartFactory.buildTasksListTable)("test_tasks_list") });
+	        }
+	    }, {
+	        key: 'update',
+	        value: function update(e) {
+	            this.state.chart.setDataTable(this.props.rawData);
+	            this.state.chart.draw();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (this.state.chart != null) {
+	                this.state.chart.setDataTable(this.props.rawData);
+	                this.state.chart.draw();
+	            }
+	            return _react2.default.createElement('div', { id: 'test_tasks_list', className: 'col-md-12 card-block card' });
+	        }
+	    }]);
+
+	    return TaskManager;
+	}(_react2.default.Component);
+
+	exports.default = (0, _jiraConnect2.default)(TaskManager);
 
 /***/ }
 /******/ ]);

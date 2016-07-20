@@ -1,18 +1,5 @@
 import jsonParser from '../api/jsonParser'
-
-var DATA_DATE = "date";
-var DATA_STRING = "string";
-var DATA_NUMBER = "number";
-
-var FILTER_CATEGORY = "CategoryFilter";
-var FILTER_DATE = "DateRangeFilter";
-
-function completeConfig() {
-    RAW_DATA_COL.EVENTS.forEach(function (element) {
-        element.dataType = DATA_DATE;
-        element.filterType = FILTER_DATE
-    });
-}
+import {DATA_DATE,DATA_STRING} from '../api/definition'
 
 function getJiraValue(jiraData, fieldPath, fieldType){
     var jiraValue = jsonParser(jiraData, fieldPath);
@@ -24,7 +11,6 @@ function getJiraValue(jiraData, fieldPath, fieldType){
 
 export default function(jiraData) {
     var taskData = new google.visualization.DataTable();
-    completeConfig();
 
     // Defining table structure
     taskData.addColumn(DATA_STRING, "Key");

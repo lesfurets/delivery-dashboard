@@ -11,22 +11,14 @@ function buildDataTable(viewId) {
 }
 
 export const buildTasksListTable = function(viewId) {
-    var tasksListTable = buildDataTable(viewId + ID_TASK_LIST);
+    var tasksListTable = buildDataTable(viewId);
     tasksListTable.setOption('height', '100%');
     tasksListTable.setOption('showRowNumber', true);
     setTaskSelectListener(tasksListTable);
     return tasksListTable;
 }
 
-/***************************
- *         Unused
- **************************/
-
-function buildDurationStatsTable(viewId) {
-    return buildDataTable(viewId + ID_DURATION_STATS);
-}
-
-function buildCumulativeFlowChart(viewId, height) {
+export const buildCumulativeFlowChart = function (viewId, height) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
         'containerId': viewId,
@@ -52,6 +44,33 @@ function buildCumulativeFlowChart(viewId, height) {
             }
         }
     });
+}
+
+export const buildRangeFilter = function(elementId) {
+    return new google.visualization.ControlWrapper({
+        'controlType': 'ChartRangeFilter',
+        'containerId': elementId,
+        'options': {
+            'filterColumnIndex': 0,
+            'ui': {
+                'chartType': 'AreaChart',
+                'chartOptions': {
+                    'height': 100,
+                    'chartArea': {
+                        'width': '90%'
+                    }
+                }
+            },
+        },
+    });
+}
+
+/***************************
+ *         Unused
+ **************************/
+
+function buildDurationStatsTable(viewId) {
+    return buildDataTable(viewId + ID_DURATION_STATS);
 }
 
 function buildTasksDurationColumnChart(viewId, columns) {
@@ -122,25 +141,6 @@ function buildTasksDurationScatterChart(viewId, columns) {
     });
     setTaskSelectListener(durationChart);
     return durationChart;
-}
-
-function buildRangeFilter(elementId) {
-    return new google.visualization.ControlWrapper({
-        'controlType': 'ChartRangeFilter',
-        'containerId': elementId,
-        'options': {
-            'filterColumnIndex': 0,
-            'ui': {
-                'chartType': 'AreaChart',
-                'chartOptions': {
-                    'height': 100,
-                    'chartArea': {
-                        'width': '90%'
-                    }
-                }
-            },
-        },
-    });
 }
 
 function buildSimpleChart(elementId, chartType, title) {

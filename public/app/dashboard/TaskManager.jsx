@@ -10,7 +10,7 @@ class TaskManager extends React.Component {
     }
     componentDidMount(){
         this.props.fetchData();
-        this.setState({chart: buildTasksListTable("test")});
+        this.setState({chart: buildTasksListTable("test_tasks_list")});
     }
     update(e){
         this.state.chart.setDataTable(this.props.rawData);
