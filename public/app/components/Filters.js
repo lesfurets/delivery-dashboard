@@ -5,16 +5,15 @@ export default class Filters extends React.Component {
         var rangeFilters = [];
         var categoryFilters = [];
         if (RAW_DATA_COL.FILTERS != null) {
-            for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-
+            RAW_DATA_COL.FILTERS.forEach(function(filter, index) {
                 let element = <div id={"filter_" + index} key={index}></div>;
 
-                if (RAW_DATA_COL.FILTERS[index].filterType == 'CategoryFilter') {
+                if (filter.filterType == 'CategoryFilter') {
                     categoryFilters.push(element);
                 } else {
                     rangeFilters.push(element);
                 }
-            }
+            })
         }
         return (
             <div id="filters_block">

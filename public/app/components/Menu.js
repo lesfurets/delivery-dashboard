@@ -22,7 +22,7 @@ export default class Menu extends React.Component {
                                     <ul className="dropdown-menu">
                                         <li><Link to={'/cumulative-flow'} styleName="title">Cumulative Flow</Link></li>
                                         <li><Link to={'/duration'} styleName="title">Duration</Link></li>
-                                        <li><Link to={'/'} styleName="title">Distribution</Link></li>
+                                        <li><Link to={'/distribution'} styleName="title">Distribution</Link></li>
                                     </ul>
                                 </li>
                                 <li className="dropdown">

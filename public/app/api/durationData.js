@@ -18,8 +18,6 @@ export const DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
 export const DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
 export const DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
 
-export const DISTRIBUTION_INDEX_STATIC_GROUP_ALL = TASK_INDEX_FILTER_LAST + 1;
-
 export const computeDurationData = function(inputData) {
     var durationDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
     durationDataStruct.push(constantColumnBuilder("string", "", "Selection"));

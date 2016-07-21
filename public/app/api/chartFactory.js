@@ -168,6 +168,48 @@ function setTaskSelectListener(element) {
 }
 
 /***************************
+ *     Mock
+ **************************/
+
+export const buildSimpleCharts = function() {
+    var charts = [];
+    RAW_DATA_COL.FILTERS.forEach(function(filter, index) {
+        if(filter.filterType == 'CategoryFilter') {
+            charts.push(buildSimpleChart("category_" + index, "PieChart", filter.label));
+        }
+    });
+    return charts;
+}
+
+function buildSimpleChart(elementId, chartType, title) {
+    return new google.visualization.ChartWrapper({
+        'chartType': chartType,
+        'containerId': elementId,
+        'options': {
+            'width': 400,
+            'height': 400,
+            'pieSliceText': 'label',
+            'legend': 'none',
+            'title' : title
+        }
+    });
+}
+
+//function buildSimpleChart(elementId, chartType, title) {
+//    return new google.visualization.ChartWrapper({
+//        'chartType': chartType,
+//        'containerId': elementId,
+//        'options': {
+//            'width': 400,
+//            'height': 400,
+//            'pieSliceText': 'label',
+//            'legend': 'none',
+//            'title' : title
+//        }
+//    });
+//}
+
+/***************************
  *         Unused
  **************************/
 
@@ -199,20 +241,6 @@ function buildTasksDurationColumnChart(viewId, columns) {
     });
     setTaskSelectListener(durationChart);
     return durationChart;
-}
-
-function buildSimpleChart(elementId, chartType, title) {
-    return new google.visualization.ChartWrapper({
-        'chartType': chartType,
-        'containerId': elementId,
-        'options': {
-            'width': 400,
-            'height': 400,
-            'pieSliceText': 'label',
-            'legend': 'none',
-            'title' : title
-        }
-    });
 }
 
 function buildFilter(containerId, controlType, filterColumnIndex) {
@@ -252,13 +280,4 @@ function buildCumulativFlowDashboard(viewId) {
     var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
     dashboard.bind([chartRangeFilter], areaChart);
     return dashboard;
-}
-
-function buildSimpleCharts(viewId, chartsConfig) {
-    var charts = [];
-    for (var index = 0; index < chartsConfig.length; index++) {
-        var chartConfig = chartsConfig[index];
-        charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
-    }
-    return charts;
 }

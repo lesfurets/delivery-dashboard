@@ -13,6 +13,7 @@ import DeliveryDashboard from './components/DeliveryDashboard';
 import Page1 from './components/Page1';
 import CumulativeFlow from './dashboard/CumulativeFlow';
 import Duration from './dashboard/Duration';
+import Distribution from './dashboard/Distribution';
 import TaskManager from './dashboard/TaskManager';
 
 
@@ -29,6 +30,7 @@ google.setOnLoadCallback(function () {
                     <IndexRedirect to="/todo"/>
                     <Route path="/cumulative-flow" component={CumulativeFlow}/>
                     <Route path="/duration" component={Duration}/>
+                    <Route path="/distribution" component={Distribution}/>
                     <Route path="/todo" component={Page1}/>
                     <Route path="/task-manager" component={TaskManager}/>
                 </Route>

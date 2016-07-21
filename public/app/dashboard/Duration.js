@@ -13,7 +13,7 @@ import { DURATION_INDEX_DURATION_FIRST,DURATION_INDEX_DURATION_LAST, DURATION_IN
 import Card from '../components/Card'
 import Filters from '../components/Filters'
 
-class TaskManager extends React.Component {
+class Duration extends React.Component {
     constructor(){
         super();
         this.state = {
@@ -78,4 +78,4 @@ class TaskManager extends React.Component {
     }
 }
 
-export default jiraConnect(TaskManager)
+export default jiraConnect(Duration)

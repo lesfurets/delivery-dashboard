@@ -92,7 +92,11 @@
 
 	var _Duration2 = _interopRequireDefault(_Duration);
 
-	var _TaskManager = __webpack_require__(279);
+	var _Distribution = __webpack_require__(279);
+
+	var _Distribution2 = _interopRequireDefault(_Distribution);
+
+	var _TaskManager = __webpack_require__(282);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -116,6 +120,7 @@
 	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/todo' }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/cumulative-flow', component: _CumulativeFlow2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/duration', component: _Duration2.default }),
+	                _react2.default.createElement(_reactRouter.Route, { path: '/distribution', component: _Distribution2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/todo', component: _Page2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/task-manager', component: _TaskManager2.default })
 	            )
@@ -37813,7 +37818,7 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/', styleName: 'title' },
+	                                            { to: '/distribution', styleName: 'title' },
 	                                            'Distribution'
 	                                        )
 	                                    )
@@ -38641,7 +38646,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.buildFilteredDashboard = exports.buildFilters = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = exports.buildDataTable = undefined;
+	exports.buildSimpleCharts = exports.buildFilteredDashboard = exports.buildFilters = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = exports.buildDataTable = undefined;
 
 	var _definition = __webpack_require__(260);
 
@@ -38814,6 +38819,48 @@
 	}
 
 	/***************************
+	 *     Mock
+	 **************************/
+
+	var buildSimpleCharts = exports.buildSimpleCharts = function buildSimpleCharts() {
+	    var charts = [];
+	    RAW_DATA_COL.FILTERS.forEach(function (filter, index) {
+	        if (filter.filterType == 'CategoryFilter') {
+	            charts.push(buildSimpleChart("category_" + index, "PieChart", filter.label));
+	        }
+	    });
+	    return charts;
+	};
+
+	function buildSimpleChart(elementId, chartType, title) {
+	    return new google.visualization.ChartWrapper({
+	        'chartType': chartType,
+	        'containerId': elementId,
+	        'options': {
+	            'width': 400,
+	            'height': 400,
+	            'pieSliceText': 'label',
+	            'legend': 'none',
+	            'title': title
+	        }
+	    });
+	}
+
+	//function buildSimpleChart(elementId, chartType, title) {
+	//    return new google.visualization.ChartWrapper({
+	//        'chartType': chartType,
+	//        'containerId': elementId,
+	//        'options': {
+	//            'width': 400,
+	//            'height': 400,
+	//            'pieSliceText': 'label',
+	//            'legend': 'none',
+	//            'title' : title
+	//        }
+	//    });
+	//}
+
+	/***************************
 	 *         Unused
 	 **************************/
 
@@ -38845,20 +38892,6 @@
 	    });
 	    setTaskSelectListener(durationChart);
 	    return durationChart;
-	}
-
-	function buildSimpleChart(elementId, chartType, title) {
-	    return new google.visualization.ChartWrapper({
-	        'chartType': chartType,
-	        'containerId': elementId,
-	        'options': {
-	            'width': 400,
-	            'height': 400,
-	            'pieSliceText': 'label',
-	            'legend': 'none',
-	            'title': title
-	        }
-	    });
 	}
 
 	function buildFilter(containerId, controlType, filterColumnIndex) {
@@ -38898,15 +38931,6 @@
 	    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
 	    dashboard.bind([chartRangeFilter], areaChart);
 	    return dashboard;
-	}
-
-	function buildSimpleCharts(viewId, chartsConfig) {
-	    var charts = [];
-	    for (var index = 0; index < chartsConfig.length; index++) {
-	        var chartConfig = chartsConfig[index];
-	        charts.push(buildSimpleChart(viewId + chartConfig.id, chartConfig.filterType, chartConfig.label));
-	    }
-	    return charts;
 	}
 
 /***/ },
@@ -39101,13 +39125,13 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TaskManager = function (_React$Component) {
-	    _inherits(TaskManager, _React$Component);
+	var Duration = function (_React$Component) {
+	    _inherits(Duration, _React$Component);
 
-	    function TaskManager() {
-	        _classCallCheck(this, TaskManager);
+	    function Duration() {
+	        _classCallCheck(this, Duration);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Duration).call(this));
 
 	        _this.state = {
 	            columnChart: null,
@@ -39119,7 +39143,7 @@
 	        return _this;
 	    }
 
-	    _createClass(TaskManager, [{
+	    _createClass(Duration, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.props.fetchData();
@@ -39181,10 +39205,10 @@
 	        }
 	    }]);
 
-	    return TaskManager;
+	    return Duration;
 	}(_react2.default.Component);
 
-	exports.default = (0, _jiraConnect2.default)(TaskManager);
+	exports.default = (0, _jiraConnect2.default)(Duration);
 
 /***/ },
 /* 275 */
@@ -39195,7 +39219,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = undefined;
+	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = undefined;
 
 	var _taskData = __webpack_require__(269);
 
@@ -39223,8 +39247,6 @@
 	var DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
 	var DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
 	var DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
-
-	var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = _taskData.TASK_INDEX_FILTER_LAST + 1;
 
 	var computeDurationData = exports.computeDurationData = function computeDurationData(inputData) {
 	    var durationDataStruct = Array.apply(null, { length: inputData.getNumberOfColumns() }).map(Number.call, Number);
@@ -39465,16 +39487,15 @@
 	            var rangeFilters = [];
 	            var categoryFilters = [];
 	            if (RAW_DATA_COL.FILTERS != null) {
-	                for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-
+	                RAW_DATA_COL.FILTERS.forEach(function (filter, index) {
 	                    var element = _react2.default.createElement('div', { id: "filter_" + index, key: index });
 
-	                    if (RAW_DATA_COL.FILTERS[index].filterType == 'CategoryFilter') {
+	                    if (filter.filterType == 'CategoryFilter') {
 	                        categoryFilters.push(element);
 	                    } else {
 	                        rangeFilters.push(element);
 	                    }
-	                }
+	                });
 	            }
 	            return _react2.default.createElement(
 	                'div',
@@ -39500,6 +39521,228 @@
 
 /***/ },
 /* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jiraConnect = __webpack_require__(265);
+
+	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
+
+	var _chartFactory = __webpack_require__(271);
+
+	var _eventData = __webpack_require__(272);
+
+	var _taskData = __webpack_require__(269);
+
+	var _distributionData = __webpack_require__(280);
+
+	var _Card = __webpack_require__(273);
+
+	var _Card2 = _interopRequireDefault(_Card);
+
+	var _Filters = __webpack_require__(278);
+
+	var _Filters2 = _interopRequireDefault(_Filters);
+
+	var _CategoryCharts = __webpack_require__(281);
+
+	var _CategoryCharts2 = _interopRequireDefault(_CategoryCharts);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Distribution = function (_React$Component) {
+	    _inherits(Distribution, _React$Component);
+
+	    function Distribution() {
+	        _classCallCheck(this, Distribution);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Distribution).call(this));
+
+	        _this.state = {
+	            dashboard: null,
+	            charts: null,
+	            timeChart: null
+	        };
+	        _this.updateTable = _this.updateTable.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(Distribution, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.props.fetchData();
+
+	            var charts = (0, _chartFactory.buildSimpleCharts)();
+	            var timeDistributionChart = (0, _chartFactory.buildDurationScatterChart)("scatter_chart", [_taskData.TASK_INDEX_EVENTS_LAST, _distributionData.DISTRIBUTION_INDEX_STATIC_GROUP_ALL]);
+	            var distributionDashboard = (0, _chartFactory.buildFilteredDashboard)("dashboard", timeDistributionChart, (0, _chartFactory.buildFilters)(), this.updateTable);
+
+	            this.setState({
+	                dashboard: distributionDashboard,
+	                charts: charts,
+	                timeChart: timeDistributionChart
+	            });
+	        }
+	    }, {
+	        key: 'updateTable',
+	        value: function updateTable() {
+	            var durationChartData = this.state.timeChart.getDataTable();
+	            var dataToDisplay = durationChartData != null ? durationChartData : (0, _distributionData.computeDistributionData)(this.props.rawData);
+
+	            var taskChart = [];
+	            if (dataToDisplay != null) {
+	                RAW_DATA_COL.FILTERS.forEach(function (filter, index) {
+	                    if (filter.filterType == 'CategoryFilter') {
+	                        taskChart.push(_taskData.TASK_INDEX_FILTER_FIRST + index);
+	                    }
+	                });
+
+	                for (var i = 0; i < this.state.charts.length; i++) {
+	                    var group = google.visualization.data.group(dataToDisplay, [taskChart[i]], [{
+	                        column: 1,
+	                        aggregation: google.visualization.data.count,
+	                        'type': 'number'
+	                    }]);
+
+	                    this.state.charts[i].setDataTable(group);
+	                    this.state.charts[i].draw();
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (this.state.dashboard != null) {
+	                var distributionData = (0, _distributionData.computeDistributionData)(this.props.rawData);
+	                this.state.dashboard.draw(distributionData);
+
+	                this.updateTable();
+	            }
+	            return _react2.default.createElement(
+	                _Card2.default,
+	                { cardTitle: 'Distribution' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { id: 'dashboard' },
+	                    _react2.default.createElement(_Filters2.default, null),
+	                    _react2.default.createElement('div', { id: 'scatter_chart' }),
+	                    _react2.default.createElement(_CategoryCharts2.default, null)
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Distribution;
+	}(_react2.default.Component);
+
+	exports.default = (0, _jiraConnect2.default)(Distribution);
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.computeDistributionData = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = undefined;
+
+	var _taskData = __webpack_require__(269);
+
+	var _dataUtils = __webpack_require__(277);
+
+	var DISTRIBUTION_INDEX_STATIC_GROUP_ALL = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = _taskData.TASK_INDEX_FILTER_LAST + 1;
+
+	var computeDistributionData = exports.computeDistributionData = function computeDistributionData(inputData) {
+	    var distributionDataStruct = Array.apply(null, { length: inputData.getNumberOfColumns() }).map(Number.call, Number);
+	    distributionDataStruct.push((0, _dataUtils.constantColumnBuilder)("number", "value", 0));
+
+	    var distributionData = new google.visualization.DataView(inputData);
+	    distributionData.setColumns(distributionDataStruct);
+
+	    return distributionData.toDataTable();
+	};
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CategoryCharts = function (_React$Component) {
+	    _inherits(CategoryCharts, _React$Component);
+
+	    function CategoryCharts() {
+	        _classCallCheck(this, CategoryCharts);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(CategoryCharts).apply(this, arguments));
+	    }
+
+	    _createClass(CategoryCharts, [{
+	        key: 'render',
+	        value: function render() {
+	            var categoryCharts = [];
+	            if (RAW_DATA_COL.FILTERS != null) {
+	                RAW_DATA_COL.FILTERS.forEach(function (filter, index) {
+	                    if (filter.filterType == 'CategoryFilter') {
+	                        categoryCharts.push(_react2.default.createElement(
+	                            'div',
+	                            { className: 'col-md-4' },
+	                            _react2.default.createElement('div', { id: "category_" + index, key: index })
+	                        ));
+	                    }
+	                });
+	            }
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'category_charts' },
+	                categoryCharts
+	            );
+	        }
+	    }]);
+
+	    return CategoryCharts;
+	}(_react2.default.Component);
+
+	exports.default = CategoryCharts;
+
+/***/ },
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
