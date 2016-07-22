@@ -1,5 +1,6 @@
-import React from 'react';
-import {Link} from 'react-router';
+import React from "react";
+import {Link} from "react-router";
+import jiraConnect from "../api/jiraConnect";
 
 export default class Menu extends React.Component {
     render() {
@@ -35,7 +36,7 @@ export default class Menu extends React.Component {
                                 <li><Link to={'/task-manager'} styleName="title"> Manage Tasks </Link></li>
                             </ul>
                             <ul className="nav navbar-nav navbar-right">
-                                <li><a href="#"><span className="glyphicon glyphicon-refresh"></span></a></li>
+                                <li><a href="#"><span className="glyphicon glyphicon-refresh" onClick={this.props.fetchData}></span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -43,3 +44,5 @@ export default class Menu extends React.Component {
             )
     }
 }
+
+export default jiraConnect(Menu)

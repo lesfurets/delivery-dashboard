@@ -80,11 +80,11 @@
 
 	var _DeliveryDashboard2 = _interopRequireDefault(_DeliveryDashboard);
 
-	var _Page = __webpack_require__(270);
+	var _Page = __webpack_require__(276);
 
 	var _Page2 = _interopRequireDefault(_Page);
 
-	var _CumulativeFlow = __webpack_require__(271);
+	var _CumulativeFlow = __webpack_require__(277);
 
 	var _CumulativeFlow2 = _interopRequireDefault(_CumulativeFlow);
 
@@ -38869,7 +38869,7 @@
 /* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -38882,6 +38882,10 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(172);
+
+	var _jiraConnect = __webpack_require__(270);
+
+	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38901,130 +38905,130 @@
 	    }
 
 	    _createClass(Menu, [{
-	        key: 'render',
+	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
-	                'nav',
-	                { className: 'navbar navbar-inverse navbar-fixed-top' },
+	                "nav",
+	                { className: "navbar navbar-inverse navbar-fixed-top" },
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'container-fluid' },
+	                    "div",
+	                    { className: "container-fluid" },
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'navbar-header' },
+	                        "div",
+	                        { className: "navbar-header" },
 	                        _react2.default.createElement(
-	                            'button',
-	                            { type: 'button', className: 'navbar-toggle', 'data-toggle': 'collapse', 'data-target': '#myNavbar' },
-	                            _react2.default.createElement('span', { className: 'icon-bar' }),
-	                            _react2.default.createElement('span', { className: 'icon-bar' }),
-	                            _react2.default.createElement('span', { className: 'icon-bar' })
+	                            "button",
+	                            { type: "button", className: "navbar-toggle", "data-toggle": "collapse", "data-target": "#myNavbar" },
+	                            _react2.default.createElement("span", { className: "icon-bar" }),
+	                            _react2.default.createElement("span", { className: "icon-bar" }),
+	                            _react2.default.createElement("span", { className: "icon-bar" })
 	                        ),
-	                        _react2.default.createElement('img', { className: 'navbar-brand-logo', src: '../img/team-traffic.png' }),
+	                        _react2.default.createElement("img", { className: "navbar-brand-logo", src: "../img/team-traffic.png" }),
 	                        _react2.default.createElement(
-	                            'span',
-	                            { className: 'navbar-brand' },
-	                            'Traffic Dashboard'
+	                            "span",
+	                            { className: "navbar-brand" },
+	                            "Traffic Dashboard"
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'collapse navbar-collapse', id: 'myNavbar' },
+	                        "div",
+	                        { className: "collapse navbar-collapse", id: "myNavbar" },
 	                        _react2.default.createElement(
-	                            'ul',
-	                            { className: 'nav navbar-nav' },
+	                            "ul",
+	                            { className: "nav navbar-nav" },
 	                            _react2.default.createElement(
-	                                'li',
-	                                { className: 'dropdown active' },
+	                                "li",
+	                                { className: "dropdown active" },
 	                                _react2.default.createElement(
-	                                    'a',
-	                                    { className: 'dropdown-toggle', 'data-toggle': 'dropdown', href: '#' },
-	                                    'Task Data',
-	                                    _react2.default.createElement('span', { className: 'caret' })
+	                                    "a",
+	                                    { className: "dropdown-toggle", "data-toggle": "dropdown", href: "#" },
+	                                    "Task Data",
+	                                    _react2.default.createElement("span", { className: "caret" })
 	                                ),
 	                                _react2.default.createElement(
-	                                    'ul',
-	                                    { className: 'dropdown-menu' },
+	                                    "ul",
+	                                    { className: "dropdown-menu" },
 	                                    _react2.default.createElement(
-	                                        'li',
+	                                        "li",
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/cumulative-flow', styleName: 'title' },
-	                                            'Cumulative Flow'
+	                                            { to: '/cumulative-flow', styleName: "title" },
+	                                            "Cumulative Flow"
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
-	                                        'li',
+	                                        "li",
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/duration', styleName: 'title' },
-	                                            'Duration'
+	                                            { to: '/duration', styleName: "title" },
+	                                            "Duration"
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
-	                                        'li',
+	                                        "li",
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/distribution', styleName: 'title' },
-	                                            'Distribution'
+	                                            { to: '/distribution', styleName: "title" },
+	                                            "Distribution"
 	                                        )
 	                                    )
 	                                )
 	                            ),
 	                            _react2.default.createElement(
-	                                'li',
-	                                { className: 'dropdown' },
+	                                "li",
+	                                { className: "dropdown" },
 	                                _react2.default.createElement(
-	                                    'a',
-	                                    { className: 'dropdown-toggle', 'data-toggle': 'dropdown', href: '#' },
-	                                    'Reports',
-	                                    _react2.default.createElement('span', { className: 'caret' })
+	                                    "a",
+	                                    { className: "dropdown-toggle", "data-toggle": "dropdown", href: "#" },
+	                                    "Reports",
+	                                    _react2.default.createElement("span", { className: "caret" })
 	                                ),
 	                                _react2.default.createElement(
-	                                    'ul',
-	                                    { className: 'dropdown-menu' },
+	                                    "ul",
+	                                    { className: "dropdown-menu" },
 	                                    _react2.default.createElement(
-	                                        'li',
+	                                        "li",
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/', styleName: 'title' },
-	                                            'Period Report'
+	                                            { to: '/', styleName: "title" },
+	                                            "Period Report"
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
-	                                        'li',
+	                                        "li",
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/', styleName: 'title' },
-	                                            'Monthly Report'
+	                                            { to: '/', styleName: "title" },
+	                                            "Monthly Report"
 	                                        )
 	                                    )
 	                                )
 	                            ),
 	                            _react2.default.createElement(
-	                                'li',
+	                                "li",
 	                                null,
 	                                _react2.default.createElement(
 	                                    _reactRouter.Link,
-	                                    { to: '/task-manager', styleName: 'title' },
-	                                    ' Manage Tasks '
+	                                    { to: '/task-manager', styleName: "title" },
+	                                    " Manage Tasks "
 	                                )
 	                            )
 	                        ),
 	                        _react2.default.createElement(
-	                            'ul',
-	                            { className: 'nav navbar-nav navbar-right' },
+	                            "ul",
+	                            { className: "nav navbar-nav navbar-right" },
 	                            _react2.default.createElement(
-	                                'li',
+	                                "li",
 	                                null,
 	                                _react2.default.createElement(
-	                                    'a',
-	                                    { href: '#' },
-	                                    _react2.default.createElement('span', { className: 'glyphicon glyphicon-refresh' })
+	                                    "a",
+	                                    { href: "#" },
+	                                    _react2.default.createElement("span", { className: "glyphicon glyphicon-refresh", onClick: this.props.fetchData })
 	                                )
 	                            )
 	                        )
@@ -39038,154 +39042,23 @@
 	}(_react2.default.Component);
 
 	exports.default = Menu;
+	exports.default = (0, _jiraConnect2.default)(Menu);
 
 /***/ },
 /* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Page1 = function (_React$Component) {
-	    _inherits(Page1, _React$Component);
-
-	    function Page1() {
-	        _classCallCheck(this, Page1);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Page1).apply(this, arguments));
-	    }
-
-	    _createClass(Page1, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "question-list" },
-	                "Page 1"
-	            );
-	        }
-	    }]);
-
-	    return Page1;
-	}(_react2.default.Component);
-
-	exports.default = Page1;
-
-/***/ },
-/* 271 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _jiraConnect = __webpack_require__(272);
-
-	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
-
-	var _chartFactory = __webpack_require__(278);
-
-	var _eventData = __webpack_require__(279);
-
-	var _Card = __webpack_require__(280);
-
-	var _Card2 = _interopRequireDefault(_Card);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TaskManager = function (_React$Component) {
-	    _inherits(TaskManager, _React$Component);
-
-	    function TaskManager() {
-	        _classCallCheck(this, TaskManager);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
-
-	        _this.state = { dashboard: null };
-	        return _this;
-	    }
-
-	    _createClass(TaskManager, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.props.fetchData();
-
-	            var areaChart = (0, _chartFactory.buildCumulativeFlowChart)("cumulative_flow_area_chart", 400);
-	            var chartRangeFilter = (0, _chartFactory.buildRangeFilter)("cumulative_flow_range_filter");
-	            var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));
-	            dashboard.bind([chartRangeFilter], areaChart);
-	            this.setState({ dashboard: dashboard });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            if (this.state.dashboard != null) {
-	                this.state.dashboard.draw((0, _eventData.computeEventData)(this.props.rawData));
-	            }
-	            return _react2.default.createElement(
-	                _Card2.default,
-	                { cardTitle: 'Cumulative Flow' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { id: 'cumulative_flow_dashboard', 'class': 'col-md-12 card-block' },
-	                    _react2.default.createElement('div', { id: 'cumulative_flow_area_chart', className: 'col-md-12 card-block' }),
-	                    _react2.default.createElement('div', { id: 'cumulative_flow_range_filter', className: 'col-md-12 card-block' })
-	                )
-	            );
-	        }
-	    }]);
-
-	    return TaskManager;
-	}(_react2.default.Component);
-
-	exports.default = (0, _jiraConnect2.default)(TaskManager);
-
-/***/ },
-/* 272 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(273);
+	var _isomorphicFetch = __webpack_require__(271);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _actions = __webpack_require__(275);
+	var _actions = __webpack_require__(273);
 
 	var _reactRedux = __webpack_require__(248);
 
@@ -39215,19 +39088,19 @@
 	};
 
 /***/ },
-/* 273 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(274);
+	__webpack_require__(272);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 274 */
+/* 272 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -39666,7 +39539,7 @@
 
 
 /***/ },
-/* 275 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39676,7 +39549,7 @@
 	});
 	exports.fetchDataAction = undefined;
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var fetchDataAction = exports.fetchDataAction = function fetchDataAction(data) {
 	    return {
@@ -39686,7 +39559,7 @@
 	};
 
 /***/ },
-/* 276 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39696,7 +39569,7 @@
 	});
 	exports.parseJiraData = exports.TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_REFERENCE = undefined;
 
-	var _jsonParser = __webpack_require__(277);
+	var _jsonParser = __webpack_require__(275);
 
 	var _jsonParser2 = _interopRequireDefault(_jsonParser);
 
@@ -39757,7 +39630,7 @@
 	};
 
 /***/ },
-/* 277 */
+/* 275 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -39787,6 +39660,138 @@
 	;
 
 /***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Page1 = function (_React$Component) {
+	    _inherits(Page1, _React$Component);
+
+	    function Page1() {
+	        _classCallCheck(this, Page1);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Page1).apply(this, arguments));
+	    }
+
+	    _createClass(Page1, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "question-list" },
+	                "Page 1"
+	            );
+	        }
+	    }]);
+
+	    return Page1;
+	}(_react2.default.Component);
+
+	exports.default = Page1;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jiraConnect = __webpack_require__(270);
+
+	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
+
+	var _chartFactory = __webpack_require__(278);
+
+	var _eventData = __webpack_require__(279);
+
+	var _Card = __webpack_require__(280);
+
+	var _Card2 = _interopRequireDefault(_Card);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TaskManager = function (_React$Component) {
+	    _inherits(TaskManager, _React$Component);
+
+	    function TaskManager() {
+	        _classCallCheck(this, TaskManager);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+
+	        _this.state = { dashboard: null };
+	        return _this;
+	    }
+
+	    _createClass(TaskManager, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.props.fetchData();
+
+	            var areaChart = (0, _chartFactory.buildCumulativeFlowChart)("cumulative_flow_area_chart", 400);
+	            var chartRangeFilter = (0, _chartFactory.buildRangeFilter)("cumulative_flow_range_filter");
+	            var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));
+	            dashboard.bind([chartRangeFilter], areaChart);
+	            this.setState({ dashboard: dashboard });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (this.state.dashboard != null) {
+	                this.state.dashboard.draw((0, _eventData.computeEventData)(this.props.rawData));
+	            }
+	            return _react2.default.createElement(
+	                _Card2.default,
+	                { cardTitle: 'Cumulative Flow' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { id: 'cumulative_flow_dashboard', 'class': 'col-md-12 card-block' },
+	                    _react2.default.createElement('div', { id: 'cumulative_flow_area_chart', className: 'col-md-12 card-block' }),
+	                    _react2.default.createElement('div', { id: 'cumulative_flow_range_filter', className: 'col-md-12 card-block' })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return TaskManager;
+	}(_react2.default.Component);
+
+	exports.default = (0, _jiraConnect2.default)(TaskManager);
+
+/***/ },
 /* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -39799,7 +39804,7 @@
 
 	var _definition = __webpack_require__(267);
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var buildDataTable = exports.buildDataTable = function buildDataTable(elementId) {
 	    return new google.visualization.ChartWrapper({
@@ -40093,7 +40098,7 @@
 	});
 	exports.computeEventData = undefined;
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	// We need one column with the date and as many columns with counters as there are events.
 	// We want to mark the number tasks moving to a special state every days
@@ -40246,7 +40251,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jiraConnect = __webpack_require__(272);
+	var _jiraConnect = __webpack_require__(270);
 
 	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
@@ -40254,7 +40259,7 @@
 
 	var _eventData = __webpack_require__(279);
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var _durationData = __webpack_require__(282);
 
@@ -40370,7 +40375,7 @@
 	});
 	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = undefined;
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var _definition = __webpack_require__(267);
 
@@ -40539,7 +40544,7 @@
 	    return "<div class='chart-tooltip'>" + html.join("") + "</div>";
 	};
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var _durationData = __webpack_require__(282);
 
@@ -40684,7 +40689,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jiraConnect = __webpack_require__(272);
+	var _jiraConnect = __webpack_require__(270);
 
 	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
@@ -40692,7 +40697,7 @@
 
 	var _eventData = __webpack_require__(279);
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var _distributionData = __webpack_require__(287);
 
@@ -40813,7 +40818,7 @@
 	});
 	exports.computeDistributionData = exports.DISTRIBUTION_INDEX_STATIC_GROUP_ALL = undefined;
 
-	var _taskData = __webpack_require__(276);
+	var _taskData = __webpack_require__(274);
 
 	var _dataUtils = __webpack_require__(284);
 
@@ -40906,7 +40911,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jiraConnect = __webpack_require__(272);
+	var _jiraConnect = __webpack_require__(270);
 
 	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
 
@@ -40936,7 +40941,7 @@
 	    _createClass(TaskManager, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.props.fetchData();
+	            //this.props.fetchData();
 	            this.setState({ chart: (0, _chartFactory.buildTasksListTable)("test_tasks_list") });
 	        }
 	    }, {
