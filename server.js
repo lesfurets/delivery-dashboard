@@ -1,42 +1,62 @@
-//var http = require('http');
-//var url = require('url');
-//var querystring = require('querystring');
+// var express = require('express');
+// var request = require('request');
+// var path = require('path');
 //
-//var server = http.createServer(function(req, res) {
-//    var params = querystring.parse(url.parse(req.url).query);
-//    res.writeHead(200, {"Content-Type": "text/plain"});
-//    if ('prenom' in params && 'nom' in params) {
-//        res.write('Vous vous appelez ' + params['prenom'] + ' ' + params['nom']);
-//    }
-//    else {
-//        res.write('Vous devez bien avoir un prénom et un nom, non ?');
-//    }
-//    res.end();
-//});
-//server.listen(8080);
+// var app = express();
+//
+// app.use(express.static('public'));
+//
+// var JIRA_URL = "http://jira.lan.courtanet.net";
+//
+// app.get('/rest/api/2/search', function (req, res) {
+//     request(JIRA_URL + req.url, function (error, response, body) {
+//         if (!error && response.statusCode == 200) {
+//             res.setHeader('Content-Type', 'application/json');
+//             res.send(body);
+//         }
+//     })
+// });
+//
+// app.all('*', function (req, res) {
+//     //res.sendFile("./public/index.html");
+//     res.sendFile(path.join(__dirname, './public', 'index.html'));
+// });
+//
+// app.listen(8080);
 
-var express = require('express');
-var request = require('request');
-var path = require('path');
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
+var config = require('./webpack.config');
 
-var app = express();
+new WebpackDevServer(webpack(config), {
+    contentBase: "./public",
+    hot: true,
+    historyApiFallback: true,
+    colors: true,
+    stats: 'normal'
+}).listen(8081, 'localhost', function (err, result) {
+    if (err) {
+        return console.log(err);
+    }
 
-app.use(express.static('public'));
-
-var JIRA_URL = "http://jira.lan.courtanet.net";
-
-app.get('/rest/api/2/search', function(req, res) {
-    request(JIRA_URL + req.url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(body);
-        }
-    })
+    console.log('Listening at http://localhost:8081/');
 });
 
-app.all('*', function(req, res){
-    //res.sendFile("./public/index.html");
-    res.sendFile(path.join(__dirname, './public', 'index.html'));
-});
-
-app.listen(8080);
+// we start a webpack-dev-server with our config
+// var webpack = require('webpack');
+// var WebpackDevServer = require('webpack-dev-server');
+// var config = require('./webpack.config.js');
+//
+// new WebpackDevServer(webpack(config), {
+//     hot: true,
+//     historyApiFallback: true,
+//     proxy: {
+//         "*": "http://localhost:8080"
+//     }
+// }).listen(8081, 'localhost', function (err, result) {
+//     if (err) {
+//         console.log(err);
+//     }
+//
+//     console.log('Listening at localhost:8081');
+// });
