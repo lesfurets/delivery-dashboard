@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "5ede5acb1669045ad8be"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fc0153e96bfb3ccc727c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -47163,7 +47163,7 @@
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "question-list" },
-	                "Page qsdfq"
+	                "Page"
 	            );
 	        }
 	    }]);
