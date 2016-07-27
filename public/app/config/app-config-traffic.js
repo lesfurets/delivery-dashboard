@@ -23,8 +23,8 @@ const RAW_DATA_COL = {
 const REPORT_CONFIG = {
     first_entry: "2015-06",
     projection: [
-        {position: 0, filterLabel: "Type"},
-        {position: 1, filterLabel: "Effort"}
+        {position: 0, label: "Type", filterLabel: "Type"},
+        {position: 1, label: "Effort", filterLabel: "Effort"}
     ]
 }
 

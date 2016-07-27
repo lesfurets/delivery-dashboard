@@ -29,8 +29,8 @@ export default class Menu extends React.Component {
                                 <li className="dropdown">
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Reports<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
-                                        <li><Link to={'/'} styleName="title">Period Report</Link></li>
-                                        <li><Link to={'/'} styleName="title">Monthly Report</Link></li>
+                                        <li><Link to={'/period-report'} styleName="title">Period Report</Link></li>
+                                        <li><Link to={'/monthly-report'} styleName="title">Monthly Report</Link></li>
                                     </ul>
                                 </li>
                                 <li><Link to={'/task-manager'} styleName="title"> Manage Tasks </Link></li>

@@ -3,6 +3,11 @@ var monthNames = ["January", "February", "March", "April", "May", "June",
 ];
 
 export const completeDatePrototype = function() {
+
+    Date.prototype.lastDayOfMonth = function () {
+        return new Date(2008, this.getMonth() + 1, 0);
+    };
+
     Date.prototype.getMonthLabel = function () {
         return monthNames[this.getMonth()];
     }
@@ -30,13 +35,18 @@ export const completeDatePrototype = function() {
         return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
     };
 
+    Date.prototype.getYearMonthLabel = function () {
+        return this.getFullYear() + " " + this.getMonthLabel()
+    };
+
     Date.prototype.getWorkDaysUntil = function (date) {
         return getWorkDaysBetween(this, date);
     };
 
     Date.prototype.getWorkDaysSince = function (date) {
         return getWorkDaysBetween(date, this);
-    };
+    }
+
 }
 
 export const getWorkDaysBetween = function(dDate1, dDate2) {// input given as Date objects
