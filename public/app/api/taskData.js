@@ -52,3 +52,16 @@ export const parseJiraData = function(jiraData) {
 
     return taskData;
 }
+
+export const filterTaskData = function(inputData, expression) {
+    var filteredData = new google.visualization.DataView(inputData)
+
+    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
+        if(inputData.getValue(index, TASK_INDEX_STATIC_REFERENCE).indexOf(expression) == -1){
+            console.log(index);
+            filteredData.hideRows([index]);
+        }
+    }
+
+    return filteredData;
+}
