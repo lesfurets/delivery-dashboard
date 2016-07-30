@@ -1,37 +1,55 @@
-import React from 'react';
-import jiraConnect from '../api/jiraConnect'
-import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from '../api/definition'
-
-import MonthSelector from '../components/MonthSelector'
-import Switch from '../components/Switch'
+import React from "react";
+import jiraConnect from "../api/jiraConnect";
+import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../api/chartFactory";
+import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../api/definition";
+import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST} from "../api/taskData";
+import {computeEventData} from "../api/eventData";
+import {computeDurationData, groupDurationDataBy} from "../api/durationData";
+import MonthSelector from "../components/MonthSelector";
+import Switch from "../components/Switch";
 
 class Report extends React.Component {
-    constructor(){
+    constructor() {
         super();
-        this.state = {dashboard: null};
-        this.updateDate=this.updateDate.bind(this);
-        this.updateType=this.updateType.bind(this);
+        this.state = {
+            cumulative: null,
+            stats: null,
+            startDate: null,
+            endDate: null,
+            reduceColumn: null,
+        };
+        this.updateDate = this.updateDate.bind(this);
+        this.updateType = this.updateType.bind(this);
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.props.fetchData();
 
+        let cumulative = buildTimePeriodDashboard("area_chart", this.state.startDate, this.state.endDate);
+        let stats = buildDataTable(duration_stats);
 
+        this.setState({
+            cumulative: cumulative,
+            stats: stats
+        });
+    }
 
-        // var areaChart = buildCumulativeFlowChart("cumulative_flow_area_chart", 400);
-        // var chartRangeFilter = buildRangeFilter("cumulative_flow_range_filter");
-        // var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));
-        // dashboard.bind([chartRangeFilter], areaChart);
-        // this.setState({dashboard: dashboard});
+    updateDate(startDate, endDate) {
+        this.setState({
+            startDate: startDate,
+            endDate: endDate,
+        })
     }
-    updateDate(dateStart, dateEnd){
-        console.log("Changing range from " + dateStart + " to " + dateEnd)
+
+    updateType(type) {
+        this.setState({
+            groupType: type,
+        })
     }
-    updateType(type){
-        console.log("Changing type " + type.label)
-    }
-    render(){
+
+    render() {
         let timeSelector;
-        if(this.props.selector == CONFIG_MONTH_SELECTOR) {
+        if (this.props.selector == CONFIG_MONTH_SELECTOR) {
             // createDomForMonthSelector(config.id, this)
             timeSelector = <MonthSelector onChange={this.updateDate}/>
         } else {
@@ -39,8 +57,15 @@ class Report extends React.Component {
             // createDomForPeriodSelector(config.id, this)
         }
 
-        if(this.state.dashboard != null){
-            // this.state.dashboard.draw(computeEventData(this.props.rawData));
+        if (this.state.cumulative != null) {
+            let filteredData = filterCreatedBefore(filterReleasedAfter(this.props.rawData, this.state.startDate), this.state.endDate);
+
+            limitDashboardPeriod(this.state.cumulative, this.state.startDate, this.state.endDate);
+            this.state.cumulative.setDataTable(computeEventData(filteredData));
+            this.state.cumulative.draw();
+
+            this.state.stats.setDataTable(groupDurationDataBy(computeDurationData(filterReleasedBefore(filteredData, this.state.endDate)), TASK_INDEX_FILTER_FIRST + this.state.groupType.position));
+            this.state.stats.draw();
         }
         return (
             <div className="card to-print graph">
@@ -48,11 +73,13 @@ class Report extends React.Component {
                     <h2 className="col-md-12 card-title">
                         <img className="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
                         {timeSelector}
-                        <Switch firstValue={REPORT_CONFIG.projection[0]} secondValue={REPORT_CONFIG.projection[1]} onChange={this.updateType}/>
+                        <Switch firstValue={REPORT_CONFIG.projection[0]} secondValue={REPORT_CONFIG.projection[1]}
+                                onChange={this.updateType}/>
                         <span id="tab_monthly_report_view_title_suffix"></span>
                         <div className="not-to-print pull-right">
                             <div id="tab_monthly_report_view_switch" className="switch"></div>
-                            <a href="#"><span className="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#tab_monthly_report_view_tasks_list_modal"></span></a>
+                            <a href="#"><span className="glyphicon glyphicon-th-list" data-toggle="modal"
+                                              data-target="#tab_monthly_report_view_tasks_list_modal"></span></a>
                         </div>
                     </h2>
                 </div>

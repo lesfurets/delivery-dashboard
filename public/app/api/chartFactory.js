@@ -195,6 +195,22 @@ function buildSimpleChart(elementId, chartType, title) {
     });
 }
 
+/***************************
+ * ExtractDashboard
+ **************************/
+
+export const buildTimePeriodDashboard = function(elementId, startDate, endDate) {
+    var areaChart = buildCumulativeFlowChart(elementId, 600);
+    limitDashboardPeriod(areaChart, startDate, endDate);
+    return areaChart;
+}
+
+export const limitDashboardPeriod = function(areaChart, firstDay, lastDay) {
+    areaChart.setOption('hAxis.viewWindow.min', firstDay);
+    areaChart.setOption('hAxis.viewWindow.max', lastDay);
+    return areaChart;
+}
+
 //function buildSimpleChart(elementId, chartType, title) {
 //    return new google.visualization.ChartWrapper({
 //        'chartType': chartType,
@@ -252,22 +268,6 @@ function buildFilter(containerId, controlType, filterColumnIndex) {
         }
     });
     return filter;
-}
-
-/***************************
- * ExtractDashboard
- **************************/
-
-function buildTimePeriodDashboard(viewId, startDate, endDate) {
-    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 600);
-    limitDashboardPeriod(areaChart, startDate, endDate);
-    return areaChart;
-}
-
-function limitDashboardPeriod(areaChart, firstDay, lastDay) {
-    areaChart.setOption('hAxis.viewWindow.min', firstDay);
-    areaChart.setOption('hAxis.viewWindow.max', lastDay);
-    return areaChart;
 }
 
 /***************************

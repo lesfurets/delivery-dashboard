@@ -11,8 +11,11 @@ class Switch extends React.Component {
         this.update = this.update.bind(this);
     }
 
+    componentDidMount(){
+        this.props.onChange(this.state.selectedValue ? this.props.firstValue : this.props.secondValue);
+    }
+
     update(value) {
-        console.log(value)
         this.props.onChange(value ? this.props.firstValue : this.props.secondValue);
         this.setState({selectedValue: value});
     }

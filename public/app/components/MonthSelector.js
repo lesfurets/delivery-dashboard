@@ -20,12 +20,18 @@ class MonthSelector extends React.Component {
             dateList: dateList
         };
 
-        this.changeMonth=this.changeMonth.bind(this);
+        this.changeMonth = this.changeMonth.bind(this);
     }
-    changeMonth(date){
+
+    componentDidMount() {
+        this.props.onChange(this.state.selectedDate, this.state.selectedDate.lastDayOfMonth());
+    }
+
+    changeMonth(date) {
         this.setState({selectedDate: date});
         this.props.onChange(date, date.lastDayOfMonth());
     }
+
     render() {
         let items = this.state.dateList.map(date => <li key={date.formatDDMMYYYY()}><a href="#" onClick={() =>
             this.changeMonth(date)}>{date.getYearMonthLabel()}</a></li>)

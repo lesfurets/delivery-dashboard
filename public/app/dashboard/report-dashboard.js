@@ -36,7 +36,7 @@ function ReportDashboard(config) {
     };
 
     this.filterData = function () {
-        filteredData = filterCreatedAfter(filterReleasedBefore(rawData, startDate), endDate);
+        filteredData = filterCreatedAfter(filterReleasedAfter(rawData, startDate), endDate);
     };
 
     this.refresh = function () {

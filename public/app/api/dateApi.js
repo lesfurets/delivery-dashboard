@@ -5,7 +5,7 @@ var monthNames = ["January", "February", "March", "April", "May", "June",
 export const completeDatePrototype = function() {
 
     Date.prototype.lastDayOfMonth = function () {
-        return new Date(2008, this.getMonth() + 1, 0);
+        return new Date(this.getFullYear(), this.getMonth() + 1, 0);
     };
 
     Date.prototype.getMonthLabel = function () {
