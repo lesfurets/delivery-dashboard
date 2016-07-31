@@ -1,11 +1,11 @@
 import React from "react";
-import jiraConnect from "../api/jiraConnect";
 import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../api/chartFactory";
 import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../api/definition";
 import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST} from "../api/taskData";
 import {computeEventData} from "../api/eventData";
 import {computeDurationData, groupDurationDataBy} from "../api/durationData";
 import MonthSelector from "../components/MonthSelector";
+import PeriodSelector from "../components/PeriodSelector";
 import Switch from "../components/Switch";
 
 class Report extends React.Component {
@@ -50,11 +50,9 @@ class Report extends React.Component {
     render() {
         let timeSelector;
         if (this.props.selector == CONFIG_MONTH_SELECTOR) {
-            // createDomForMonthSelector(config.id, this)
             timeSelector = <MonthSelector onChange={this.updateDate}/>
         } else {
-            timeSelector = <MonthSelector onChange={this.updateDate}/>
-            // createDomForPeriodSelector(config.id, this)
+            timeSelector = <PeriodSelector onChange={this.updateDate}/>
         }
 
         if (this.state.cumulative != null) {
@@ -98,4 +96,4 @@ Report.protoTypes = {
     selector: React.PropTypes.oneOf([CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR])
 }
 
-export default jiraConnect(Report)
+export default Report

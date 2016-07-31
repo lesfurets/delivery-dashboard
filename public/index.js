@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e667112f6f835a4ee09a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e2324dca9b2deb3258cd"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -36037,7 +36037,7 @@
 	var completeDatePrototype = exports.completeDatePrototype = function completeDatePrototype() {
 
 	    Date.prototype.lastDayOfMonth = function () {
-	        return new Date(2008, this.getMonth() + 1, 0);
+	        return new Date(this.getFullYear(), this.getMonth() + 1, 0);
 	    };
 
 	    Date.prototype.getMonthLabel = function () {
@@ -36961,7 +36961,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.filterTaskData = exports.parseJiraData = exports.TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_REFERENCE = undefined;
+	exports.filterCreatedBefore = exports.filterReleasedBefore = exports.filterReleasedAfter = exports.filterTaskData = exports.parseJiraData = exports.TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_REFERENCE = undefined;
 
 	var _jsonParser = __webpack_require__(357);
 
@@ -37035,6 +37035,49 @@
 
 	    return filteredData;
 	};
+
+	var filterReleasedAfter = exports.filterReleasedAfter = function filterReleasedAfter(inputData, fromDate) {
+	    var view = new google.visualization.DataView(inputData);
+	    view.setRows(view.getFilteredRows([{
+	        column: TASK_INDEX_EVENTS_LAST,
+	        minValue: fromDate
+	    }]));
+	    return view;
+	};
+
+	var filterReleasedBefore = exports.filterReleasedBefore = function filterReleasedBefore(inputData, toDate) {
+	    var view = new google.visualization.DataView(inputData);
+	    view.setRows(view.getFilteredRows([{
+	        column: TASK_INDEX_EVENTS_LAST,
+	        maxValue: toDate
+	    }]));
+	    return view;
+	};
+
+	var filterCreatedBefore = exports.filterCreatedBefore = function filterCreatedBefore(inputData, toDate) {
+	    var view = new google.visualization.DataView(inputData);
+	    view.setRows(view.getFilteredRows([{
+	        column: TASK_INDEX_EVENTS_FIRST,
+	        maxValue: toDate
+	    }]));
+	    return view;
+	};
+
+	function columnBuilder(type, label, calc) {
+	    return { type: type, label: label, calc: calc };
+	}
+
+	function constantColumnBuilder(type, label, value) {
+	    return {
+	        type: type, label: label, calc: function calc() {
+	            return value;
+	        }
+	    };
+	}
+
+	function aggregatorBuilder(column, type, aggregation) {
+	    return { column: column, type: type, aggregation: aggregation };
+	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(344); if (makeExportsHot(module, __webpack_require__(149))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "taskData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
@@ -37238,7 +37281,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.buildSimpleCharts = exports.buildFilteredDashboard = exports.buildFilters = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = exports.buildDataTable = undefined;
+	exports.limitDashboardPeriod = exports.buildTimePeriodDashboard = exports.buildSimpleCharts = exports.buildFilteredDashboard = exports.buildFilters = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildTasksListTable = exports.buildDataTable = undefined;
 
 	var _definition = __webpack_require__(349);
 
@@ -37438,6 +37481,22 @@
 	    });
 	}
 
+	/***************************
+	 * ExtractDashboard
+	 **************************/
+
+	var buildTimePeriodDashboard = exports.buildTimePeriodDashboard = function buildTimePeriodDashboard(elementId, startDate, endDate) {
+	    var areaChart = buildCumulativeFlowChart(elementId, 600);
+	    limitDashboardPeriod(areaChart, startDate, endDate);
+	    return areaChart;
+	};
+
+	var limitDashboardPeriod = exports.limitDashboardPeriod = function limitDashboardPeriod(areaChart, firstDay, lastDay) {
+	    areaChart.setOption('hAxis.viewWindow.min', firstDay);
+	    areaChart.setOption('hAxis.viewWindow.max', lastDay);
+	    return areaChart;
+	};
+
 	//function buildSimpleChart(elementId, chartType, title) {
 	//    return new google.visualization.ChartWrapper({
 	//        'chartType': chartType,
@@ -37495,22 +37554,6 @@
 	        }
 	    });
 	    return filter;
-	}
-
-	/***************************
-	 * ExtractDashboard
-	 **************************/
-
-	function buildTimePeriodDashboard(viewId, startDate, endDate) {
-	    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 600);
-	    limitDashboardPeriod(areaChart, startDate, endDate);
-	    return areaChart;
-	}
-
-	function limitDashboardPeriod(areaChart, firstDay, lastDay) {
-	    areaChart.setOption('hAxis.viewWindow.min', firstDay);
-	    areaChart.setOption('hAxis.viewWindow.max', lastDay);
-	    return areaChart;
 	}
 
 	/***************************
@@ -38392,7 +38435,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(80), RootInstanceProvider = __webpack_require__(88), ReactMount = __webpack_require__(90), React = __webpack_require__(149); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -38404,15 +38447,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDom = __webpack_require__(164);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _jiraConnect = __webpack_require__(352);
-
-	var _jiraConnect2 = _interopRequireDefault(_jiraConnect);
+	var _chartFactory = __webpack_require__(360);
 
 	var _definition = __webpack_require__(349);
+
+	var _taskData = __webpack_require__(356);
+
+	var _eventData = __webpack_require__(361);
+
+	var _durationData = __webpack_require__(364);
 
 	var _MonthSelector = __webpack_require__(372);
 
@@ -38438,35 +38481,48 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Report).call(this));
 
-	        _this.state = { dashboard: null };
+	        _this.state = {
+	            cumulative: null,
+	            stats: null,
+	            startDate: null,
+	            endDate: null,
+	            reduceColumn: null
+	        };
 	        _this.updateDate = _this.updateDate.bind(_this);
 	        _this.updateType = _this.updateType.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(Report, [{
-	        key: 'componentDidMount',
+	        key: "componentDidMount",
 	        value: function componentDidMount() {
 	            this.props.fetchData();
 
-	            // var areaChart = buildCumulativeFlowChart("cumulative_flow_area_chart", 400);
-	            // var chartRangeFilter = buildRangeFilter("cumulative_flow_range_filter");
-	            // var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));
-	            // dashboard.bind([chartRangeFilter], areaChart);
-	            // this.setState({dashboard: dashboard});
+	            var cumulative = (0, _chartFactory.buildTimePeriodDashboard)("area_chart", this.state.startDate, this.state.endDate);
+	            var stats = (0, _chartFactory.buildDataTable)(duration_stats);
+
+	            this.setState({
+	                cumulative: cumulative,
+	                stats: stats
+	            });
 	        }
 	    }, {
-	        key: 'updateDate',
-	        value: function updateDate(dateStart, dateEnd) {
-	            console.log("Changing range from " + dateStart + " to " + dateEnd);
+	        key: "updateDate",
+	        value: function updateDate(startDate, endDate) {
+	            this.setState({
+	                startDate: startDate,
+	                endDate: endDate
+	            });
 	        }
 	    }, {
-	        key: 'updateType',
+	        key: "updateType",
 	        value: function updateType(type) {
-	            console.log("Changing type " + type);
+	            this.setState({
+	                groupType: type
+	            });
 	        }
 	    }, {
-	        key: 'render',
+	        key: "render",
 	        value: function render() {
 	            var timeSelector = void 0;
 	            if (this.props.selector == _definition.CONFIG_MONTH_SELECTOR) {
@@ -38477,43 +38533,52 @@
 	                // createDomForPeriodSelector(config.id, this)
 	            }
 
-	            if (this.state.dashboard != null) {
-	                // this.state.dashboard.draw(computeEventData(this.props.rawData));
+	            if (this.state.cumulative != null) {
+	                var filteredData = (0, _taskData.filterCreatedBefore)((0, _taskData.filterReleasedAfter)(this.props.rawData, this.state.startDate), this.state.endDate);
+
+	                (0, _chartFactory.limitDashboardPeriod)(this.state.cumulative, this.state.startDate, this.state.endDate);
+	                this.state.cumulative.setDataTable((0, _eventData.computeEventData)(filteredData));
+	                this.state.cumulative.draw();
+
+	                this.state.stats.setDataTable((0, _durationData.groupDurationDataBy)((0, _durationData.computeDurationData)((0, _taskData.filterReleasedBefore)(filteredData, this.state.endDate)), _taskData.TASK_INDEX_FILTER_FIRST + this.state.groupType.position));
+	                this.state.stats.draw();
 	            }
 	            return _react2.default.createElement(
-	                'div',
-	                { className: 'card to-print graph' },
+	                "div",
+	                { className: "card to-print graph" },
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'row' },
+	                    "div",
+	                    { className: "row" },
 	                    _react2.default.createElement(
-	                        'h2',
-	                        { className: 'col-md-12 card-title' },
-	                        _react2.default.createElement('img', { className: 'print-only', src: '../../img/team-traffic.png' }),
-	                        ' Team Traffic - Cycle time -',
+	                        "h2",
+	                        { className: "col-md-12 card-title" },
+	                        _react2.default.createElement("img", { className: "print-only", src: "../../img/team-traffic.png" }),
+	                        " Team Traffic - Cycle time -",
 	                        timeSelector,
-	                        _react2.default.createElement(_Switch2.default, { firstValue: { label: "test" }, secondValue: { label: "test" }, onChange: this.updateType }),
-	                        _react2.default.createElement('span', { id: 'tab_monthly_report_view_title_suffix' }),
+	                        _react2.default.createElement(_Switch2.default, { firstValue: REPORT_CONFIG.projection[0], secondValue: REPORT_CONFIG.projection[1],
+	                            onChange: this.updateType }),
+	                        _react2.default.createElement("span", { id: "tab_monthly_report_view_title_suffix" }),
 	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'not-to-print pull-right' },
-	                            _react2.default.createElement('div', { id: 'tab_monthly_report_view_switch', className: 'switch' }),
+	                            "div",
+	                            { className: "not-to-print pull-right" },
+	                            _react2.default.createElement("div", { id: "tab_monthly_report_view_switch", className: "switch" }),
 	                            _react2.default.createElement(
-	                                'a',
-	                                { href: '#' },
-	                                _react2.default.createElement('span', { className: 'glyphicon glyphicon-th-list', 'data-toggle': 'modal', 'data-target': '#tab_monthly_report_view_tasks_list_modal' })
+	                                "a",
+	                                { href: "#" },
+	                                _react2.default.createElement("span", { className: "glyphicon glyphicon-th-list", "data-toggle": "modal",
+	                                    "data-target": "#tab_monthly_report_view_tasks_list_modal" })
 	                            )
 	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'row card-relative-chart' },
-	                    _react2.default.createElement('div', { id: 'area_chart' }),
+	                    "div",
+	                    { className: "row card-relative-chart" },
+	                    _react2.default.createElement("div", { id: "area_chart" }),
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'card to-print stats' },
-	                        _react2.default.createElement('div', { id: 'duration_stats' })
+	                        "div",
+	                        { className: "card to-print stats" },
+	                        _react2.default.createElement("div", { id: "duration_stats" })
 	                    )
 	                )
 	            );
@@ -38527,7 +38592,7 @@
 	    selector: _react2.default.PropTypes.oneOf([_definition.CONFIG_MONTH_SELECTOR, _definition.CONFIG_PERIOD_SELECTOR])
 	};
 
-	exports.default = (0, _jiraConnect2.default)(Report);
+	exports.default = Report;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(344); if (makeExportsHot(module, __webpack_require__(149))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Report.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
@@ -38588,6 +38653,11 @@
 	    }
 
 	    _createClass(MonthSelector, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            this.props.onChange(this.state.selectedDate, this.state.selectedDate.lastDayOfMonth());
+	        }
+	    }, {
 	        key: "changeMonth",
 	        value: function changeMonth(date) {
 	            this.setState({ selectedDate: date });
@@ -38684,26 +38754,39 @@
 	    }
 
 	    _createClass(Switch, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            this.props.onChange(this.state.selectedValue ? this.props.firstValue : this.props.secondValue);
+	        }
+	    }, {
 	        key: "update",
 	        value: function update(value) {
-	            this.setState({ selectedDate: value });
-	            this.props.onChange();
+	            this.props.onChange(value ? this.props.firstValue : this.props.secondValue);
+	            this.setState({ selectedValue: value });
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+
 	            return _react2.default.createElement(
 	                "div",
-	                { className: "switch" },
+	                { className: "switch " + (this.state.selectedValue ? "" : "switched") },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "switch-label", onClick: this.update(true) },
+	                    { className: "switch-label", onClick: function onClick() {
+	                            return _this2.update(true);
+	                        } },
 	                    this.props.firstValue.label
 	                ),
-	                _react2.default.createElement("div", { className: "switch-widget", onClick: this.update(!this.state.selectedValue) }),
+	                _react2.default.createElement("div", { className: "switch-widget", onClick: function onClick() {
+	                        return _this2.update(!_this2.state.selectedValue);
+	                    } }),
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "switch-label", onClick: this.update(false) },
+	                    { className: "switch-label", onClick: function onClick() {
+	                            return _this2.update(false);
+	                        } },
 	                    this.props.secondValue.label
 	                )
 	            );

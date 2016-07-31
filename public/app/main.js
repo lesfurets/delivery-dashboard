@@ -8,11 +8,11 @@ import reducer from './reducers';
 import initApp from './core/initApp';
 
 import DeliveryDashboard from './components/DeliveryDashboard';
-import Page1 from './components/Page1';
 import CumulativeFlow from './dashboard/CumulativeFlow';
 import Duration from './dashboard/Duration';
 import Distribution from './dashboard/Distribution';
-import Report from './dashboard/Report';
+import MonthlyReport from './dashboard/MonthlyReport';
+import PeriodReport from './dashboard/PeriodReport';
 import TaskManager from './dashboard/TaskManager';
 
 
@@ -30,8 +30,8 @@ google.setOnLoadCallback(function () {
                     <Route path="/cumulative-flow" component={CumulativeFlow}/>
                     <Route path="/duration" component={Duration}/>
                     <Route path="/distribution" component={Distribution}/>
-                    <Route path="/monthly-report" component={Report}/>
-                    <Route path="/period-report" component={Page1}/>
+                    <Route path="/monthly-report" component={MonthlyReport}/>
+                    <Route path="/period-report" component={PeriodReport}/>
                     <Route path="/task-manager" component={TaskManager}/>
                 </Route>
             </Router>
