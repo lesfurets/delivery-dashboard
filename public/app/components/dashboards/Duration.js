@@ -57,7 +57,7 @@ class Duration extends React.Component {
         }
     };
     render() {
-        if(this.state.columnChart != null) {
+        if(this.state.columnChart != null && this.props.rawData != null) {
             var durationData = computeDurationData(this.props.rawData);
             this.state.dashboard.draw(durationData);
             var durationChartData = this.state.columnChart.getDataTable();

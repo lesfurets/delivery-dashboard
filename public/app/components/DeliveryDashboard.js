@@ -11,7 +11,7 @@ export default class Application extends React.Component {
                 </div>
             </div>
             <footer className="main-footer">
-                <strong>Copyright rien du tout</strong>
+                <strong>Copyright rien du tout test</strong>
             </footer>
         </div>;
     }

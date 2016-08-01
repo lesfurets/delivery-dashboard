@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-const rawData = (state = "Test", action) => {
+const rawData = (state = null, action) => {
     switch (action.type) {
         case 'SET_RAW_DATA':
             return action.rawData

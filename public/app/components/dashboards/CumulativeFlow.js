@@ -20,7 +20,7 @@ class TaskManager extends React.Component {
         this.setState({dashboard: dashboard});
     }
     render() {
-        if(this.state.dashboard != null){
+        if(this.state.dashboard != null && this.props.rawData != null){
             this.state.dashboard.draw(computeEventData(this.props.rawData));
         }
         return (
