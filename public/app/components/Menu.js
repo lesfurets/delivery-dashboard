@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
-import jiraConnect from "../api/jiraConnect";
+import jiraConnect from "../redux/jiraConnect";
 
 export default class Menu extends React.Component {
     render() {

@@ -1,15 +1,15 @@
 import React from 'react'
 
-import jiraConnect from '../api/jiraConnect'
-import {buildCumulativeFlowChart, buildRangeFilter, buildSimpleCharts} from '../api/chartFactory'
-import {computeEventData} from '../api/eventData'
-import {buildDurationColumnChart, buildDurationScatterChart, buildFilters, buildFilteredDashboard, buildDataTable} from '../api/chartFactory'
-import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_EVENTS_LAST, TASK_INDEX_FILTER_FIRST } from '../api/taskData'
-import { DISTRIBUTION_INDEX_STATIC_GROUP_ALL, computeDistributionData } from '../api/distributionData'
+import jiraConnect from '../../redux/jiraConnect'
+import {buildCumulativeFlowChart, buildRangeFilter, buildSimpleCharts} from '../../core/charts/chartFactory'
+import {computeEventData} from '../../core/data/eventData'
+import {buildDurationColumnChart, buildDurationScatterChart, buildFilters, buildFilteredDashboard, buildDataTable} from '../../core/charts/chartFactory'
+import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_EVENTS_LAST, TASK_INDEX_FILTER_FIRST } from '../../core/data/taskData'
+import { DISTRIBUTION_INDEX_STATIC_GROUP_ALL, computeDistributionData } from '../../core/data/distributionData'
 
-import Card from '../components/Card'
-import Filters from '../components/Filters'
-import CategoryCharts from '../components/CategoryCharts'
+import Card from './elements/Card'
+import Filters from './elements/Filters'
+import CategoryCharts from './elements/CategoryCharts'
 
 class Distribution extends React.Component {
     constructor(){

@@ -1,17 +1,17 @@
 import React from 'react'
 
-import jiraConnect from '../api/jiraConnect'
-import {buildCumulativeFlowChart,buildRangeFilter} from '../api/chartFactory'
-import {computeEventData} from '../api/eventData'
-import {buildDurationColumnChart, buildDurationScatterChart, buildFilters, buildFilteredDashboard, buildDataTable} from '../api/chartFactory'
-import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_EVENTS_LAST } from '../api/taskData'
+import jiraConnect from '../../redux/jiraConnect'
+import {buildCumulativeFlowChart,buildRangeFilter} from '../../core/charts/chartFactory'
+import {computeEventData} from '../../core/data/eventData'
+import {buildDurationColumnChart, buildDurationScatterChart, buildFilters, buildFilteredDashboard, buildDataTable} from '../../core/charts/chartFactory'
+import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_EVENTS_LAST } from '../../core/data/taskData'
 import { DURATION_INDEX_DURATION_FIRST,DURATION_INDEX_DURATION_LAST, DURATION_INDEX_TOOLTIP,
     DURATION_INDEX_STATITICS_AVERAGE, DURATION_INDEX_STATITICS_50PCT,
     DURATION_INDEX_STATITICS_90PCT, DURATION_INDEX_STATIC_GROUP_ALL,
-    computeDurationData, computeDurationStats, groupDurationDataBy } from '../api/durationData'
+    computeDurationData, computeDurationStats, groupDurationDataBy } from '../../core/data/durationData'
 
-import Card from '../components/Card'
-import Filters from '../components/Filters'
+import Card from './elements/Card'
+import Filters from './elements/Filters'
 
 class Duration extends React.Component {
     constructor(){

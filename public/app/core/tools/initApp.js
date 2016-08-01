@@ -1,5 +1,5 @@
-import {completeDatePrototype} from '../api/dateApi'
-import {DATA_DATE,FILTER_DATE} from '../api/definition'
+import {completeDatePrototype} from './dateApi'
+import {DATA_DATE,FILTER_DATE} from '../definition'
 
 export default function() {
     completeDatePrototype();

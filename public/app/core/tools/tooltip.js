@@ -1,5 +1,5 @@
-import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_STATIC_SYMMARY } from './taskData'
-import { DURATION_INDEX_DURATION_FIRST } from './durationData'
+import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_STATIC_SYMMARY } from '../data/taskData'
+import { DURATION_INDEX_DURATION_FIRST } from '../data/durationData'
 
 export default function(table, row) {
     var html = [];

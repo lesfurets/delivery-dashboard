@@ -1,7 +1,7 @@
 import React from "react";
-import jiraConnect from "../api/jiraConnect";
-import {buildTasksListTable} from "../api/chartFactory";
-import {filterTaskData} from "../api/taskData";
+import jiraConnect from "../../redux/jiraConnect";
+import {buildTasksListTable} from "../../core/charts/chartFactory";
+import {filterTaskData} from "../../core/data/taskData";
 
 class TaskManager extends React.Component {
     constructor() {

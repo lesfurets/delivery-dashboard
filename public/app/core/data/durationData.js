@@ -1,6 +1,6 @@
 import { TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, TASK_INDEX_FILTER_LAST } from './taskData'
-import { DATA_NUMBER, DATA_STRING } from '../api/definition'
-import durationTooltip from './tooltip'
+import { DATA_NUMBER, DATA_STRING } from '../definition'
+import durationTooltip from '../tools/tooltip'
 import { constantColumnBuilder, columnBuilder, aggregatorBuilder } from './dataUtils'
 
 export const DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;

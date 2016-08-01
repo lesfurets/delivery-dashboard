@@ -1,9 +1,9 @@
 import React from "react";
 
-import jiraConnect from "../api/jiraConnect"
-import { CONFIG_PERIOD_SELECTOR } from "../api/definition";
+import jiraConnect from "../../redux/jiraConnect"
+import { CONFIG_PERIOD_SELECTOR } from "../../core/definition";
 
-import Report from "./Report";
+import Report from "./elements/Report";
 
 class MonthlyReport extends React.Component {
     render() {

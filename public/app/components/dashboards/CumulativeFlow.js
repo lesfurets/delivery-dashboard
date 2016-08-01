@@ -1,9 +1,9 @@
 import React from 'react'
-import jiraConnect from '../api/jiraConnect'
-import {buildCumulativeFlowChart,buildRangeFilter} from '../api/chartFactory'
-import {computeEventData} from '../api/eventData'
+import jiraConnect from '../../redux/jiraConnect'
+import {buildCumulativeFlowChart,buildRangeFilter} from '../../core/charts/chartFactory'
+import {computeEventData} from '../../core/data/eventData'
 
-import Card from '../components/Card'
+import Card from './elements/Card'
 
 class TaskManager extends React.Component {
     constructor(){
@@ -24,7 +24,7 @@ class TaskManager extends React.Component {
             this.state.dashboard.draw(computeEventData(this.props.rawData));
         }
         return (
-            <Card cardTitle="Cumulative Flow">
+            <Card cardTitle="Cumulative Flow Test">
                 <div id="cumulative_flow_dashboard" class="col-md-12 card-block">
                     <div id="cumulative_flow_area_chart" className="col-md-12 card-block"></div>
                     <div id="cumulative_flow_range_filter" className="col-md-12 card-block"></div>

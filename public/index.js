@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e37c3ffb66bc448e37fc"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f03628abfc8e68f5a135"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -37432,54 +37432,6 @@
 	    return areaChart;
 	};
 
-	//function buildSimpleChart(elementId, chartType, title) {
-	//    return new google.visualization.ChartWrapper({
-	//        'chartType': chartType,
-	//        'containerId': elementId,
-	//        'options': {
-	//            'width': 400,
-	//            'height': 400,
-	//            'pieSliceText': 'label',
-	//            'legend': 'none',
-	//            'title' : title
-	//        }
-	//    });
-	//}
-
-	/***************************
-	 *         Unused
-	 **************************/
-
-	function buildTasksDurationColumnChart(viewId, columns) {
-	    var durationChart = new google.visualization.ChartWrapper({
-	        'chartType': 'ColumnChart',
-	        'containerId': viewId + ID_COLUMN_CHART,
-	        'view': { 'columns': columns },
-	        'options': {
-	            'tooltip': { isHtml: true },
-	            'height': 400,
-	            'isStacked': true,
-	            'hAxis': {
-	                'title': 'Jira Tickets',
-	                'textPosition': 'none'
-	            },
-	            'vAxis': {
-	                'title': 'Duration (days)',
-	                'textPosition': 'in'
-	            },
-	            'legend': {
-	                'position': 'in'
-	            },
-	            'chartArea': {
-	                'width': '90%',
-	                'height': '100%'
-	            }
-	        }
-	    });
-	    setTaskSelectListener(durationChart);
-	    return durationChart;
-	}
-
 	function buildFilter(containerId, controlType, filterColumnIndex) {
 	    var filter = new google.visualization.ControlWrapper({
 	        'controlType': controlType,
@@ -37489,18 +37441,6 @@
 	        }
 	    });
 	    return filter;
-	}
-
-	/***************************
-	 * CumulativFlowDashboard
-	 **************************/
-
-	function buildCumulativFlowDashboard(viewId) {
-	    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 400);
-	    var chartRangeFilter = buildRangeFilter(viewId + ID_RANGE_FILTER);
-	    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
-	    dashboard.bind([chartRangeFilter], areaChart);
-	    return dashboard;
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(344); if (makeExportsHot(module, __webpack_require__(149))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "chartFactory.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -38005,33 +37945,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	function filterReleasedBefore(inputData, fromDate) {
-	    var view = new google.visualization.DataView(inputData);
-	    view.setRows(view.getFilteredRows([{
-	        column: TASK_INDEX_EVENTS_LAST,
-	        minValue: fromDate
-	    }]));
-	    return view;
-	}
-
-	function filterReleasedAfter(inputData, toDate) {
-	    var view = new google.visualization.DataView(inputData);
-	    view.setRows(view.getFilteredRows([{
-	        column: TASK_INDEX_EVENTS_LAST,
-	        maxValue: toDate
-	    }]));
-	    return view;
-	}
-
-	function filterCreatedAfter(inputData, toDate) {
-	    var view = new google.visualization.DataView(inputData);
-	    view.setRows(view.getFilteredRows([{
-	        column: TASK_INDEX_EVENTS_FIRST,
-	        maxValue: toDate
-	    }]));
-	    return view;
-	}
-
 	var columnBuilder = exports.columnBuilder = function columnBuilder(type, label, calc) {
 	    return { type: type, label: label, calc: calc };
 	};

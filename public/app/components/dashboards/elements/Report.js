@@ -1,12 +1,12 @@
 import React from "react";
-import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../api/chartFactory";
-import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../api/definition";
-import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST} from "../api/taskData";
-import {computeEventData} from "../api/eventData";
-import {computeDurationData, groupDurationDataBy} from "../api/durationData";
-import MonthSelector from "../components/MonthSelector";
-import PeriodSelector from "../components/PeriodSelector";
-import Switch from "../components/Switch";
+import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../../../core/charts/chartFactory";
+import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../../../core/definition";
+import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST} from "../../../core/data/taskData";
+import {computeEventData} from "../../../core/data/eventData";
+import {computeDurationData, groupDurationDataBy} from "../../../core/data/durationData";
+import MonthSelector from "./MonthSelector";
+import PeriodSelector from "./PeriodSelector";
+import Switch from "./Switch";
 
 class Report extends React.Component {
     constructor() {

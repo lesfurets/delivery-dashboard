@@ -1,5 +1,5 @@
-import jsonParser from '../api/jsonParser'
-import {DATA_DATE,DATA_STRING} from '../api/definition'
+import jsonParser from '../tools/jsonParser'
+import {DATA_DATE,DATA_STRING} from '../definition'
 
 export const TASK_INDEX_STATIC_REFERENCE = 0;
 export const TASK_INDEX_STATIC_SYMMARY = 1;

@@ -1,5 +1,5 @@
-import { ID_TASK_LIST } from './definition'
-import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_FILTER_FIRST } from './taskData'
+import { ID_TASK_LIST } from '../definition'
+import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_FILTER_FIRST } from '../data/taskData'
 
 export const buildDataTable = function(elementId) {
     return new google.visualization.ChartWrapper({
@@ -211,54 +211,6 @@ export const limitDashboardPeriod = function(areaChart, firstDay, lastDay) {
     return areaChart;
 }
 
-//function buildSimpleChart(elementId, chartType, title) {
-//    return new google.visualization.ChartWrapper({
-//        'chartType': chartType,
-//        'containerId': elementId,
-//        'options': {
-//            'width': 400,
-//            'height': 400,
-//            'pieSliceText': 'label',
-//            'legend': 'none',
-//            'title' : title
-//        }
-//    });
-//}
-
-/***************************
- *         Unused
- **************************/
-
-function buildTasksDurationColumnChart(viewId, columns) {
-    var durationChart = new google.visualization.ChartWrapper({
-        'chartType': 'ColumnChart',
-        'containerId': viewId + ID_COLUMN_CHART,
-        'view': {'columns': columns},
-        'options': {
-            'tooltip': { isHtml: true },
-            'height': 400,
-            'isStacked': true,
-            'hAxis': {
-                'title': 'Jira Tickets',
-                'textPosition': 'none'
-            },
-            'vAxis': {
-                'title': 'Duration (days)',
-                'textPosition': 'in'
-            },
-            'legend': {
-                'position': 'in'
-            },
-            'chartArea': {
-                'width': '90%',
-                'height': '100%'
-            },
-        }
-    });
-    setTaskSelectListener(durationChart);
-    return durationChart;
-}
-
 function buildFilter(containerId, controlType, filterColumnIndex) {
     var filter = new google.visualization.ControlWrapper({
         'controlType': controlType,
@@ -268,16 +220,4 @@ function buildFilter(containerId, controlType, filterColumnIndex) {
         }
     });
     return filter;
-}
-
-/***************************
- * CumulativFlowDashboard
- **************************/
-
-function buildCumulativFlowDashboard(viewId) {
-    var areaChart = buildCumulativeFlowChart(viewId + ID_AREA_CHART, 400);
-    var chartRangeFilter = buildRangeFilter(viewId + ID_RANGE_FILTER);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(viewId));
-    dashboard.bind([chartRangeFilter], areaChart);
-    return dashboard;
 }

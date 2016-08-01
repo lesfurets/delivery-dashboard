@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch';
-import { fetchDataAction } from '../actions'
+import { fetchDataAction } from './actions'
 import { connect } from 'react-redux'
 
 const mapStateToProps = (state) => {

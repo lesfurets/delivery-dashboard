@@ -4,16 +4,16 @@ import {Router, Route, browserHistory, IndexRedirect} from 'react-router'
 import {compose, createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 
-import reducer from './reducers';
-import initApp from './core/initApp';
+import reducer from './redux/reducers';
+import initApp from './core/tools/initApp';
 
 import DeliveryDashboard from './components/DeliveryDashboard';
-import CumulativeFlow from './dashboard/CumulativeFlow';
-import Duration from './dashboard/Duration';
-import Distribution from './dashboard/Distribution';
-import MonthlyReport from './dashboard/MonthlyReport';
-import PeriodReport from './dashboard/PeriodReport';
-import TaskManager from './dashboard/TaskManager';
+import CumulativeFlow from './components/dashboards/CumulativeFlow';
+import Duration from './components/dashboards/Duration';
+import Distribution from './components/dashboards/Distribution';
+import MonthlyReport from './components/dashboards/MonthlyReport';
+import PeriodReport from './components/dashboards/PeriodReport';
+import TaskManager from './components/dashboards/TaskManager';
 
 
 google.load('visualization', '1.0', {'packages': ['controls', 'corechart', 'table']});
