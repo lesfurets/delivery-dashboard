@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux'
+
 const rawData = (state = "Test", action) => {
     switch (action.type) {
         case 'SET_RAW_DATA':
@@ -7,4 +9,8 @@ const rawData = (state = "Test", action) => {
     }
 }
 
-export default rawData
+const appReducer = combineReducers({
+    rawData
+})
+
+export default appReducer

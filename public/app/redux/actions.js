@@ -1,4 +1,4 @@
-import { parseJiraData } from '../../core/data/taskData'
+import { parseJiraData } from '../core/data/taskData'
 
 export const fetchDataAction = (data) => {
     return {
