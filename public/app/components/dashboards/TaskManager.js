@@ -1,5 +1,5 @@
 import React from "react";
-import jiraConnect from "../../redux/jiraConnect";
+import {rawDataConnect} from "../../redux/jiraConnect";
 import {buildTasksListTable} from "../../core/charts/chartFactory";
 import {filterTaskData} from "../../core/data/taskData";
 
@@ -37,4 +37,4 @@ class TaskManager extends React.Component {
     }
 }
 
-export default jiraConnect(TaskManager)
+export default rawDataConnect(TaskManager)

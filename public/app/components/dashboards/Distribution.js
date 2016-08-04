@@ -1,6 +1,6 @@
 import React from 'react'
 
-import jiraConnect from '../../redux/jiraConnect'
+import {rawDataConnect} from "../../redux/jiraConnect";
 import {buildCumulativeFlowChart, buildRangeFilter, buildSimpleCharts} from '../../core/charts/chartFactory'
 import {computeEventData} from '../../core/data/eventData'
 import {buildDurationColumnChart, buildDurationScatterChart, buildFilters, buildFilteredDashboard, buildDataTable} from '../../core/charts/chartFactory'
@@ -77,4 +77,4 @@ class Distribution extends React.Component {
     }
 }
 
-export default jiraConnect(Distribution)
+export default rawDataConnect(Distribution)

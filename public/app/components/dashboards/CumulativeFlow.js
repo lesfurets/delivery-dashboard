@@ -1,11 +1,11 @@
 import React from 'react'
-import jiraConnect from '../../redux/jiraConnect'
+import {rawDataConnect} from "../../redux/jiraConnect";
 import {buildCumulativeFlowChart,buildRangeFilter} from '../../core/charts/chartFactory'
 import {computeEventData} from '../../core/data/eventData'
 
 import Card from './elements/Card'
 
-class TaskManager extends React.Component {
+class CumulativeFlow extends React.Component {
     constructor(){
         super();
         this.state = {dashboard: null};
@@ -34,4 +34,4 @@ class TaskManager extends React.Component {
     }
 }
 
-export default jiraConnect(TaskManager)
+export default rawDataConnect(CumulativeFlow)

@@ -7,7 +7,7 @@ const mapStateToProps = (state) => {
     return {
         rawData: buildTaskTable(state.taskList)
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -18,6 +18,6 @@ const mapDispatchToProps = (dispatch) => {
                 .then(data => dispatch(fetchDataAction(data)));
         }
     }
-}
+};
 
-export default (Element) => connect(mapStateToProps, mapDispatchToProps)(Element)
+export const rawDataConnect = (Element) => connect(mapStateToProps, mapDispatchToProps)(Element);

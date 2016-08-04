@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
-import jiraConnect from "../redux/jiraConnect";
+import {rawDataConnect} from "../redux/jiraConnect";
 
 export default class Menu extends React.Component {
     render() {
@@ -45,4 +45,4 @@ export default class Menu extends React.Component {
     }
 }
 
-export default jiraConnect(Menu)
+export default rawDataConnect(Menu)
