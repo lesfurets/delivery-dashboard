@@ -4,5 +4,7 @@ export default class Task {
         this.summary = summary;
         this.events = [];
         this.filters = [];
+        this.durations = [];
+        this.cycleTime;
     }
 }

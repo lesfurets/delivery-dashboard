@@ -25,8 +25,8 @@ export const parseJiraJson = function (jiraData) {
     jiraData.issues.forEach(function (issue) {
         let task = new Task(getJiraValue(issue, RAW_DATA_COL.KEY), getJiraValue(issue, RAW_DATA_COL.SUMMARY))
 
-        RAW_DATA_COL.EVENTS.forEach((element) =>
-            task.events.push(getJiraValue(issue, element.jiraField, element.dataType)));
+        RAW_DATA_COL.EVENTS.forEach((event, index) =>
+            task.events.push(getJiraValue(issue, event.jiraField, event.dataType)));
 
 
         if (RAW_DATA_COL.FILTERS != null) {
@@ -34,10 +34,28 @@ export const parseJiraJson = function (jiraData) {
                 task.filters.push(getJiraValue(issue, element.jiraField, element.dataType)));
         }
 
+        task.events.forEach((event, index) => {
+            if (event != null && task.events.length > index + 1) {
+                task.durations.push(computeDuration(event, task.events[index + 1], RAW_DATA_COL.EVENTS[index].correction));
+            }
+        })
+
+        var firstEventDate = task.events[0];
+        var lastEventDate = task.events[task.events.length - 1];
+        if (firstEventDate != null && lastEventDate != null) {
+            task.cycleTime = computeDuration(firstEventDate, lastEventDate, 0);
+        }
+
         taskList.push(task);
     });
 
+    console.log(taskList)
+
     return taskList;
+}
+
+function computeDuration(startDate, endDate, correction) {
+    return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
 }
 
 export const buildTaskTable = function (taskList) {
