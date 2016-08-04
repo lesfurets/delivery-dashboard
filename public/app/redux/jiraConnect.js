@@ -3,7 +3,7 @@ import { fetchDataAction } from './actions'
 import { connect } from 'react-redux'
 import { buildTaskTable } from '../core/data/taskData'
 
-const mapStateToProps = (state) => {
+const mapStateToRawDataProps = (state) => {
     return {
         rawData: buildTaskTable(state.taskList)
     }
@@ -20,4 +20,12 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export const rawDataConnect = (Element) => connect(mapStateToProps, mapDispatchToProps)(Element);
+export const rawDataConnect = (Element) => connect(mapStateToRawDataProps, mapDispatchToProps)(Element);
+
+const mapStateToTaskListProps = (state) => {
+    return {
+        taskList: state.taskList
+    }
+};
+
+export const taskListConnect = (Element) => connect(mapStateToTaskListProps, mapDispatchToProps)(Element);

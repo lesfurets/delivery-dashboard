@@ -1,40 +1,55 @@
 import React from "react";
-import {rawDataConnect} from "../../redux/jiraConnect";
-import {buildTasksListTable} from "../../core/charts/chartFactory";
-import {filterTaskData} from "../../core/data/taskData";
+import {taskListConnect} from "../../redux/jiraConnect";
+import Card from "./elements/Card";
 
 class TaskManager extends React.Component {
     constructor() {
         super();
         this.state = {
             filterExpr: "",
-            chart: null
         };
         this.update = this.update.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchData();
-        this.setState({chart: buildTasksListTable("test_tasks_list")});
+        this.setState({});
     }
 
     update(e) {
-        let filterExp = e.target.value;
-        this.setState({filterExpr: filterExp});
+        this.setState({filterExpr: e.target.value.toLowerCase()});
     }
 
     render() {
-        if (this.state.chart != null) {
-            this.state.chart.setDataTable(filterTaskData(this.props.rawData, this.state.filterExpr));
-            this.state.chart.draw();
-        }
+
+        let tasks = this.props.taskList
+            .filter((task) => (
+                task.key.toLowerCase().indexOf(this.state.filterExpr) != -1)
+                || task.summary.toLowerCase().indexOf(this.state.filterExpr) != -1
+            )
+            .map((task) => {
+            return (
+                <tr key={task.key}>
+                    <td>{task.key}</td>
+                    <td>{task.summary}</td>
+                </tr>
+            )
+        });
         return (
-            <div>
+            <Card>
                 <input type="text" onChange={this.update} defaultValue=""/>
-                <div id="test_tasks_list" className="col-md-12 card-block card"></div>
-            </div>
+                <table className="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Summary</th>
+                    </tr>
+                    </thead>
+                    <tbody>{tasks}</tbody>
+                </table>
+            </Card>
         );
     }
 }
 
-export default rawDataConnect(TaskManager)
+export default taskListConnect(TaskManager)
