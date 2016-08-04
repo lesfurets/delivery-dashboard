@@ -20,7 +20,7 @@ function getJiraValue(jiraData, fieldPath, fieldType) {
     return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
 }
 
-export const jiraToJson = function (jiraData) {
+export const parseJiraJson = function (jiraData) {
     let taskList = [];
     jiraData.issues.forEach(function (issue) {
         let task = new Task(getJiraValue(issue, RAW_DATA_COL.KEY), getJiraValue(issue, RAW_DATA_COL.SUMMARY))
@@ -40,9 +40,7 @@ export const jiraToJson = function (jiraData) {
     return taskList;
 }
 
-export const parseJiraData = function (jiraData) {
-    let taskDataJson = jiraToJson(jiraData)
-
+export const buildTaskTable = function (taskList) {
     var taskData = new google.visualization.DataTable();
 
     // Defining table structure
@@ -58,7 +56,7 @@ export const parseJiraData = function (jiraData) {
     }
 
     // Adding jira data in the table
-    taskDataJson.forEach(function (task) {
+    taskList.forEach(function (task) {
         var row = [];
         row.push(task.key);
         row.push(task.summary);

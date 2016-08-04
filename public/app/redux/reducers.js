@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux'
 
-const rawData = (state = null, action) => {
+const taskList = (state = [], action) => {
     switch (action.type) {
-        case 'SET_RAW_DATA':
-            return action.rawData
+        case 'SET_TASK_LIST':
+            return action.taskList
         default:
             return state
     }
 }
 
 const appReducer = combineReducers({
-    rawData
+    taskList
 })
 
 export default appReducer
