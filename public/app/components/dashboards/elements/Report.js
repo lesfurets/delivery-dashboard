@@ -55,7 +55,7 @@ class Report extends React.Component {
             timeSelector = <PeriodSelector onChange={this.updateDate}/>
         }
 
-        if (this.state.cumulative != null && this.props.rawData != null) {
+        if (this.state.cumulative != null) {
             let filteredData = filterCreatedBefore(filterReleasedAfter(this.props.rawData, this.state.startDate), this.state.endDate);
 
             limitDashboardPeriod(this.state.cumulative, this.state.startDate, this.state.endDate);

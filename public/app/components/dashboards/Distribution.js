@@ -39,7 +39,7 @@ class Distribution extends React.Component {
         var dataToDisplay = durationChartData != null ? durationChartData : computeDistributionData(this.props.rawData);
 
         let taskChart = []
-        if (dataToDisplay != null && this.props.rawData != null) {
+        if (dataToDisplay != null) {
             RAW_DATA_COL.FILTERS.forEach(function(filter, index) {
                 if(filter.filterType == 'CategoryFilter') {
                     taskChart.push(TASK_INDEX_FILTER_FIRST + index)
