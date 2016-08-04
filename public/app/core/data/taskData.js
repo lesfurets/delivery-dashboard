@@ -1,5 +1,6 @@
-import jsonParser from '../tools/jsonParser'
-import {DATA_DATE,DATA_STRING} from '../definition'
+import jsonParser from "../tools/jsonParser";
+import {DATA_DATE, DATA_STRING} from "../definition";
+import Task from "./Task";
 
 export const TASK_INDEX_STATIC_REFERENCE = 0;
 export const TASK_INDEX_STATIC_SYMMARY = 1;
@@ -11,15 +12,37 @@ export const TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVEN
 export const TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
 export const TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
-function getJiraValue(jiraData, fieldPath, fieldType){
+function getJiraValue(jiraData, fieldPath, fieldType) {
     var jiraValue = jsonParser(jiraData, fieldPath);
-    if (fieldType != DATA_DATE){
+    if (fieldType != DATA_DATE) {
         return jiraValue;
     }
-    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue+".00:00");
+    return jiraValue == null || jiraValue == "" ? null : new Date(jiraValue + ".00:00");
 }
 
-export const parseJiraData = function(jiraData) {
+export const jiraToJson = function (jiraData) {
+    let taskList = [];
+    jiraData.issues.forEach(function (issue) {
+        let task = new Task(getJiraValue(issue, RAW_DATA_COL.KEY), getJiraValue(issue, RAW_DATA_COL.SUMMARY))
+
+        RAW_DATA_COL.EVENTS.forEach((element) =>
+            task.events.push(getJiraValue(issue, element.jiraField, element.dataType)));
+
+
+        if (RAW_DATA_COL.FILTERS != null) {
+            RAW_DATA_COL.FILTERS.forEach((element) =>
+                task.filters.push(getJiraValue(issue, element.jiraField, element.dataType)));
+        }
+
+        taskList.push(task);
+    });
+
+    return taskList;
+}
+
+export const parseJiraData = function (jiraData) {
+    let taskDataJson = jiraToJson(jiraData)
+
     var taskData = new google.visualization.DataTable();
 
     // Defining table structure
@@ -28,36 +51,30 @@ export const parseJiraData = function(jiraData) {
     RAW_DATA_COL.EVENTS.forEach(function (element) {
         taskData.addColumn(element.dataType, element.label);
     });
-    if(RAW_DATA_COL.FILTERS != null){
+    if (RAW_DATA_COL.FILTERS != null) {
         RAW_DATA_COL.FILTERS.forEach(function (element) {
             taskData.addColumn(element.dataType, element.label);
         });
     }
 
     // Adding jira data in the table
-    jiraData.issues.forEach(function (issue) {
-        var row =[];
-        row.push(getJiraValue(issue, RAW_DATA_COL.KEY));
-        row.push(getJiraValue(issue, RAW_DATA_COL.SUMMARY));
-        RAW_DATA_COL.EVENTS.forEach(function (element) {
-            row.push(getJiraValue(issue, element.jiraField, element.dataType));
-        });
-        if(RAW_DATA_COL.FILTERS != null){
-            RAW_DATA_COL.FILTERS.forEach(function (element) {
-                row.push(getJiraValue(issue, element.jiraField, element.dataType));
-            });
-        }
+    taskDataJson.forEach(function (task) {
+        var row = [];
+        row.push(task.key);
+        row.push(task.summary);
+        task.events.forEach((event) => row.push(event));
+        task.filters.forEach((filter) => row.push(filter));
         taskData.addRow(row);
     });
 
     return taskData;
 }
 
-export const filterTaskData = function(inputData, expression) {
+export const filterTaskData = function (inputData, expression) {
     var filteredData = new google.visualization.DataView(inputData)
 
     for (var index = 0; index < inputData.getNumberOfRows(); index++) {
-        if(inputData.getValue(index, TASK_INDEX_STATIC_REFERENCE).indexOf(expression) == -1){
+        if (inputData.getValue(index, TASK_INDEX_STATIC_REFERENCE).indexOf(expression) == -1) {
             console.log(index);
             filteredData.hideRows([index]);
         }
@@ -66,7 +83,7 @@ export const filterTaskData = function(inputData, expression) {
     return filteredData;
 }
 
-export const filterReleasedAfter = function(inputData, fromDate) {
+export const filterReleasedAfter = function (inputData, fromDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
         column: TASK_INDEX_EVENTS_LAST,
@@ -75,7 +92,7 @@ export const filterReleasedAfter = function(inputData, fromDate) {
     return view;
 }
 
-export const filterReleasedBefore = function(inputData, toDate) {
+export const filterReleasedBefore = function (inputData, toDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
         column: TASK_INDEX_EVENTS_LAST,
@@ -84,7 +101,7 @@ export const filterReleasedBefore = function(inputData, toDate) {
     return view;
 }
 
-export const filterCreatedBefore = function(inputData, toDate) {
+export const filterCreatedBefore = function (inputData, toDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
         column: TASK_INDEX_EVENTS_FIRST,
