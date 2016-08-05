@@ -11,8 +11,6 @@ class CumulativeFlow extends React.Component {
         this.state = {dashboard: null};
     }
     componentDidMount(){
-        this.props.fetchData();
-
         var areaChart = buildCumulativeFlowChart("cumulative_flow_area_chart", 400);
         var chartRangeFilter = buildRangeFilter("cumulative_flow_range_filter");
         var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));

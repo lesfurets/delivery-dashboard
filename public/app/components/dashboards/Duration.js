@@ -35,8 +35,6 @@ class Duration extends React.Component {
         this.updateTable = this.updateTable.bind(this);
     }
     componentDidMount(){
-        this.props.fetchData();
-
         var durationsColumns = [TASK_INDEX_STATIC_REFERENCE];
         for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
             durationsColumns.push(DURATION_INDEX_DURATION_FIRST + i);

@@ -23,8 +23,6 @@ class Report extends React.Component {
     }
 
     componentDidMount() {
-        this.props.fetchData();
-
         let cumulative = buildTimePeriodDashboard("area_chart", this.state.startDate, this.state.endDate);
         let stats = buildDataTable(duration_stats);
 

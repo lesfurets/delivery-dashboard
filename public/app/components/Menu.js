@@ -3,6 +3,10 @@ import {Link} from "react-router";
 import {rawDataConnect} from "../redux/jiraConnect";
 
 export default class Menu extends React.Component {
+    componentDidMount() {
+        this.props.fetchData();
+    }
+
     render() {
         return (
                 <nav className="navbar navbar-inverse navbar-fixed-top">
