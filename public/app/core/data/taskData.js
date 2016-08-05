@@ -49,8 +49,6 @@ export const parseJiraJson = function (jiraData) {
         taskList.push(task);
     });
 
-    console.log(taskList)
-
     return taskList;
 }
 
