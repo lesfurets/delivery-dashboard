@@ -167,21 +167,7 @@ function setTaskSelectListener(element) {
     });
 }
 
-/***************************
- *     Mock
- **************************/
-
-export const buildSimpleCharts = function() {
-    var charts = [];
-    RAW_DATA_COL.FILTERS.forEach(function(filter, index) {
-        if(filter.filterType == 'CategoryFilter') {
-            charts.push(buildSimpleChart("category_" + index, "PieChart", filter.label));
-        }
-    });
-    return charts;
-}
-
-function buildSimpleChart(elementId, chartType, title) {
+export const buildSimpleChart = function (elementId, chartType, title) {
     return new google.visualization.ChartWrapper({
         'chartType': chartType,
         'containerId': elementId,
