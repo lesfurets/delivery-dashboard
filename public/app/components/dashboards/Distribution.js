@@ -8,32 +8,51 @@ import PieChart from "./elements/PieChart";
 class Distribution extends React.Component {
     constructor() {
         super();
+        this.state = {
+            filteredTasks: []
+        }
         this.update = this.update.bind(this)
     }
 
     update() {
-        if (RAW_DATA_COL.FILTERS != null) {
-            RAW_DATA_COL.FILTERS.forEach((filter, index) => {
-                if (filter.filterType == 'CategoryFilter') {
-                    console.log(filter.label + " => " + ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected);
+        var filteredTasks = this.props.taskList.filter((task) => {
+            for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+                if (RAW_DATA_COL.FILTERS[index].filterType == 'CategoryFilter') {
+                    let filterValues = ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected;
+                    if(filterValues.length != 0 && filterValues.indexOf(task.filters[index]) == -1){
+                        console.log("Whyyyyy ?")
+                        return false;
+                    }
                 }
-            });
-        }
+            }
+            return true;
+        });
+        this.setState({
+            filteredTasks: filteredTasks
+        });
+    }
+
+    computeStats(index) {
+        var taskList = this.state.filteredTasks.length == 0 ? this.props.taskList : this.state.filteredTasks;
+        var statsJson = taskList.map((task) => task.filters[index])
+            .reduce((counter, item) => {
+                counter[item] = counter.hasOwnProperty(item) ? counter[item] + 1 : 1;
+                return counter;
+            }, {});
+
+        let statArray = [["Item", "Count"]];
+        Object.keys(statsJson).forEach((key) => statArray.push([key, statsJson[key]]));
+
+        return statArray;
     }
 
     render() {
-        var data = [
-            ['Task', 'Hours per Day'],
-            ['Work', 11],
-            ['Eat', 2],
-            ['Commute', 2],
-            ['Watch TV', 2],
-            ['Sleep', 7]
-        ];
-
         let pieCharts = RAW_DATA_COL.FILTERS
             .filter((filter) => filter.filterType == 'CategoryFilter')
-            .map((filter) => <div className="col-md-4"><PieChart title={filter.label} data={data}/></div>)
+            .map((filter, index) => (
+                <div className="col-md-4" key={index}>
+                    <PieChart title={filter.label} data={this.computeStats(index)}/>
+                </div>))
 
         return (
             <Card cardTitle="Distribution">

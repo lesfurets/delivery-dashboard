@@ -18,7 +18,6 @@ export default class Card extends React.Component {
     }
 
     render() {
-        console.log(this.props.data)
         if (this.state.chart != null) {
             this.state.chart.setDataTable(google.visualization.arrayToDataTable(this.props.data));
             this.state.chart.draw();

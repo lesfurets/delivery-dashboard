@@ -32,7 +32,7 @@ export default class Filters extends React.Component {
                 <div className="col-md-7 text-center">
                     {rangeFilters}
                 </div>
-                <div className="col-md-5 text-center">
+                <div className="col-md-5">
                     {categoryFilters}
                 </div>
             </div>
