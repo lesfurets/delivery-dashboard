@@ -38,7 +38,7 @@ export default class Filters extends React.Component {
                 {value} <span className="glyphicon glyphicon-remove"></span>
             </button>)
         return (
-            <div selected={this.state.selected}>
+            <div className="col-md-6" selected={this.state.selected}>
                 <div className="btn-group" role="group" aria-label="...">
                     <div className="btn-group">
                         <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
