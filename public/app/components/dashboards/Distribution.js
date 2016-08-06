@@ -17,11 +17,9 @@ class Distribution extends React.Component {
     update() {
         var filteredTasks = this.props.taskList.filter((task) => {
             for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-                if (RAW_DATA_COL.FILTERS[index].filterType == 'CategoryFilter') {
-                    if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
-                        console.log("Rejected")
-                        return false;
-                    }
+                if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
+                    console.log("Rejected")
+                    return false;
                 }
             }
             console.log("Acepted")
