@@ -45,9 +45,8 @@ export default class CategoryFilter extends React.Component {
             <div className="col-md-6" selected={this.state.matcher}>
                 <div className="btn-group" role="group" aria-label="...">
                     <div className="btn-group">
-                        <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            {this.props.label} <span className="caret"></span>
+                        <button type="button" className="btn btn-default btn-filter dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {this.props.label} <span className="caret pull-right"></span>
                         </button>
                         <ul className="dropdown-menu">
                             {values}

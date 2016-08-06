@@ -42,7 +42,7 @@ export default class DateRangeFilter extends React.Component {
     render() {
         return (
             <div className="input-group" selected={this.state.matcher}>
-                <span className="input-group-addon" id="basic-addon1">{this.props.label}</span>
+                <span className="input-group-addon addon-filter" id="basic-addon1">{this.props.label}</span>
                 <input name={this.state.filterId} id={this.state.filterId} ref="filter" type="text"
                        className="form-control" aria-describedby="basic-addon1"/>
             </div>
