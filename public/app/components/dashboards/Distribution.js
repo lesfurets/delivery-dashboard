@@ -52,10 +52,8 @@ class Distribution extends React.Component {
 
         return (
             <Card cardTitle="Distribution">
-                <div id="dashboard">
-                    <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
-                    {pieCharts}
-                </div>
+                <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
+                {pieCharts}
             </Card>
         );
     }

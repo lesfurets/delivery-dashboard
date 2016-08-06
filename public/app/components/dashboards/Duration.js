@@ -1,5 +1,5 @@
 import React from "react";
-import {rawDataConnect} from "../../redux/jiraConnect";
+import {taskListConnect} from "../../redux/jiraConnect";
 import {
     buildDurationColumnChart,
     buildDurationScatterChart,
@@ -7,7 +7,7 @@ import {
     buildFilteredDashboard,
     buildDataTable
 } from "../../core/charts/chartFactory";
-import {TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_EVENTS_LAST} from "../../core/data/taskData";
+import {TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_EVENTS_LAST, buildTaskTable} from "../../core/data/taskData";
 import {
     DURATION_INDEX_DURATION_FIRST,
     DURATION_INDEX_DURATION_LAST,
@@ -21,7 +21,8 @@ import {
     groupDurationDataBy
 } from "../../core/data/durationData";
 import Card from "./elements/Card";
-import Filters from "./elements/Filters";
+import OldFilters from "./elements/Filters";
+import Filters from "./elements/filtering/Filters";
 
 class Duration extends React.Component {
     constructor(){
@@ -54,7 +55,7 @@ class Duration extends React.Component {
     }
     updateTable() {
         var durationChartData = this.state.columnChart.getDataTable();
-        var dataToDisplay = durationChartData != null ? durationChartData : computeDurationData(this.props.rawData);
+        var dataToDisplay = durationChartData != null ? durationChartData : computeDurationData(buildTaskTable(this.props.taskList));
 
         if (dataToDisplay != null) {
             this.state.scatterChart.setDataTable(computeDurationStats(dataToDisplay));
@@ -65,8 +66,8 @@ class Duration extends React.Component {
         }
     };
     render() {
-        if(this.state.columnChart != null) {
-            var durationData = computeDurationData(this.props.rawData);
+        if(this.state.columnChart != null && this.props.taskList.length != 0) {
+            var durationData = computeDurationData(buildTaskTable(this.props.taskList));
             this.state.dashboard.draw(durationData);
             var durationChartData = this.state.columnChart.getDataTable();
             var dataToDisplay = durationChartData != null ? durationChartData : durationData;
@@ -76,14 +77,15 @@ class Duration extends React.Component {
         return (
             <Card cardTitle="Duration">
                 <div id="dashboard">
-                    <Filters/>
+                    <OldFilters/>
                     <div id="duration_stats"></div>
                     <div id="column_chart"></div>
                     <div id="scatter_chart"></div>
                 </div>
+                <Filters ref="filters" taskList={this.props.taskList}/>
             </Card>
         );
     }
 }
 
-export default rawDataConnect(Duration)
+export default taskListConnect(Duration)
