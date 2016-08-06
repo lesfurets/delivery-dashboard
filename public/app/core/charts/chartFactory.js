@@ -11,14 +11,6 @@ export const buildDataTable = function(elementId) {
     });
 }
 
-export const buildTasksListTable = function(elementId) {
-    var tasksListTable = buildDataTable(elementId);
-    tasksListTable.setOption('height', '100%');
-    tasksListTable.setOption('showRowNumber', true);
-    setTaskSelectListener(tasksListTable);
-    return tasksListTable;
-}
-
 export const buildCumulativeFlowChart = function (elementId, height) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
