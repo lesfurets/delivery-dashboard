@@ -18,13 +18,13 @@ class Distribution extends React.Component {
         var filteredTasks = this.props.taskList.filter((task) => {
             for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
                 if (RAW_DATA_COL.FILTERS[index].filterType == 'CategoryFilter') {
-                    let filterValues = ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected;
-                    if(filterValues.length != 0 && filterValues.indexOf(task.filters[index]) == -1){
-                        console.log("Whyyyyy ?")
+                    if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
+                        console.log("Rejected")
                         return false;
                     }
                 }
             }
+            console.log("Acepted")
             return true;
         });
         this.setState({

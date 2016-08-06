@@ -1,5 +1,6 @@
 import React from "react";
 import CategoryFilter from './CategoryFilter'
+import DateRangeFilter from './DateRangeFilter'
 
 function listValues(taskList, index){
     return taskList.map((task) => task.filters[index])
@@ -12,6 +13,9 @@ export default class Filters extends React.Component {
         super();
     }
     render() {
+        let startDate = new Date(REPORT_CONFIG.first_entry);
+        let endDate = new Date();
+
         let rangeFilters = [];
         let categoryFilters = [];
         if (RAW_DATA_COL.FILTERS != null) {
@@ -23,7 +27,13 @@ export default class Filters extends React.Component {
                                                              onChange={this.props.onChange}
                                                              values={listValues(this.props.taskList,index)}/>);
                     } else {
-                        rangeFilters.push(<div key={index}>{filter.label}</div>)
+                        rangeFilters.push(<DateRangeFilter key={index}
+                                                           ref={"filter_"+index}
+                                                           label={filter.label}
+                                                           startDate={startDate}
+                                                           rangeStartDate={startDate}
+                                                           rangeEndDate={endDate}
+                                                           onChange={this.props.onChange}/>)
                     }
                 });
         }
