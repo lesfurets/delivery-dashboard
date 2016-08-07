@@ -9,28 +9,28 @@ class Distribution extends React.Component {
     constructor() {
         super();
         this.state = {
-            filteredTasks: []
+            taskFilter: (task) => true
         }
         this.update = this.update.bind(this)
     }
 
     update() {
-        var filteredTasks = this.props.taskList.filter((task) => {
-            for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-                if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
-                    return false;
-                }
-            }
-            return true;
-        });
         this.setState({
-            filteredTasks: filteredTasks
+            taskFilter: (task) => {
+                for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+                    if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
         });
     }
 
     computeStats(index) {
-        var taskList = this.state.filteredTasks.length == 0 ? this.props.taskList : this.state.filteredTasks;
-        var statsJson = taskList.map((task) => task.filters[index])
+        var statsJson = this.props.taskList
+            .filter(this.state.taskFilter)
+            .map((task) => task.filters[index])
             .reduce((counter, item) => {
                 counter[item] = counter.hasOwnProperty(item) ? counter[item] + 1 : 1;
                 return counter;

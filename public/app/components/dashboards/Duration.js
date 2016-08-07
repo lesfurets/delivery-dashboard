@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDom from "react-dom";
 import {taskListConnect} from "../../redux/jiraConnect";
 import {
     buildDurationColumnChart,
@@ -28,13 +29,29 @@ class Duration extends React.Component {
     constructor(){
         super();
         this.state = {
+            taskFilter: (task) => true,
             columnChart: null,
             scatterChart: null,
             dashboard: null,
             statTable: null
         };
         this.updateTable = this.updateTable.bind(this);
+        this.update = this.update.bind(this);
     }
+
+    update() {
+        this.setState({
+            taskFilter: (task) => {
+                for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
+                    if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
     componentDidMount(){
         var durationsColumns = [TASK_INDEX_STATIC_REFERENCE];
         for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
@@ -82,7 +99,8 @@ class Duration extends React.Component {
                     <div id="column_chart"></div>
                     <div id="scatter_chart"></div>
                 </div>
-                <Filters ref="filters" taskList={this.props.taskList}/>
+                <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
+                {this.props.taskList.filter(this.state.taskFilter).length}
             </Card>
         );
     }

@@ -37,7 +37,7 @@ export default class CategoryFilter extends React.Component {
         let values = this.props.values.map((value, index) =>
             <li key={index}><a href="#" onClick={this.addValue} value={value}>{value}</a></li>);
         let selection = this.state.selection.map((value, index) =>
-            <button key={index} type="button" className="btn btn-default btn btn-primary" onClick={() => this.removeValue(value)}>
+            <button key={index} type="button" className="btn btn-default btn btn-info" onClick={() => this.removeValue(value)}>
                 {value} <span className="glyphicon glyphicon-remove"></span>
             </button>
         )
