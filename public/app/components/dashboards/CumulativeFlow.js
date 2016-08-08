@@ -1,7 +1,8 @@
 import React from 'react'
-import {rawDataConnect} from "../../redux/jiraConnect";
+import {taskListConnect} from "../../redux/jiraConnect";
 import {buildCumulativeFlowChart,buildRangeFilter} from '../../core/charts/chartFactory'
 import {computeEventData} from '../../core/data/eventData'
+import {buildTaskTable} from '../../core/data/taskData'
 
 import Card from './elements/Card'
 
@@ -19,7 +20,7 @@ class CumulativeFlow extends React.Component {
     }
     render() {
         if(this.state.dashboard != null){
-            this.state.dashboard.draw(computeEventData(this.props.rawData));
+            this.state.dashboard.draw(computeEventData(buildTaskTable(this.props.taskList)));
         }
         return (
             <Card cardTitle="Cumulative Flow Test">
@@ -32,4 +33,4 @@ class CumulativeFlow extends React.Component {
     }
 }
 
-export default rawDataConnect(CumulativeFlow)
+export default taskListConnect(CumulativeFlow)
