@@ -30,6 +30,7 @@ class Duration extends React.Component {
     constructor(){
         super();
         this.state = {
+            matchers: [],
             taskFilter: (task) => true,
             columnChart: null,
             scatterChart: null,
@@ -41,10 +42,16 @@ class Duration extends React.Component {
     }
 
     update() {
+        let matchers = RAW_DATA_COL.FILTERS
+            .map((filter, index) => ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected);
         this.setState({
+            matchers: matchers,
             taskFilter: (task) => {
-                for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-                    if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
+                for (var index = 0; index < this.state.matchers.length; index++) {
+                    if (!this.state.matchers[index].match(task.filters[index])) {
+                        if(task.events[4] != null){
+                            debugger;
+                        }
                         return false;
                     }
                 }
@@ -95,6 +102,7 @@ class Duration extends React.Component {
         let filteredTaskList = this.props.taskList.filter(this.state.taskFilter);
         return (
             <Card cardTitle="Duration">
+                {this.props.taskList.length}
                 <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
                 <DurationStats taskList={filteredTaskList}/>
                 <div id="dashboard">
