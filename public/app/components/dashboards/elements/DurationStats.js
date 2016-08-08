@@ -67,11 +67,11 @@ class TaskStatistic {
         let cells = [this.count];
         this.phasesDuration.forEach((phase) => cells.push(phase))
         cells.push(this.cycleTime)
-        return cells.map((value, index) => (<th key={"header_" + index}>{value}</th>));
+        return cells.map((value, index) => (<td key={"header_" + index}>{value}</td>));
     }
 
     computeAverage(phase) {
-        return phase.reduce((a, b) => a + b, 0) / phase.length;
+        return (phase.reduce((a, b) => a + b, 0) / phase.length).toFixed(2) + " day(s)";
     }
 
 }
