@@ -41,10 +41,10 @@ export default class Filters extends React.Component {
         return (
             <div id="filters_block">
                 <div className="col-md-6">
-                    {rangeFilters}
+                    {categoryFilters}
                 </div>
                 <div className="col-md-6">
-                    {categoryFilters}
+                    {rangeFilters}
                 </div>
             </div>
         );

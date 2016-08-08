@@ -31,7 +31,6 @@ class Duration extends React.Component {
         super();
         this.state = {
             matchers: [],
-            taskFilter: (task) => true,
             columnChart: null,
             scatterChart: null,
             dashboard: null,
@@ -39,25 +38,24 @@ class Duration extends React.Component {
         };
         this.updateTable = this.updateTable.bind(this);
         this.update = this.update.bind(this);
+        this.taskFilter = this.taskFilter.bind(this);
     }
 
     update() {
         let matchers = RAW_DATA_COL.FILTERS
             .map((filter, index) => ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected);
         this.setState({
-            matchers: matchers,
-            taskFilter: (task) => {
-                for (var index = 0; index < this.state.matchers.length; index++) {
-                    if (!this.state.matchers[index].match(task.filters[index])) {
-                        if(task.events[4] != null){
-                            debugger;
-                        }
-                        return false;
-                    }
-                }
-                return true;
-            }
+            matchers: matchers
         });
+    }
+
+    taskFilter(task) {
+        for (var index = 0; index < this.state.matchers.length; index++) {
+            if (!this.state.matchers[index].match(task.filters[index])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     componentDidMount(){
@@ -99,10 +97,9 @@ class Duration extends React.Component {
 
             this.updateTable();
         }
-        let filteredTaskList = this.props.taskList.filter(this.state.taskFilter);
+        let filteredTaskList = this.props.taskList.filter(this.taskFilter);
         return (
             <Card cardTitle="Duration">
-                {this.props.taskList.length}
                 <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
                 <DurationStats taskList={filteredTaskList}/>
                 <div id="dashboard">

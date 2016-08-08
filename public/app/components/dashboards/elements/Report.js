@@ -90,7 +90,7 @@ class Report extends React.Component {
     }
 }
 
-Report.protoTypes = {
+Report.propTypes = {
     selector: React.PropTypes.oneOf([CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR])
 }
 

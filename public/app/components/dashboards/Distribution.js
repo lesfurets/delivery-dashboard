@@ -9,27 +9,32 @@ class Distribution extends React.Component {
     constructor() {
         super();
         this.state = {
-            taskFilter: (task) => true
+            matchers: []
         }
         this.update = this.update.bind(this)
+        this.taskFilter = this.taskFilter.bind(this)
     }
 
     update() {
+        let matchers = RAW_DATA_COL.FILTERS
+            .map((filter, index) => ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected);
         this.setState({
-            taskFilter: (task) => {
-                for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-                    if (!ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
+            matchers: matchers
         });
+    }
+
+    taskFilter(task) {
+        for (var index = 0; index < this.state.matchers.length; index++) {
+            if (!this.state.matchers[index].match(task.filters[index])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     computeStats(index) {
         var statsJson = this.props.taskList
-            .filter(this.state.taskFilter)
+            .filter(this.taskFilter)
             .map((task) => task.filters[index])
             .reduce((counter, item) => {
                 counter[item] = counter.hasOwnProperty(item) ? counter[item] + 1 : 1;
@@ -48,7 +53,7 @@ class Distribution extends React.Component {
             .map((filter, index) => (
                 <div className="col-md-4" key={index}>
                     <PieChart title={filter.label} data={this.computeStats(index)}/>
-                </div>))
+                </div>));
 
         return (
             <Card cardTitle="Distribution">
