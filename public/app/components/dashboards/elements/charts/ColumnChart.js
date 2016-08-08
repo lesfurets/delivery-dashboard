@@ -1,8 +1,8 @@
 import React from "react";
-import randomId from "../../../core/tools/randomId";
-import {buildSimpleChart} from "../../../core/charts/chartFactory";
+import randomId from "../../../../core/tools/randomId";
+import {buildDurationColumnChart} from "../../../../core/charts/chartFactory";
 
-export default class PieChart extends React.Component {
+export default class ColumnChart extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -13,7 +13,7 @@ export default class PieChart extends React.Component {
 
     componentDidMount() {
         this.setState({
-            chart: buildSimpleChart(this.state.chartId, "PieChart",this.props.title)
+            chart: buildDurationColumnChart(this.state.chartId)
         });
     }
 
@@ -26,6 +26,6 @@ export default class PieChart extends React.Component {
     }
 }
 
-PieChart.defaultProps = {
-    title: "PieChart"
+ColumnChart.defaultProps = {
+    title: "Column Chart"
 }

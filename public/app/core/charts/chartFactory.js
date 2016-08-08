@@ -63,10 +63,9 @@ export const buildRangeFilter = function(elementId) {
  **************************/
 
 export const buildDurationColumnChart = function(elementId, columns) {
-    var durationChart = new google.visualization.ChartWrapper({
+    var options = {
         'chartType': 'ColumnChart',
         'containerId': elementId,
-        'view': {'columns': columns},
         'options': {
             'tooltip': { isHtml: true },
             'height': 400,
@@ -87,7 +86,11 @@ export const buildDurationColumnChart = function(elementId, columns) {
                 'height': '100%'
             },
         }
-    });
+    };
+    if(columns != null){
+        options.view = {'columns': columns};
+    }
+    var durationChart = new google.visualization.ChartWrapper(options);
     setTaskSelectListener(durationChart);
     return durationChart;
 }

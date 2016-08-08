@@ -19,12 +19,14 @@ import {
     DURATION_INDEX_STATIC_GROUP_ALL,
     computeDurationData,
     computeDurationStats,
-    groupDurationDataBy
+    groupDurationDataBy,
+    computeDurations
 } from "../../core/data/durationData";
 import Card from "./elements/Card";
 import OldFilters from "./elements/Filters";
 import Filters from "./elements/filtering/Filters";
 import DurationStats from "./elements/DurationStats";
+import ColumnChart from "./elements/charts/ColumnChart";
 
 class Duration extends React.Component {
     constructor(){
@@ -88,6 +90,7 @@ class Duration extends React.Component {
             this.state.statTable.draw();
         }
     };
+
     render() {
         if(this.state.columnChart != null && this.props.taskList.length != 0) {
             var durationData = computeDurationData(buildTaskTable(this.props.taskList));
@@ -97,11 +100,15 @@ class Duration extends React.Component {
 
             this.updateTable();
         }
+
+
         let filteredTaskList = this.props.taskList.filter(this.taskFilter);
+
         return (
             <Card cardTitle="Duration">
                 <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
                 <DurationStats taskList={filteredTaskList}/>
+                <ColumnChart data={computeDurations(filteredTaskList)}/>
                 <div id="dashboard">
                     <OldFilters/>
                     <div id="duration_stats"></div>

@@ -3,7 +3,7 @@ import ReactDom from "react-dom";
 import {taskListConnect} from "../../redux/jiraConnect";
 import Card from "./elements/Card";
 import Filters from "./elements/filtering/Filters";
-import PieChart from "./elements/PieChart";
+import PieChart from "./elements/charts/PieChart";
 
 class Distribution extends React.Component {
     constructor() {

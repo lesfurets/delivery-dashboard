@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1a5741914e084c171ee8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f7e2fdc18204a9637152"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -586,7 +586,7 @@
 	__webpack_require__(5);
 	__webpack_require__(78);
 	__webpack_require__(80);
-	module.exports = __webpack_require__(384);
+	module.exports = __webpack_require__(385);
 
 
 /***/ },
@@ -8223,19 +8223,19 @@
 
 	var _Duration2 = _interopRequireDefault(_Duration);
 
-	var _Distribution = __webpack_require__(375);
+	var _Distribution = __webpack_require__(376);
 
 	var _Distribution2 = _interopRequireDefault(_Distribution);
 
-	var _MonthlyReport = __webpack_require__(377);
+	var _MonthlyReport = __webpack_require__(378);
 
 	var _MonthlyReport2 = _interopRequireDefault(_MonthlyReport);
 
-	var _PeriodReport = __webpack_require__(382);
+	var _PeriodReport = __webpack_require__(383);
 
 	var _PeriodReport2 = _interopRequireDefault(_PeriodReport);
 
-	var _TaskManager = __webpack_require__(383);
+	var _TaskManager = __webpack_require__(384);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -37067,8 +37067,8 @@
 	            });
 	        }
 
-	        for (var index = 0; index < task.events.length - 1 && task.event[index] != null && task.event[index + 1] != null; index++) {
-	            task.durations.push(computeDuration(event, task.events[index + 1], RAW_DATA_COL.EVENTS[index].correction));
+	        for (var index = 0; index < task.events.length - 1 && task.events[index] != null && task.events[index + 1] != null; index++) {
+	            task.durations.push(computeDuration(task.events[index], task.events[index + 1], RAW_DATA_COL.EVENTS[index].correction));
 	        }
 
 	        var firstEventDate = task.events[0];
@@ -37406,10 +37406,9 @@
 	 **************************/
 
 	var buildDurationColumnChart = exports.buildDurationColumnChart = function buildDurationColumnChart(elementId, columns) {
-	    var durationChart = new google.visualization.ChartWrapper({
+	    var options = {
 	        'chartType': 'ColumnChart',
 	        'containerId': elementId,
-	        'view': { 'columns': columns },
 	        'options': {
 	            'tooltip': { isHtml: true },
 	            'height': 400,
@@ -37430,7 +37429,11 @@
 	                'height': '100%'
 	            }
 	        }
-	    });
+	    };
+	    if (columns != null) {
+	        options.view = { 'columns': columns };
+	    }
+	    var durationChart = new google.visualization.ChartWrapper(options);
 	    setTaskSelectListener(durationChart);
 	    return durationChart;
 	};
@@ -37750,6 +37753,10 @@
 
 	var _DurationStats2 = _interopRequireDefault(_DurationStats);
 
+	var _ColumnChart = __webpack_require__(375);
+
+	var _ColumnChart2 = _interopRequireDefault(_ColumnChart);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37767,9 +37774,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Duration).call(this));
 
 	        _this.state = {
-	            taskFilter: function taskFilter(task) {
-	                return true;
-	            },
+	            matchers: [],
 	            columnChart: null,
 	            scatterChart: null,
 	            dashboard: null,
@@ -37777,6 +37782,7 @@
 	        };
 	        _this.updateTable = _this.updateTable.bind(_this);
 	        _this.update = _this.update.bind(_this);
+	        _this.taskFilter = _this.taskFilter.bind(_this);
 	        return _this;
 	    }
 
@@ -37785,16 +37791,22 @@
 	        value: function update() {
 	            var _this2 = this;
 
-	            this.setState({
-	                taskFilter: function taskFilter(task) {
-	                    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-	                        if (!_reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
-	                            return false;
-	                        }
-	                    }
-	                    return true;
-	                }
+	            var matchers = RAW_DATA_COL.FILTERS.map(function (filter, index) {
+	                return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
 	            });
+	            this.setState({
+	                matchers: matchers
+	            });
+	        }
+	    }, {
+	        key: "taskFilter",
+	        value: function taskFilter(task) {
+	            for (var index = 0; index < this.state.matchers.length; index++) {
+	                if (!this.state.matchers[index].match(task.filters[index])) {
+	                    return false;
+	                }
+	            }
+	            return true;
 	        }
 	    }, {
 	        key: "componentDidMount",
@@ -37841,12 +37853,15 @@
 
 	                this.updateTable();
 	            }
-	            var filteredTaskList = this.props.taskList.filter(this.state.taskFilter);
+
+	            var filteredTaskList = this.props.taskList.filter(this.taskFilter);
+
 	            return _react2.default.createElement(
 	                _Card2.default,
 	                { cardTitle: "Duration" },
 	                _react2.default.createElement(_Filters4.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update }),
 	                _react2.default.createElement(_DurationStats2.default, { taskList: filteredTaskList }),
+	                _react2.default.createElement(_ColumnChart2.default, { data: (0, _durationData.computeDurations)(filteredTaskList) }),
 	                _react2.default.createElement(
 	                    "div",
 	                    { id: "dashboard" },
@@ -37878,7 +37893,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = undefined;
+	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = exports.computeDurations = undefined;
 
 	var _taskData = __webpack_require__(357);
 
@@ -37891,6 +37906,26 @@
 	var _dataUtils = __webpack_require__(367);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var computeDurations = exports.computeDurations = function computeDurations(taskList) {
+	    var header = ["Key"];
+	    for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+	        header.push(RAW_DATA_COL.EVENTS[i].label);
+	    }
+
+	    var data = taskList.map(function (task) {
+	        var line = new Array(RAW_DATA_COL.EVENTS.length);
+	        line[0] = task.key;
+	        task.durations.forEach(function (duration, index) {
+	            return line[index + 1] = duration;
+	        });
+	        return line;
+	    });
+
+	    data.unshift(header);
+
+	    return data;
+	};
 
 	var DURATION_INDEX_STATIC_FIRST = exports.DURATION_INDEX_STATIC_FIRST = _taskData.TASK_INDEX_FILTER_LAST + 1;
 	var DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
@@ -38255,12 +38290,12 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "col-md-6" },
-	                    rangeFilters
+	                    categoryFilters
 	                ),
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "col-md-6" },
-	                    categoryFilters
+	                    rangeFilters
 	                )
 	            );
 	        }
@@ -38608,61 +38643,30 @@
 	    _createClass(DurationStats, [{
 	        key: "render",
 	        value: function render() {
-	            var header = [_react2.default.createElement(
-	                "th",
-	                null,
-	                "Tasks"
-	            )];
-	            for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
-	                header.push(_react2.default.createElement(
-	                    "th",
-	                    null,
-	                    RAW_DATA_COL.EVENTS[index].label
-	                ));
-	            }
-	            header.push(_react2.default.createElement(
-	                "th",
-	                null,
-	                "Cycle Time"
-	            ));
-
 	            var stats = this.props.taskList.reduce(function (collector, task) {
 	                return collector.add(task);
-	            }, new AverageCollector()).computeStats().map(function (stat) {
-	                return _react2.default.createElement(
-	                    "td",
-	                    null,
-	                    stat
-	                );
-	            });
+	            }, new TaskCollector()).getStatistics();
+
 	            return _react2.default.createElement(
 	                "table",
 	                { className: "table table-hover" },
 	                _react2.default.createElement(
 	                    "thead",
 	                    null,
-	                    " ",
 	                    _react2.default.createElement(
 	                        "tr",
 	                        null,
-	                        " ",
-	                        header,
-	                        " "
-	                    ),
-	                    " "
+	                        stats.getHeader()
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    "tbody",
 	                    null,
-	                    " ",
 	                    _react2.default.createElement(
 	                        "tr",
 	                        null,
-	                        " ",
-	                        stats,
-	                        " "
-	                    ),
-	                    " "
+	                        stats.getValues()
+	                    )
 	                )
 	            );
 	        }
@@ -38673,53 +38677,101 @@
 
 	exports.default = DurationStats;
 
-	var AverageCollector = function () {
-	    function AverageCollector() {
-	        _classCallCheck(this, AverageCollector);
+	var TaskCollector = function () {
+	    function TaskCollector() {
+	        _classCallCheck(this, TaskCollector);
 
-	        this.cycleTime = [];
-	        this.phasesDuration = [];
+	        this.cycleTimeList = [];
+	        this.phasesDurationList = [];
+	        this.count = 0;
 	    }
 
-	    _createClass(AverageCollector, [{
+	    _createClass(TaskCollector, [{
 	        key: "add",
 	        value: function add(task) {
 	            var _this2 = this;
 
-	            debugger;
 	            if (task.cycleTime != null) {
-	                this.cycleTime.push(task.cycleTime);
+	                this.cycleTimeList.push(task.cycleTime);
 	            }
 
-	            task.events.forEach(function (event, index) {
-	                if (_this2.phasesDuration[index] == null) {
-	                    _this2.phasesDuration[index] = [event];
+	            task.durations.forEach(function (duration, index) {
+	                if (_this2.phasesDurationList[index] == null) {
+	                    _this2.phasesDurationList[index] = [duration];
 	                } else {
-	                    _this2.phasesDuration[index].push([event]);
+	                    _this2.phasesDurationList[index].push(duration);
 	                }
+	            });
+
+	            this.count++;
+
+	            return this;
+	        }
+	    }, {
+	        key: "getStatistics",
+	        value: function getStatistics() {
+	            return new TaskStatistic(this);
+	        }
+	    }]);
+
+	    return TaskCollector;
+	}();
+
+	var TaskStatistic = function () {
+	    function TaskStatistic(taskCollector) {
+	        var _this3 = this;
+
+	        _classCallCheck(this, TaskStatistic);
+
+	        this.phasesDuration = taskCollector.phasesDurationList.map(function (phase) {
+	            return _this3.computeAverage(phase);
+	        });
+	        this.cycleTime = this.computeAverage(taskCollector.cycleTimeList);
+	        this.count = taskCollector.count;
+	    }
+
+	    _createClass(TaskStatistic, [{
+	        key: "getHeader",
+	        value: function getHeader() {
+	            var cells = ["Tasks"];
+	            this.phasesDuration.forEach(function (phase, index) {
+	                return cells.push(RAW_DATA_COL.EVENTS[index].label);
+	            });
+	            cells.push("Cycle Time");
+	            return cells.map(function (value, index) {
+	                return _react2.default.createElement(
+	                    "th",
+	                    { key: "header_" + index },
+	                    value
+	                );
 	            });
 	        }
 	    }, {
-	        key: "computeStats",
-	        value: function computeStats() {
-	            var _this3 = this;
-
-	            var averageList = [];
+	        key: "getValues",
+	        value: function getValues() {
+	            var cells = [this.count];
 	            this.phasesDuration.forEach(function (phase) {
-	                return averageList.push(_this3.computeAverage(phase));
+	                return cells.push(phase);
 	            });
-	            averageList.push(this.computeAverage(this.cycleTime));
+	            cells.push(this.cycleTime);
+	            return cells.map(function (value, index) {
+	                return _react2.default.createElement(
+	                    "td",
+	                    { key: "header_" + index },
+	                    value
+	                );
+	            });
 	        }
 	    }, {
 	        key: "computeAverage",
 	        value: function computeAverage(phase) {
-	            return phase.reduce(function (a, b) {
+	            return (phase.reduce(function (a, b) {
 	                return a + b;
-	            }, 0) / phase.length;
+	            }, 0) / phase.length).toFixed(2) + " day(s)";
 	        }
 	    }]);
 
-	    return AverageCollector;
+	    return TaskStatistic;
 	}();
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DurationStats.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -38727,6 +38779,84 @@
 
 /***/ },
 /* 375 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _randomId = __webpack_require__(373);
+
+	var _randomId2 = _interopRequireDefault(_randomId);
+
+	var _chartFactory = __webpack_require__(361);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ColumnChart = function (_React$Component) {
+	    _inherits(ColumnChart, _React$Component);
+
+	    function ColumnChart() {
+	        _classCallCheck(this, ColumnChart);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnChart).call(this));
+
+	        _this.state = {
+	            chartId: (0, _randomId2.default)(),
+	            chart: null
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ColumnChart, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            this.setState({
+	                chart: (0, _chartFactory.buildDurationColumnChart)(this.state.chartId)
+	            });
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            if (this.state.chart != null) {
+	                this.state.chart.setDataTable(google.visualization.arrayToDataTable(this.props.data));
+	                this.state.chart.draw();
+	            }
+	            return _react2.default.createElement("div", { id: this.state.chartId });
+	        }
+	    }]);
+
+	    return ColumnChart;
+	}(_react2.default.Component);
+
+	exports.default = ColumnChart;
+
+
+	ColumnChart.defaultProps = {
+	    title: "Column Chart"
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "ColumnChart.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38757,7 +38887,7 @@
 
 	var _Filters2 = _interopRequireDefault(_Filters);
 
-	var _PieChart = __webpack_require__(376);
+	var _PieChart = __webpack_require__(377);
 
 	var _PieChart2 = _interopRequireDefault(_PieChart);
 
@@ -38778,11 +38908,10 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Distribution).call(this));
 
 	        _this.state = {
-	            taskFilter: function taskFilter(task) {
-	                return true;
-	            }
+	            matchers: []
 	        };
 	        _this.update = _this.update.bind(_this);
+	        _this.taskFilter = _this.taskFilter.bind(_this);
 	        return _this;
 	    }
 
@@ -38791,21 +38920,27 @@
 	        value: function update() {
 	            var _this2 = this;
 
-	            this.setState({
-	                taskFilter: function taskFilter(task) {
-	                    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-	                        if (!_reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected.match(task.filters[index])) {
-	                            return false;
-	                        }
-	                    }
-	                    return true;
-	                }
+	            var matchers = RAW_DATA_COL.FILTERS.map(function (filter, index) {
+	                return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
 	            });
+	            this.setState({
+	                matchers: matchers
+	            });
+	        }
+	    }, {
+	        key: "taskFilter",
+	        value: function taskFilter(task) {
+	            for (var index = 0; index < this.state.matchers.length; index++) {
+	                if (!this.state.matchers[index].match(task.filters[index])) {
+	                    return false;
+	                }
+	            }
+	            return true;
 	        }
 	    }, {
 	        key: "computeStats",
 	        value: function computeStats(index) {
-	            var statsJson = this.props.taskList.filter(this.state.taskFilter).map(function (task) {
+	            var statsJson = this.props.taskList.filter(this.taskFilter).map(function (task) {
 	                return task.filters[index];
 	            }).reduce(function (counter, item) {
 	                counter[item] = counter.hasOwnProperty(item) ? counter[item] + 1 : 1;
@@ -38852,7 +38987,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 376 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38923,14 +39058,14 @@
 
 
 	PieChart.defaultProps = {
-	    title: "PieChart"
+	    title: "Pie Chart"
 	};
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "PieChart.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 377 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38953,7 +39088,7 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _Report = __webpack_require__(378);
+	var _Report = __webpack_require__(379);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -38990,7 +39125,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 378 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39017,15 +39152,15 @@
 
 	var _durationData = __webpack_require__(365);
 
-	var _MonthSelector = __webpack_require__(379);
+	var _MonthSelector = __webpack_require__(380);
 
 	var _MonthSelector2 = _interopRequireDefault(_MonthSelector);
 
-	var _PeriodSelector = __webpack_require__(380);
+	var _PeriodSelector = __webpack_require__(381);
 
 	var _PeriodSelector2 = _interopRequireDefault(_PeriodSelector);
 
-	var _Switch = __webpack_require__(381);
+	var _Switch = __webpack_require__(382);
 
 	var _Switch2 = _interopRequireDefault(_Switch);
 
@@ -39148,7 +39283,7 @@
 	    return Report;
 	}(_react2.default.Component);
 
-	Report.protoTypes = {
+	Report.propTypes = {
 	    selector: _react2.default.PropTypes.oneOf([_definition.CONFIG_MONTH_SELECTOR, _definition.CONFIG_PERIOD_SELECTOR])
 	};
 
@@ -39158,7 +39293,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 379 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39272,7 +39407,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 380 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39355,7 +39490,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 381 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39451,7 +39586,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 382 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39474,7 +39609,7 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _Report = __webpack_require__(378);
+	var _Report = __webpack_require__(379);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -39511,7 +39646,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 383 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39635,23 +39770,23 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 384 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(385);
+	var content = __webpack_require__(386);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(387)(content, {});
+	var update = __webpack_require__(388)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(385, function() {
-				var newContent = __webpack_require__(385);
+			module.hot.accept(386, function() {
+				var newContent = __webpack_require__(386);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -39661,10 +39796,10 @@
 	}
 
 /***/ },
-/* 385 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(386)();
+	exports = module.exports = __webpack_require__(387)();
 	// imports
 
 
@@ -39675,7 +39810,7 @@
 
 
 /***/ },
-/* 386 */
+/* 387 */
 /***/ function(module, exports) {
 
 	/*
@@ -39731,7 +39866,7 @@
 
 
 /***/ },
-/* 387 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

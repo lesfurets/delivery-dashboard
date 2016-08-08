@@ -3,6 +3,24 @@ import { DATA_NUMBER, DATA_STRING } from '../definition'
 import durationTooltip from '../tools/tooltip'
 import { constantColumnBuilder, columnBuilder, aggregatorBuilder } from './dataUtils'
 
+export const computeDurations = function(taskList) {
+    let header = ["Key"]
+    for (let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+        header.push(RAW_DATA_COL.EVENTS[i].label);
+    }
+
+    let data = taskList.map((task) => {
+        let line = new Array(RAW_DATA_COL.EVENTS.length);
+        line[0] = task.key;
+        task.durations.forEach((duration, index) =>  line[index + 1] = duration);
+        return line;
+    })
+
+    data.unshift(header);
+
+    return data;
+}
+
 export const DURATION_INDEX_STATIC_FIRST = TASK_INDEX_FILTER_LAST + 1;
 export const DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
 export const DURATION_INDEX_STATIC_COUNT = DURATION_INDEX_STATIC_GROUP_ALL + 1;
