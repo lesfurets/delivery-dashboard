@@ -2,7 +2,7 @@ import React from "react";
 import randomId from "../../../core/tools/randomId";
 import {buildSimpleChart} from "../../../core/charts/chartFactory";
 
-export default class Card extends React.Component {
+export default class PieChart extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -26,6 +26,6 @@ export default class Card extends React.Component {
     }
 }
 
-Card.defaultProps = {
+PieChart.defaultProps = {
     title: "PieChart"
 }

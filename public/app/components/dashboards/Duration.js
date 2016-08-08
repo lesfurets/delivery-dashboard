@@ -24,6 +24,7 @@ import {
 import Card from "./elements/Card";
 import OldFilters from "./elements/Filters";
 import Filters from "./elements/filtering/Filters";
+import DurationStats from "./elements/DurationStats";
 
 class Duration extends React.Component {
     constructor(){
@@ -91,16 +92,17 @@ class Duration extends React.Component {
 
             this.updateTable();
         }
+        let filteredTaskList = this.props.taskList.filter(this.state.taskFilter);
         return (
             <Card cardTitle="Duration">
+                <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
+                <DurationStats taskList={filteredTaskList}/>
                 <div id="dashboard">
                     <OldFilters/>
                     <div id="duration_stats"></div>
                     <div id="column_chart"></div>
                     <div id="scatter_chart"></div>
                 </div>
-                <Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/>
-                {this.props.taskList.filter(this.state.taskFilter).length}
             </Card>
         );
     }

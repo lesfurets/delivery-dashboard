@@ -34,11 +34,9 @@ export const parseJiraJson = function (jiraData) {
                 task.filters.push(getJiraValue(issue, element.jiraField, element.dataType)));
         }
 
-        task.events.forEach((event, index) => {
-            if (event != null && task.events.length > index + 1) {
-                task.durations.push(computeDuration(event, task.events[index + 1], RAW_DATA_COL.EVENTS[index].correction));
-            }
-        })
+        for (var index = 0; index < task.events.length - 1 && task.events[index] != null && task.events[index + 1] != null; index++) {
+            task.durations.push(computeDuration(task.events[index], task.events[index + 1], RAW_DATA_COL.EVENTS[index].correction));
+        }
 
         var firstEventDate = task.events[0];
         var lastEventDate = task.events[task.events.length - 1];
