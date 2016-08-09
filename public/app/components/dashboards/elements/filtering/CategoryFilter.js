@@ -58,3 +58,7 @@ export default class CategoryFilter extends React.Component {
         );
     }
 }
+
+CategoryFilter.protoTypes = {
+    onChange: React.PropTypes.func.isRequired
+}

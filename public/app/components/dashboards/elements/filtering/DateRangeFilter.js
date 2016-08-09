@@ -14,8 +14,8 @@ export default class DateRangeFilter extends React.Component {
 
     componentDidMount() {
         var startDate = this.props.startDate;
-        var rangeStart = this.props.rangeStartDate;
-        var rangeEnd = this.props.rangeEndDate;
+        var rangeStart = this.props.rangeStartDate == null ? this.props.startDate : this.props.rangeStartDate;
+        var rangeEnd = this.props.rangeEndDate == null ? new Date() : this.props.rangeEndDate;
 
         var update = this.update;
         update(rangeStart, rangeEnd);
@@ -35,7 +35,7 @@ export default class DateRangeFilter extends React.Component {
 
     update(startDate, endDate) {
         this.setState({
-            matcher: {match: (date) => date >= startDate && date <= endDate}
+            matcher: new DataMatcher((date) => date >= startDate && date <= endDate)
         }, this.props.onChange)
     }
 
@@ -48,4 +48,8 @@ export default class DateRangeFilter extends React.Component {
             </div>
         );
     }
+}
+
+DateRangeFilter.protoTypes = {
+    onChange: React.PropTypes.func.isRequired
 }

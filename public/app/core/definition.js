@@ -21,9 +21,6 @@ export const ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
 export const ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
 export const ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
 
-export const CONFIG_MONTH_SELECTOR = "month_selector";
-export const CONFIG_PERIOD_SELECTOR = "pediod_selector";
-
 export const DATA_DATE = "date";
 export const DATA_STRING = "string";
 export const DATA_NUMBER = "number";
