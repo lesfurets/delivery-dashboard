@@ -27,9 +27,6 @@ class Duration extends React.Component {
     taskFilter(task) {
         for (var index = 0; index < this.state.matcherList.length; index++) {
             if (!this.state.matcherList[index].match(task.filters[index])) {
-                if(task.key == "AMX-11956"){
-                    debugger;
-                }
                 return false;
             }
         }

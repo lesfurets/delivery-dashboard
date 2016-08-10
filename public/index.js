@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f7e2fdc18204a9637152"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1bfd1583c43b839f05c5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -586,7 +586,7 @@
 	__webpack_require__(5);
 	__webpack_require__(78);
 	__webpack_require__(80);
-	module.exports = __webpack_require__(385);
+	module.exports = __webpack_require__(388);
 
 
 /***/ },
@@ -8219,23 +8219,23 @@
 
 	var _CumulativeFlow2 = _interopRequireDefault(_CumulativeFlow);
 
-	var _Duration = __webpack_require__(364);
+	var _Duration = __webpack_require__(366);
 
 	var _Duration2 = _interopRequireDefault(_Duration);
 
-	var _Distribution = __webpack_require__(376);
+	var _Distribution = __webpack_require__(379);
 
 	var _Distribution2 = _interopRequireDefault(_Distribution);
 
-	var _MonthlyReport = __webpack_require__(378);
+	var _MonthlyReport = __webpack_require__(382);
 
 	var _MonthlyReport2 = _interopRequireDefault(_MonthlyReport);
 
-	var _PeriodReport = __webpack_require__(383);
+	var _PeriodReport = __webpack_require__(386);
 
 	var _PeriodReport2 = _interopRequireDefault(_PeriodReport);
 
-	var _TaskManager = __webpack_require__(384);
+	var _TaskManager = __webpack_require__(387);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -36196,9 +36196,6 @@
 	var ID_MONTH_SELECTOR_LABEL = exports.ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
 	var ID_MONTH_SELECTOR_LIST = exports.ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
 
-	var CONFIG_MONTH_SELECTOR = exports.CONFIG_MONTH_SELECTOR = "month_selector";
-	var CONFIG_PERIOD_SELECTOR = exports.CONFIG_PERIOD_SELECTOR = "pediod_selector";
-
 	var DATA_DATE = exports.DATA_DATE = "date";
 	var DATA_STRING = exports.DATA_STRING = "string";
 	var DATA_NUMBER = exports.DATA_NUMBER = "number";
@@ -37263,11 +37260,13 @@
 
 	var _jiraConnect = __webpack_require__(353);
 
-	var _chartFactory = __webpack_require__(361);
+	var _eventData = __webpack_require__(361);
 
-	var _eventData = __webpack_require__(362);
+	var _AreaChart = __webpack_require__(362);
 
-	var _Card = __webpack_require__(363);
+	var _AreaChart2 = _interopRequireDefault(_AreaChart);
+
+	var _Card = __webpack_require__(365);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
@@ -37285,36 +37284,16 @@
 	    function CumulativeFlow() {
 	        _classCallCheck(this, CumulativeFlow);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CumulativeFlow).call(this));
-
-	        _this.state = { dashboard: null };
-	        return _this;
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(CumulativeFlow).apply(this, arguments));
 	    }
 
 	    _createClass(CumulativeFlow, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var areaChart = (0, _chartFactory.buildCumulativeFlowChart)("cumulative_flow_area_chart", 400);
-	            var chartRangeFilter = (0, _chartFactory.buildRangeFilter)("cumulative_flow_range_filter");
-	            var dashboard = new google.visualization.Dashboard(document.getElementById("cumulative_flow_dashboard"));
-	            dashboard.bind([chartRangeFilter], areaChart);
-	            this.setState({ dashboard: dashboard });
-	        }
-	    }, {
 	        key: 'render',
 	        value: function render() {
-	            if (this.state.dashboard != null) {
-	                this.state.dashboard.draw((0, _eventData.computeEventData)(this.props.rawData));
-	            }
 	            return _react2.default.createElement(
 	                _Card2.default,
 	                { cardTitle: 'Cumulative Flow Test' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { id: 'cumulative_flow_dashboard', 'class': 'col-md-12 card-block' },
-	                    _react2.default.createElement('div', { id: 'cumulative_flow_area_chart', className: 'col-md-12 card-block' }),
-	                    _react2.default.createElement('div', { id: 'cumulative_flow_range_filter', className: 'col-md-12 card-block' })
-	                )
+	                _react2.default.createElement(_AreaChart2.default, { data: (0, _eventData.computeEvent)(this.props.taskList) })
 	            );
 	        }
 	    }]);
@@ -37322,13 +37301,275 @@
 	    return CumulativeFlow;
 	}(_react2.default.Component);
 
-	exports.default = (0, _jiraConnect.rawDataConnect)(CumulativeFlow);
+	exports.default = (0, _jiraConnect.taskListConnect)(CumulativeFlow);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "CumulativeFlow.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
 /* 361 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.computeEventData = exports.computeEvent = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _taskData = __webpack_require__(357);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var EventCounter = function () {
+	    function EventCounter(date) {
+	        _classCallCheck(this, EventCounter);
+
+	        this.date = date;
+	        this.counters = Array.apply(null, { length: RAW_DATA_COL.EVENTS.length }).map(Number.prototype.valueOf, 0);
+	    }
+
+	    _createClass(EventCounter, [{
+	        key: "add",
+	        value: function add(counter) {
+	            var _this = this;
+
+	            RAW_DATA_COL.EVENTS.forEach(function (event, index) {
+	                return _this.counters[index] = _this.counters[index] + counter.counters[index];
+	            });
+	            return this;
+	        }
+	    }, {
+	        key: "toArray",
+	        value: function toArray() {
+	            var eventArray = [this.date];
+	            this.counters.forEach(function (counter) {
+	                return eventArray.push(counter);
+	            });
+	            return eventArray;
+	        }
+	    }]);
+
+	    return EventCounter;
+	}();
+
+	// We want to extract all events from a task
+	// Input :
+	// ╔═══════╦═════════╦═════════╦═════════╗
+	// ║ Ref   ║ Event 1 ║ Event 2 ║ Event 3 ║
+	// ╠═══════╬═════════╬═════════╬═════════╣
+	// ║Task 1 ║ 01/01   ║ 01/02   ║ 01/03   ║
+	// ║Task 2 ║ 01/01   ║ 01/04   ║ 01/04   ║
+	// ╚═══════╩═════════╩═════════╩═════════╝
+	// Output :
+	// ╔═══════╦═════════╦═════════╦═════════╗
+	// ║ Date  ║ Event 1 ║ Event 2 ║ Event 3 ║
+	// ╠═══════╬═════════╬═════════╬═════════╣
+	// ║ 01/01 ║       2 ║       0 ║       0 ║
+	// ║ 01/02 ║       0 ║       1 ║       0 ║
+	// ║ 01/03 ║       0 ║       0 ║       1 ║
+	// ║ 01/04 ║       0 ║       1 ║       1 ║
+	// ╚═══════╩═════════╩═════════╩═════════╝
+	// Then we build a cumulative table
+	// ╔═══════╦═════════╦═════════╦═════════╗
+	// ║ Date  ║ Event 1 ║ Event 2 ║ Event 3 ║
+	// ╠═══════╬═════════╬═════════╬═════════╣
+	// ║ 01/01 ║       2 ║       0 ║       0 ║
+	// ║ 01/02 ║       2 ║       1 ║       0 ║
+	// ║ 01/03 ║       2 ║       2 ║       1 ║
+	// ║ 01/04 ║       2 ║       2 ║       2 ║
+	// ╚═══════╩═════════╩═════════╩═════════╝
+
+	var computeEvent = exports.computeEvent = function computeEvent(taskList) {
+	    var statByDateMap = {};
+	    taskList.forEach(function (task) {
+	        for (var i = 0; i < task.events.length && task.events[i] != null; i++) {
+	            var fotmatedDate = task.events[i].formatYYYYMMDD();
+	            if (!(fotmatedDate in statByDateMap)) {
+	                statByDateMap[fotmatedDate] = new EventCounter(task.events[i]);
+	            }
+	            statByDateMap[fotmatedDate].counters[i]++;
+	        }
+	    });
+
+	    var cumulativeStats = [];
+	    Object.keys(statByDateMap).sort().map(function (date) {
+	        return statByDateMap[date];
+	    }).reduce(function (a, b, i) {
+	        return cumulativeStats[i] = b.add(a);
+	    }, new EventCounter());
+
+	    var header = ["Date"];
+	    RAW_DATA_COL.EVENTS.forEach(function (event) {
+	        return header.push(event.label);
+	    });
+
+	    var cumulativeArray = [header];
+	    cumulativeStats.forEach(function (counter) {
+	        return cumulativeArray.push(counter.toArray());
+	    });
+
+	    return cumulativeArray;
+	};
+
+	var computeEventData = exports.computeEventData = function computeEventData(inputData) {
+	    // Count the number of events at each day
+	    var eventsNb = RAW_DATA_COL.EVENTS.length;
+	    var eventsByDateMap = {};
+	    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
+	        for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
+	            var eventDate = inputData.getValue(index, _taskData.TASK_INDEX_EVENTS_FIRST + eventIndex);
+	            if (eventDate != null) {
+	                var indexDate = eventDate.formatYYYYMMDD();
+	                if (!(indexDate in eventsByDateMap)) {
+	                    eventsByDateMap[indexDate] = Array.apply(null, { length: eventsNb }).map(Number.prototype.valueOf, 0);
+	                }
+	                eventsByDateMap[indexDate][eventIndex]++;
+	            }
+	        }
+	    }
+
+	    // Order by date and add in a table with a cumulative count
+	    var cumulativeData = new google.visualization.DataTable();
+	    cumulativeData.addColumn('date', "EventDate");
+	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
+	        cumulativeData.addColumn('number', inputData.getColumnLabel(_taskData.TASK_INDEX_EVENTS_FIRST + index));
+	    }
+
+	    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
+	        var row = [new Date(dateString)];
+	        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
+	            row.push(dateIndex == 0 ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
+	        });
+	        cumulativeData.addRow(row);
+	    });
+
+	    return cumulativeData;
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "eventData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 362 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _randomId = __webpack_require__(363);
+
+	var _randomId2 = _interopRequireDefault(_randomId);
+
+	var _chartFactory = __webpack_require__(364);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AreaChart = function (_React$Component) {
+	    _inherits(AreaChart, _React$Component);
+
+	    function AreaChart() {
+	        _classCallCheck(this, AreaChart);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AreaChart).call(this));
+
+	        _this.state = {
+	            chartId: (0, _randomId2.default)(),
+	            filterId: (0, _randomId2.default)(),
+	            dashboardId: (0, _randomId2.default)(),
+	            dashboard: null
+	        };
+	        return _this;
+	    }
+
+	    _createClass(AreaChart, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            var areaChart = (0, _chartFactory.buildCumulativeFlowChart)(this.state.chartId, 400);
+	            var chartRangeFilter = (0, _chartFactory.buildRangeFilter)(this.state.filterId);
+
+	            var dashboard = new google.visualization.Dashboard(document.getElementById(this.state.dashboardId));
+	            dashboard.bind([chartRangeFilter], [areaChart]);
+
+	            this.setState({
+	                dashboard: dashboard
+	            });
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            if (this.state.dashboard != null) {
+	                this.state.dashboard.draw(google.visualization.arrayToDataTable(this.props.data));
+	            }
+	            return _react2.default.createElement(
+	                "div",
+	                { id: this.state.dashboardId },
+	                _react2.default.createElement("div", { id: this.state.chartId }),
+	                _react2.default.createElement("div", { id: this.state.filterId })
+	            );
+	        }
+	    }]);
+
+	    return AreaChart;
+	}(_react2.default.Component);
+
+	exports.default = AreaChart;
+
+
+	AreaChart.defaultProps = {
+	    title: "Column Chart"
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AreaChart.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 363 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function () {
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	    for (var i = 0; i < 10; i++) {
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    }return text;
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "randomId.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -37550,87 +37791,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 362 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.computeEventData = undefined;
-
-	var _taskData = __webpack_require__(357);
-
-	// We need one column with the date and as many columns with counters as there are events.
-	// We want to mark the number tasks moving to a special state every days
-	// So these lines :
-	// ╔═══════╦═════════╦═════════╦═════════╗
-	// ║ Ref   ║ Event 1 ║ Event 2 ║ Event 3 ║
-	// ╠═══════╬═════════╬═════════╬═════════╣
-	// ║Task 1 ║ 01/01   ║ 01/02   ║ 01/03   ║
-	// ║Task 2 ║ 01/01   ║ 01/04   ║ 01/04   ║
-	// ╚═══════╩═════════╩═════════╩═════════╝
-	// Should lead to this table :
-	// ╔═══════╦═════════╦═════════╦═════════╗
-	// ║ Date  ║ Event 1 ║ Event 2 ║ Event 3 ║
-	// ╠═══════╬═════════╬═════════╬═════════╣
-	// ║ 01/01 ║       2 ║       0 ║       0 ║
-	// ║ 01/02 ║       0 ║       1 ║       0 ║
-	// ║ 01/03 ║       0 ║       0 ║       1 ║
-	// ║ 01/04 ║       0 ║       1 ║       1 ║
-	// ╚═══════╩═════════╩═════════╩═════════╝
-	// Then we build a cumulative table
-	// ╔═══════╦═════════╦═════════╦═════════╗
-	// ║ Date  ║ Event 1 ║ Event 2 ║ Event 3 ║
-	// ╠═══════╬═════════╬═════════╬═════════╣
-	// ║ 01/01 ║       2 ║       0 ║       0 ║
-	// ║ 01/02 ║       2 ║       1 ║       0 ║
-	// ║ 01/03 ║       2 ║       2 ║       1 ║
-	// ║ 01/04 ║       2 ║       2 ║       2 ║
-	// ╚═══════╩═════════╩═════════╩═════════╝
-	var computeEventData = exports.computeEventData = function computeEventData(inputData) {
-	    // Count the number of events at each day
-	    var eventsNb = RAW_DATA_COL.EVENTS.length;
-	    var eventsByDateMap = {};
-	    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
-	        for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
-	            var eventDate = inputData.getValue(index, _taskData.TASK_INDEX_EVENTS_FIRST + eventIndex);
-	            if (eventDate != null) {
-	                var indexDate = eventDate.formatYYYYMMDD();
-	                if (!(indexDate in eventsByDateMap)) {
-	                    eventsByDateMap[indexDate] = Array.apply(null, { length: eventsNb }).map(Number.prototype.valueOf, 0);
-	                }
-	                eventsByDateMap[indexDate][eventIndex]++;
-	            }
-	        }
-	    }
-
-	    // Order by date and add in a table with a cumulative count
-	    var cumulativeData = new google.visualization.DataTable();
-	    cumulativeData.addColumn('date', "EventDate");
-	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-	        cumulativeData.addColumn('number', inputData.getColumnLabel(_taskData.TASK_INDEX_EVENTS_FIRST + index));
-	    }
-
-	    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
-	        var row = [new Date(dateString)];
-	        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
-	            row.push(dateIndex == 0 ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
-	        });
-	        cumulativeData.addRow(row);
-	    });
-
-	    return cumulativeData;
-	};
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "eventData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
-
-/***/ },
-/* 363 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -37708,7 +37869,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 364 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -37731,29 +37892,21 @@
 
 	var _jiraConnect = __webpack_require__(353);
 
-	var _chartFactory = __webpack_require__(361);
+	var _durationData = __webpack_require__(367);
 
-	var _taskData = __webpack_require__(357);
-
-	var _durationData = __webpack_require__(365);
-
-	var _Card = __webpack_require__(363);
+	var _Card = __webpack_require__(365);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
-	var _Filters = __webpack_require__(368);
+	var _Filters = __webpack_require__(370);
 
 	var _Filters2 = _interopRequireDefault(_Filters);
 
-	var _Filters3 = __webpack_require__(369);
-
-	var _Filters4 = _interopRequireDefault(_Filters3);
-
-	var _DurationStats = __webpack_require__(374);
+	var _DurationStats = __webpack_require__(377);
 
 	var _DurationStats2 = _interopRequireDefault(_DurationStats);
 
-	var _ColumnChart = __webpack_require__(375);
+	var _ColumnChart = __webpack_require__(378);
 
 	var _ColumnChart2 = _interopRequireDefault(_ColumnChart);
 
@@ -37774,13 +37927,8 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Duration).call(this));
 
 	        _this.state = {
-	            matchers: [],
-	            columnChart: null,
-	            scatterChart: null,
-	            dashboard: null,
-	            statTable: null
+	            matcherList: []
 	        };
-	        _this.updateTable = _this.updateTable.bind(_this);
 	        _this.update = _this.update.bind(_this);
 	        _this.taskFilter = _this.taskFilter.bind(_this);
 	        return _this;
@@ -37791,84 +37939,43 @@
 	        value: function update() {
 	            var _this2 = this;
 
-	            var matchers = RAW_DATA_COL.FILTERS.map(function (filter, index) {
-	                return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
-	            });
 	            this.setState({
-	                matchers: matchers
+	                matcherList: RAW_DATA_COL.FILTERS.map(function (filter, index) {
+	                    return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
+	                })
 	            });
 	        }
 	    }, {
 	        key: "taskFilter",
 	        value: function taskFilter(task) {
-	            for (var index = 0; index < this.state.matchers.length; index++) {
-	                if (!this.state.matchers[index].match(task.filters[index])) {
+	            for (var index = 0; index < this.state.matcherList.length; index++) {
+	                if (!this.state.matcherList[index].match(task.filters[index])) {
 	                    return false;
 	                }
 	            }
 	            return true;
 	        }
 	    }, {
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            var durationsColumns = [_taskData.TASK_INDEX_STATIC_REFERENCE];
-	            for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
-	                durationsColumns.push(_durationData.DURATION_INDEX_DURATION_FIRST + i);
-	                durationsColumns.push(_durationData.DURATION_INDEX_TOOLTIP);
-	            }
-
-	            var tasksDurationColumnChart = (0, _chartFactory.buildDurationColumnChart)("column_chart", durationsColumns);
-	            var tasksDurationScatterChart = (0, _chartFactory.buildDurationScatterChart)("scatter_chart", [_taskData.TASK_INDEX_EVENTS_LAST, _durationData.DURATION_INDEX_DURATION_LAST, _durationData.DURATION_INDEX_TOOLTIP, _durationData.DURATION_INDEX_STATITICS_AVERAGE, _durationData.DURATION_INDEX_STATITICS_50PCT, _durationData.DURATION_INDEX_STATITICS_90PCT]);
-	            var tasksDurationDashboard = (0, _chartFactory.buildFilteredDashboard)("dashboard", tasksDurationColumnChart, (0, _chartFactory.buildFilters)(), this.updateTable);
-	            var tasksDurationStatsTable = (0, _chartFactory.buildDataTable)("duration_stats");
-	            this.setState({
-	                columnChart: tasksDurationColumnChart,
-	                scatterChart: tasksDurationScatterChart,
-	                dashboard: tasksDurationDashboard,
-	                statTable: tasksDurationStatsTable
-	            });
-	        }
-	    }, {
-	        key: "updateTable",
-	        value: function updateTable() {
-	            var durationChartData = this.state.columnChart.getDataTable();
-	            var dataToDisplay = durationChartData != null ? durationChartData : (0, _durationData.computeDurationData)((0, _taskData.buildTaskTable)(this.props.taskList));
-
-	            if (dataToDisplay != null) {
-	                this.state.scatterChart.setDataTable((0, _durationData.computeDurationStats)(dataToDisplay));
-	                this.state.scatterChart.draw();
-
-	                this.state.statTable.setDataTable((0, _durationData.groupDurationDataBy)(dataToDisplay, _durationData.DURATION_INDEX_STATIC_GROUP_ALL));
-	                this.state.statTable.draw();
-	            }
-	        }
-	    }, {
 	        key: "render",
 	        value: function render() {
-	            if (this.state.columnChart != null && this.props.taskList.length != 0) {
-	                var durationData = (0, _durationData.computeDurationData)((0, _taskData.buildTaskTable)(this.props.taskList));
-	                this.state.dashboard.draw(durationData);
-	                var durationChartData = this.state.columnChart.getDataTable();
-	                var dataToDisplay = durationChartData != null ? durationChartData : durationData;
-
-	                this.updateTable();
-	            }
-
 	            var filteredTaskList = this.props.taskList.filter(this.taskFilter);
-
 	            return _react2.default.createElement(
 	                _Card2.default,
 	                { cardTitle: "Duration" },
-	                _react2.default.createElement(_Filters4.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update }),
-	                _react2.default.createElement(_DurationStats2.default, { taskList: filteredTaskList }),
-	                _react2.default.createElement(_ColumnChart2.default, { data: (0, _durationData.computeDurations)(filteredTaskList) }),
 	                _react2.default.createElement(
 	                    "div",
-	                    { id: "dashboard" },
-	                    _react2.default.createElement(_Filters2.default, null),
-	                    _react2.default.createElement("div", { id: "duration_stats" }),
-	                    _react2.default.createElement("div", { id: "column_chart" }),
-	                    _react2.default.createElement("div", { id: "scatter_chart" })
+	                    { className: "row" },
+	                    _react2.default.createElement(_Filters2.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update })
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    _react2.default.createElement(_DurationStats2.default, { taskList: filteredTaskList })
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    _react2.default.createElement(_ColumnChart2.default, { data: (0, _durationData.computeDurations)(filteredTaskList) })
 	                )
 	            );
 	        }
@@ -37883,7 +37990,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 365 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -37899,11 +38006,11 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _tooltip = __webpack_require__(366);
+	var _tooltip = __webpack_require__(368);
 
 	var _tooltip2 = _interopRequireDefault(_tooltip);
 
-	var _dataUtils = __webpack_require__(367);
+	var _dataUtils = __webpack_require__(369);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38064,7 +38171,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 366 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38091,7 +38198,7 @@
 
 	var _taskData = __webpack_require__(357);
 
-	var _durationData = __webpack_require__(365);
+	var _durationData = __webpack_require__(367);
 
 	;
 
@@ -38099,7 +38206,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 367 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38129,83 +38236,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 368 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(150);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Filters = function (_React$Component) {
-	    _inherits(Filters, _React$Component);
-
-	    function Filters() {
-	        _classCallCheck(this, Filters);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Filters).apply(this, arguments));
-	    }
-
-	    _createClass(Filters, [{
-	        key: 'render',
-	        value: function render() {
-	            var rangeFilters = [];
-	            var categoryFilters = [];
-	            if (RAW_DATA_COL.FILTERS != null) {
-	                RAW_DATA_COL.FILTERS.forEach(function (filter, index) {
-	                    var element = _react2.default.createElement('div', { id: "filter_" + index, key: index });
-
-	                    if (filter.filterType == 'CategoryFilter') {
-	                        categoryFilters.push(element);
-	                    } else {
-	                        rangeFilters.push(element);
-	                    }
-	                });
-	            }
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'filters_block' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'col-md-7 text-center' },
-	                    rangeFilters
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'col-md-5 text-center' },
-	                    categoryFilters
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Filters;
-	}(_react2.default.Component);
-
-	exports.default = Filters;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Filters.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
-
-/***/ },
-/* 369 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38222,13 +38253,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _CategoryFilter = __webpack_require__(370);
+	var _CategoryFilter = __webpack_require__(371);
 
 	var _CategoryFilter2 = _interopRequireDefault(_CategoryFilter);
 
-	var _DateRangeFilter = __webpack_require__(372);
+	var _PeriodFilter = __webpack_require__(373);
 
-	var _DateRangeFilter2 = _interopRequireDefault(_DateRangeFilter);
+	var _PeriodFilter2 = _interopRequireDefault(_PeriodFilter);
+
+	var _Switch = __webpack_require__(376);
+
+	var _Switch2 = _interopRequireDefault(_Switch);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38252,10 +38287,23 @@
 	    function Filters() {
 	        _classCallCheck(this, Filters);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Filters).call(this));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Filters).call(this));
+
+	        _this.state = {
+	            periodType: _PeriodFilter2.default.DATE_RANGE_SELECTOR
+	        };
+	        _this.updateType = _this.updateType.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Filters, [{
+	        key: "updateType",
+	        value: function updateType(type) {
+	            this.setState({
+	                periodType: type
+	            });
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
 	            var _this2 = this;
@@ -38274,13 +38322,12 @@
 	                            onChange: _this2.props.onChange,
 	                            values: listValues(_this2.props.taskList, index) }));
 	                    } else {
-	                        rangeFilters.push(_react2.default.createElement(_DateRangeFilter2.default, { key: index,
+	                        rangeFilters.push(_react2.default.createElement(_PeriodFilter2.default, { key: index,
 	                            ref: "filter_" + index,
 	                            label: filter.label,
 	                            startDate: startDate,
-	                            rangeStartDate: startDate,
-	                            rangeEndDate: endDate,
-	                            onChange: _this2.props.onChange }));
+	                            onChange: _this2.props.onChange,
+	                            selector: _this2.state.periodType }));
 	                    }
 	                });
 	            }
@@ -38295,6 +38342,11 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "col-md-6" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "col-md-12", selected: this.state.matcher },
+	                        _react2.default.createElement(_Switch2.default, { firstValue: _PeriodFilter2.default.DATE_RANGE_SELECTOR, secondValue: _PeriodFilter2.default.MONTH_SELECTOR, onChange: this.updateType })
+	                    ),
 	                    rangeFilters
 	                )
 	            );
@@ -38310,7 +38362,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 370 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38327,7 +38379,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _DataMatcher = __webpack_require__(371);
+	var _DataMatcher = __webpack_require__(372);
 
 	var _DataMatcher2 = _interopRequireDefault(_DataMatcher);
 
@@ -38446,11 +38498,16 @@
 
 	exports.default = CategoryFilter;
 
+
+	CategoryFilter.protoTypes = {
+	    onChange: _react2.default.PropTypes.func.isRequired
+	};
+
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "CategoryFilter.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 371 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38475,7 +38532,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 372 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38492,11 +38549,85 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _randomId = __webpack_require__(373);
+	var _DateRangeFilter = __webpack_require__(374);
+
+	var _DateRangeFilter2 = _interopRequireDefault(_DateRangeFilter);
+
+	var _MonthFilter = __webpack_require__(375);
+
+	var _MonthFilter2 = _interopRequireDefault(_MonthFilter);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PeriodFilter = function (_React$Component) {
+	    _inherits(PeriodFilter, _React$Component);
+
+	    function PeriodFilter() {
+	        _classCallCheck(this, PeriodFilter);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(PeriodFilter).apply(this, arguments));
+	    }
+
+	    _createClass(PeriodFilter, [{
+	        key: "render",
+	        value: function render() {
+	            return this.props.selector == PeriodFilter.DATE_RANGE_SELECTOR ? _react2.default.createElement(_DateRangeFilter2.default, this.props) : _react2.default.createElement(
+	                _MonthFilter2.default,
+	                this.props,
+	                " doing "
+	            );
+	        }
+	    }]);
+
+	    return PeriodFilter;
+	}(_react2.default.Component);
+
+	exports.default = PeriodFilter;
+
+
+	PeriodFilter.MONTH_SELECTOR = { label: "Month" };
+	PeriodFilter.DATE_RANGE_SELECTOR = { label: "Date" };
+
+	PeriodFilter.propTypes = {
+	    selector: _react2.default.PropTypes.oneOf([PeriodFilter.MONTH_SELECTOR, PeriodFilter.DATE_RANGE_SELECTOR])
+	};
+
+	PeriodFilter.defaultProps = {
+	    selector: PeriodFilter.DATE_RANGE_SELECTOR
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "PeriodFilter.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 374 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _randomId = __webpack_require__(363);
 
 	var _randomId2 = _interopRequireDefault(_randomId);
 
-	var _DataMatcher = __webpack_require__(371);
+	var _DataMatcher = __webpack_require__(372);
 
 	var _DataMatcher2 = _interopRequireDefault(_DataMatcher);
 
@@ -38530,8 +38661,8 @@
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
 	            var startDate = this.props.startDate;
-	            var rangeStart = this.props.rangeStartDate;
-	            var rangeEnd = this.props.rangeEndDate;
+	            var rangeStart = this.props.rangeStartDate == null ? this.props.startDate : this.props.rangeStartDate;
+	            var rangeEnd = this.props.rangeEndDate == null ? new Date() : this.props.rangeEndDate;
 
 	            var update = this.update;
 	            update(rangeStart, rangeEnd);
@@ -38551,9 +38682,9 @@
 	        key: "update",
 	        value: function update(startDate, endDate) {
 	            this.setState({
-	                matcher: { match: function match(date) {
-	                        return date >= startDate && date <= endDate;
-	                    } }
+	                matcher: new _DataMatcher2.default(function (date) {
+	                    return date >= startDate && date <= endDate;
+	                })
 	            }, this.props.onChange);
 	        }
 	    }, {
@@ -38578,11 +38709,16 @@
 
 	exports.default = DateRangeFilter;
 
+
+	DateRangeFilter.protoTypes = {
+	    onChange: _react2.default.PropTypes.func.isRequired
+	};
+
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DateRangeFilter.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 373 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38593,20 +38729,241 @@
 	    value: true
 	});
 
-	exports.default = function () {
-	    var text = "";
-	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	    for (var i = 0; i < 10; i++) {
-	        text += possible.charAt(Math.floor(Math.random() * possible.length));
-	    }return text;
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _DataMatcher = __webpack_require__(372);
+
+	var _DataMatcher2 = _interopRequireDefault(_DataMatcher);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MonthFilter = function (_React$Component) {
+	    _inherits(MonthFilter, _React$Component);
+
+	    function MonthFilter(props) {
+	        _classCallCheck(this, MonthFilter);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MonthFilter).call(this, props));
+
+	        var selectedDate = new Date();
+	        selectedDate.setDate(1);
+
+	        var dateList = [];
+	        var startDate = new Date(props.startDate);
+	        var currentDate = new Date(selectedDate);
+	        while (startDate < currentDate) {
+	            dateList.push(new Date(currentDate));
+	            currentDate.setMonth(currentDate.getMonth() - 1);
+	        }
+
+	        _this.state = {
+	            dateList: dateList,
+	            selection: null,
+	            matcher: new _DataMatcher2.default(function (date) {
+	                return true;
+	            })
+	        };
+
+	        _this.changeValue = _this.changeValue.bind(_this);
+	        _this.resetValue = _this.resetValue.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(MonthFilter, [{
+	        key: "changeValue",
+	        value: function changeValue(value) {
+	            this.setNewSelection(value);
+	        }
+	    }, {
+	        key: "resetValue",
+	        value: function resetValue() {
+	            this.setNewSelection(null);
+	        }
+	    }, {
+	        key: "setNewSelection",
+	        value: function setNewSelection(selection) {
+	            this.setState({
+	                selection: selection,
+	                matcher: new _DataMatcher2.default(function (date) {
+	                    return selection == null || date != null && selection.getYear() == date.getYear() && selection.getMonth() == date.getMonth();
+	                })
+	            }, this.props.onChange);
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+
+	            var values = this.state.dateList.map(function (date) {
+	                return _react2.default.createElement(
+	                    "li",
+	                    { key: date.formatDDMMYYYY() },
+	                    _react2.default.createElement(
+	                        "a",
+	                        { href: "#", onClick: function onClick() {
+	                                return _this2.changeValue(date);
+	                            } },
+	                        date.getYearMonthLabel()
+	                    )
+	                );
+	            });
+	            var selection = this.state.selection == null ? "" : _react2.default.createElement(
+	                "button",
+	                { type: "button", className: "btn btn-default btn btn-info", onClick: function onClick() {
+	                        return _this2.resetValue();
+	                    } },
+	                this.state.selection.getYearMonthLabel(),
+	                " ",
+	                _react2.default.createElement("span", { className: "glyphicon glyphicon-remove" })
+	            );
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "col-md-12", selected: this.state.matcher },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "btn-group", role: "group", "aria-label": "..." },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "btn-group" },
+	                        _react2.default.createElement(
+	                            "button",
+	                            { type: "button", className: "btn btn-default btn-filter dropdown-toggle", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false" },
+	                            this.props.label,
+	                            " ",
+	                            _react2.default.createElement("span", { className: "caret pull-right" })
+	                        ),
+	                        _react2.default.createElement(
+	                            "ul",
+	                            { className: "dropdown-menu" },
+	                            values
+	                        )
+	                    ),
+	                    selection
+	                )
+	            );
+	        }
+	    }]);
+
+	    return MonthFilter;
+	}(_react2.default.Component);
+
+	MonthFilter.protoTypes = {
+	    onChange: _react2.default.PropTypes.func.isRequired
 	};
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "randomId.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	exports.default = MonthFilter;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "MonthFilter.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 374 */
+/* 376 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Switch = function (_React$Component) {
+	    _inherits(Switch, _React$Component);
+
+	    function Switch() {
+	        _classCallCheck(this, Switch);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Switch).call(this));
+
+	        _this.state = {
+	            selectedValue: true // true => first and false => second
+	        };
+
+	        _this.update = _this.update.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(Switch, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            this.props.onChange(this.state.selectedValue ? this.props.firstValue : this.props.secondValue);
+	        }
+	    }, {
+	        key: "update",
+	        value: function update(value) {
+	            this.props.onChange(value ? this.props.firstValue : this.props.secondValue);
+	            this.setState({ selectedValue: value });
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "switch " + (this.state.selectedValue ? "" : "switched") },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "switch-label", onClick: function onClick() {
+	                            return _this2.update(true);
+	                        } },
+	                    this.props.firstValue.label
+	                ),
+	                _react2.default.createElement("div", { className: "switch-widget", onClick: function onClick() {
+	                        return _this2.update(!_this2.state.selectedValue);
+	                    } }),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "switch-label", onClick: function onClick() {
+	                            return _this2.update(false);
+	                        } },
+	                    this.props.secondValue.label
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Switch;
+	}(_react2.default.Component);
+
+	Switch.protoTypes = {
+	    firstValue: _react2.default.PropTypes.object.isRequired,
+	    secondValue: _react2.default.PropTypes.object.isRequired,
+	    onChange: _react2.default.PropTypes.func.isRequired
+	};
+
+	exports.default = Switch;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Switch.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38778,7 +39135,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 375 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38795,11 +39152,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _randomId = __webpack_require__(373);
+	var _randomId = __webpack_require__(363);
 
 	var _randomId2 = _interopRequireDefault(_randomId);
 
-	var _chartFactory = __webpack_require__(361);
+	var _chartFactory = __webpack_require__(364);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38856,7 +39213,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 376 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38879,15 +39236,17 @@
 
 	var _jiraConnect = __webpack_require__(353);
 
-	var _Card = __webpack_require__(363);
+	var _distributionData = __webpack_require__(380);
+
+	var _Card = __webpack_require__(365);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
-	var _Filters = __webpack_require__(369);
+	var _Filters = __webpack_require__(370);
 
 	var _Filters2 = _interopRequireDefault(_Filters);
 
-	var _PieChart = __webpack_require__(377);
+	var _PieChart = __webpack_require__(381);
 
 	var _PieChart2 = _interopRequireDefault(_PieChart);
 
@@ -38908,7 +39267,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Distribution).call(this));
 
 	        _this.state = {
-	            matchers: []
+	            matcherList: []
 	        };
 	        _this.update = _this.update.bind(_this);
 	        _this.taskFilter = _this.taskFilter.bind(_this);
@@ -38920,44 +39279,26 @@
 	        value: function update() {
 	            var _this2 = this;
 
-	            var matchers = RAW_DATA_COL.FILTERS.map(function (filter, index) {
-	                return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
-	            });
 	            this.setState({
-	                matchers: matchers
+	                matcherList: RAW_DATA_COL.FILTERS.map(function (filter, index) {
+	                    return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
+	                })
 	            });
 	        }
 	    }, {
 	        key: "taskFilter",
 	        value: function taskFilter(task) {
-	            for (var index = 0; index < this.state.matchers.length; index++) {
-	                if (!this.state.matchers[index].match(task.filters[index])) {
+	            for (var index = 0; index < this.state.matcherList.length; index++) {
+	                if (!this.state.matcherList[index].match(task.filters[index])) {
 	                    return false;
 	                }
 	            }
 	            return true;
 	        }
 	    }, {
-	        key: "computeStats",
-	        value: function computeStats(index) {
-	            var statsJson = this.props.taskList.filter(this.taskFilter).map(function (task) {
-	                return task.filters[index];
-	            }).reduce(function (counter, item) {
-	                counter[item] = counter.hasOwnProperty(item) ? counter[item] + 1 : 1;
-	                return counter;
-	            }, {});
-
-	            var statArray = [["Item", "Count"]];
-	            Object.keys(statsJson).forEach(function (key) {
-	                return statArray.push([key, statsJson[key]]);
-	            });
-
-	            return statArray;
-	        }
-	    }, {
 	        key: "render",
 	        value: function render() {
-	            var _this3 = this;
+	            var filteredTaskList = this.props.taskList.filter(this.taskFilter);
 
 	            var pieCharts = RAW_DATA_COL.FILTERS.filter(function (filter) {
 	                return filter.filterType == 'CategoryFilter';
@@ -38965,15 +39306,23 @@
 	                return _react2.default.createElement(
 	                    "div",
 	                    { className: "col-md-4", key: index },
-	                    _react2.default.createElement(_PieChart2.default, { title: filter.label, data: _this3.computeStats(index) })
+	                    _react2.default.createElement(_PieChart2.default, { title: filter.label, data: (0, _distributionData.computeDistribution)(filteredTaskList, index) })
 	                );
 	            });
 
 	            return _react2.default.createElement(
 	                _Card2.default,
 	                { cardTitle: "Distribution" },
-	                _react2.default.createElement(_Filters2.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update }),
-	                pieCharts
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    _react2.default.createElement(_Filters2.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update })
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    pieCharts
+	                )
 	            );
 	        }
 	    }]);
@@ -38987,7 +39336,37 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 377 */
+/* 380 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var computeDistribution = exports.computeDistribution = function computeDistribution(taskList, index) {
+	    var statsJson = taskList.map(function (task) {
+	        return task.filters[index];
+	    }).reduce(function (counter, item) {
+	        counter[item] = counter.hasOwnProperty(item) ? counter[item] + 1 : 1;
+	        return counter;
+	    }, {});
+
+	    var statArray = [["Item", "Count"]];
+	    Object.keys(statsJson).forEach(function (key) {
+	        return statArray.push([key, statsJson[key]]);
+	    });
+
+	    return statArray;
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "distributionData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39004,11 +39383,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _randomId = __webpack_require__(373);
+	var _randomId = __webpack_require__(363);
 
 	var _randomId2 = _interopRequireDefault(_randomId);
 
-	var _chartFactory = __webpack_require__(361);
+	var _chartFactory = __webpack_require__(364);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39065,7 +39444,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 378 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39088,7 +39467,7 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _Report = __webpack_require__(379);
+	var _Report = __webpack_require__(383);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -39125,7 +39504,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 379 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39142,25 +39521,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _chartFactory = __webpack_require__(361);
+	var _chartFactory = __webpack_require__(364);
 
 	var _definition = __webpack_require__(350);
 
 	var _taskData = __webpack_require__(357);
 
-	var _eventData = __webpack_require__(362);
+	var _eventData = __webpack_require__(361);
 
-	var _durationData = __webpack_require__(365);
+	var _durationData = __webpack_require__(367);
 
-	var _MonthSelector = __webpack_require__(380);
+	var _MonthSelector = __webpack_require__(384);
 
 	var _MonthSelector2 = _interopRequireDefault(_MonthSelector);
 
-	var _PeriodSelector = __webpack_require__(381);
+	var _PeriodSelector = __webpack_require__(385);
 
 	var _PeriodSelector2 = _interopRequireDefault(_PeriodSelector);
 
-	var _Switch = __webpack_require__(382);
+	var _Switch = __webpack_require__(376);
 
 	var _Switch2 = _interopRequireDefault(_Switch);
 
@@ -39293,7 +39672,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 380 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39407,7 +39786,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 381 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39490,103 +39869,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 382 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(150);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Switch = function (_React$Component) {
-	    _inherits(Switch, _React$Component);
-
-	    function Switch() {
-	        _classCallCheck(this, Switch);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Switch).call(this));
-
-	        _this.state = {
-	            selectedValue: true // true => first and false => second
-	        };
-
-	        _this.update = _this.update.bind(_this);
-	        return _this;
-	    }
-
-	    _createClass(Switch, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            this.props.onChange(this.state.selectedValue ? this.props.firstValue : this.props.secondValue);
-	        }
-	    }, {
-	        key: "update",
-	        value: function update(value) {
-	            this.props.onChange(value ? this.props.firstValue : this.props.secondValue);
-	            this.setState({ selectedValue: value });
-	        }
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            var _this2 = this;
-
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "switch " + (this.state.selectedValue ? "" : "switched") },
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "switch-label", onClick: function onClick() {
-	                            return _this2.update(true);
-	                        } },
-	                    this.props.firstValue.label
-	                ),
-	                _react2.default.createElement("div", { className: "switch-widget", onClick: function onClick() {
-	                        return _this2.update(!_this2.state.selectedValue);
-	                    } }),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "switch-label", onClick: function onClick() {
-	                            return _this2.update(false);
-	                        } },
-	                    this.props.secondValue.label
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Switch;
-	}(_react2.default.Component);
-
-	Switch.protoTypes = {
-	    firstValue: _react2.default.PropTypes.object.isRequired,
-	    secondValue: _react2.default.PropTypes.object.isRequired,
-	    onChange: _react2.default.PropTypes.func.isRequired
-	};
-
-	exports.default = Switch;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Switch.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
-
-/***/ },
-/* 383 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39609,7 +39892,7 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _Report = __webpack_require__(379);
+	var _Report = __webpack_require__(383);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -39646,7 +39929,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 384 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39665,7 +39948,7 @@
 
 	var _jiraConnect = __webpack_require__(353);
 
-	var _Card = __webpack_require__(363);
+	var _Card = __webpack_require__(365);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
@@ -39770,23 +40053,23 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 385 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(386);
+	var content = __webpack_require__(389);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(388)(content, {});
+	var update = __webpack_require__(391)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(386, function() {
-				var newContent = __webpack_require__(386);
+			module.hot.accept(389, function() {
+				var newContent = __webpack_require__(389);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -39796,10 +40079,10 @@
 	}
 
 /***/ },
-/* 386 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(387)();
+	exports = module.exports = __webpack_require__(390)();
 	// imports
 
 
@@ -39810,7 +40093,7 @@
 
 
 /***/ },
-/* 387 */
+/* 390 */
 /***/ function(module, exports) {
 
 	/*
@@ -39866,7 +40149,7 @@
 
 
 /***/ },
-/* 388 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
