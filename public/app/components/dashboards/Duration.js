@@ -40,7 +40,6 @@ class Duration extends React.Component {
         let filteredTaskList = this.props.taskList.filter(this.taskFilter);
         return (
             <Card cardTitle="Duration">
-                {filteredTaskList.map((task) => task.key + ", ")}
                 <div className="row"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
                 <div className="row"><DurationStats taskList={filteredTaskList}/></div>
                 <div className="row"><ColumnChart data={computeDurations(filteredTaskList)}/></div>
