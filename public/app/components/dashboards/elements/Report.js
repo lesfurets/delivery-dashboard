@@ -13,7 +13,7 @@ import {computeDurationData, groupDurationDataBy} from "../../../core/data/durat
 import MonthSelector from "./MonthSelector";
 import PeriodFilter from "./filtering/PeriodFilter";
 import PeriodSelector from "./PeriodSelector";
-import Switch from "./Switch";
+import Switch from "./inputs/Switch";
 
 class Report extends React.Component {
     constructor() {

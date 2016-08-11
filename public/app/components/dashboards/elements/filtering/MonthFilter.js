@@ -1,5 +1,7 @@
 import React from "react";
 import DataMatcher from "./DataMatcher";
+import InputElement from "../inputs/InputElement";
+import DropDown from "../inputs/DropDown";
 
 class MonthFilter extends React.Component {
     constructor(props) {
@@ -26,8 +28,8 @@ class MonthFilter extends React.Component {
         this.resetValue = this.resetValue.bind(this);
     }
 
-    changeValue(value) {
-        this.setNewSelection(value);
+    changeValue(selection) {
+        this.setNewSelection(selection.value);
     }
 
     resetValue() {
@@ -42,20 +44,11 @@ class MonthFilter extends React.Component {
     }
 
     render() {
-        let values = this.state.dateList.map(date => <li key={date.formatDDMMYYYY()}><a href="#" onClick={() =>
-            this.changeValue(date)}>{date.getYearMonthLabel()}</a></li>)
+        let values = this.state.dateList.map(date => new InputElement(date, date.getYearMonthLabel()));
 
         if (this.props.label == null) {
             return (
-                <div className="btn-group">
-                    <button type="button" className="btn btn-default btn-filter dropdown-toggle" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                        {this.state.selection.getYearMonthLabel()} <span className="caret pull-right"></span>
-                    </button>
-                    <ul className="dropdown-menu">
-                        {values}
-                    </ul>
-                </div>
+                <DropDown values={values} defaultSelection="true" onChange={this.changeValue}/>
             )
         } else {
             let selection = this.state.selection == null ? "" : (
@@ -66,15 +59,7 @@ class MonthFilter extends React.Component {
             return (
                 <div className="col-md-12" selected={this.state.matcher}>
                     <div className="btn-group" role="group" aria-label="...">
-                        <div className="btn-group">
-                            <button type="button" className="btn btn-default btn-filter dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {this.props.label} <span className="caret pull-right"></span>
-                            </button>
-                            <ul className="dropdown-menu">
-                                {values}
-                            </ul>
-                        </div>
+                        <DropDown values={values} onChange={this.changeValue} label={this.props.label}/>
                         {selection}
                     </div>
                 </div>

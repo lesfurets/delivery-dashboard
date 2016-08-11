@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import PeriodFilter from "./PeriodFilter";
-import Switch from "../Switch";
+import Switch from "../inputs/Switch";
 
 function listValues(taskList, index) {
     return taskList.map((task) => task.filters[index])

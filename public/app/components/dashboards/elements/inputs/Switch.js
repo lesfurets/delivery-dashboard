@@ -1,6 +1,6 @@
 import React from "react";
 
-class Switch extends React.Component {
+export default class Switch extends React.Component {
     constructor() {
         super();
 
@@ -37,4 +37,4 @@ Switch.protoTypes = {
     onChange: React.PropTypes.func.isRequired
 }
 
-export default Switch
+
