@@ -1,6 +1,6 @@
 import React from "react";
 
-import {rawDataConnect} from "../../redux/jiraConnect"
+import {taskListConnect} from "../../redux/jiraConnect"
 import { CONFIG_PERIOD_SELECTOR } from "../../core/definition";
 
 import Report from "./elements/Report";
@@ -13,4 +13,4 @@ class MonthlyReport extends React.Component {
     }
 }
 
-export default rawDataConnect(MonthlyReport)
+export default taskListConnect(MonthlyReport)

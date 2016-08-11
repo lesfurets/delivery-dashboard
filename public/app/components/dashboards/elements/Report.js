@@ -1,7 +1,7 @@
 import React from "react";
 import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../../../core/charts/chartFactory";
 import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../../../core/definition";
-import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST} from "../../../core/data/taskData";
+import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST, buildTaskTable} from "../../../core/data/taskData";
 import {computeEventData} from "../../../core/data/eventData";
 import {computeDurationData, groupDurationDataBy} from "../../../core/data/durationData";
 import MonthSelector from "./MonthSelector";
@@ -54,7 +54,7 @@ class Report extends React.Component {
         }
 
         if (this.state.cumulative != null) {
-            let filteredData = filterCreatedBefore(filterReleasedAfter(this.props.rawData, this.state.startDate), this.state.endDate);
+            let filteredData = filterCreatedBefore(filterReleasedAfter(buildTaskTable(this.props.taskList), this.state.startDate), this.state.endDate);
 
             limitDashboardPeriod(this.state.cumulative, this.state.startDate, this.state.endDate);
             this.state.cumulative.setDataTable(computeEventData(filteredData));
