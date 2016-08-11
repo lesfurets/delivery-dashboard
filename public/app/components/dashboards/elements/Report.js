@@ -1,10 +1,17 @@
 import React from "react";
 import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../../../core/charts/chartFactory";
 import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../../../core/definition";
-import {filterCreatedBefore, filterReleasedAfter, filterReleasedBefore, TASK_INDEX_FILTER_FIRST, buildTaskTable} from "../../../core/data/taskData";
+import {
+    filterCreatedBefore,
+    filterReleasedAfter,
+    filterReleasedBefore,
+    TASK_INDEX_FILTER_FIRST,
+    buildTaskTable
+} from "../../../core/data/taskData";
 import {computeEventData} from "../../../core/data/eventData";
 import {computeDurationData, groupDurationDataBy} from "../../../core/data/durationData";
 import MonthSelector from "./MonthSelector";
+import PeriodFilter from "./filtering/PeriodFilter";
 import PeriodSelector from "./PeriodSelector";
 import Switch from "./Switch";
 
@@ -12,6 +19,7 @@ class Report extends React.Component {
     constructor() {
         super();
         this.state = {
+            taskMatcher: (task) => true,
             cumulative: null,
             stats: null,
             startDate: null,
@@ -20,6 +28,13 @@ class Report extends React.Component {
         };
         this.updateDate = this.updateDate.bind(this);
         this.updateType = this.updateType.bind(this);
+        this.update = this.update.bind(this);
+    }
+
+    update() {
+        this.setState({
+            taskMatcher: (task) => ReactDom.findDOMNode(this.refs.filters.refs["filter"]).selected
+        });
     }
 
     componentDidMount() {
@@ -69,6 +84,11 @@ class Report extends React.Component {
                     <h2 className="col-md-12 card-title">
                         <img className="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
                         {timeSelector}
+                        <PeriodFilter ref="filter"
+                                      startDate={new Date(REPORT_CONFIG.first_entry)}
+                                      onChange={this.update}
+                                      defaultSelection={true}
+                                      selector={PeriodFilter.MONTH_SELECTOR}/>
                         <Switch firstValue={REPORT_CONFIG.projection[0]} secondValue={REPORT_CONFIG.projection[1]}
                                 onChange={this.updateType}/>
                         <span id="tab_monthly_report_view_title_suffix"></span>

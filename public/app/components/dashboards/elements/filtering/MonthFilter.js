@@ -18,7 +18,7 @@ class MonthFilter extends React.Component {
 
         this.state = {
             dateList: dateList,
-            selection: null,
+            selection: props.defaultSelection ? dateList[0] : null,
             matcher: new DataMatcher((date) => true)
         };
 
@@ -38,34 +38,50 @@ class MonthFilter extends React.Component {
         this.setState({
             selection: selection,
             matcher: new DataMatcher((date) => selection == null || (date != null && selection.getYear() == date.getYear() && selection.getMonth() == date.getMonth()))
-    }, this.props.onChange);
+        }, this.props.onChange);
     }
 
     render() {
         let values = this.state.dateList.map(date => <li key={date.formatDDMMYYYY()}><a href="#" onClick={() =>
             this.changeValue(date)}>{date.getYearMonthLabel()}</a></li>)
-        let selection = this.state.selection == null ? "" : (
-            <button type="button" className="btn btn-default btn btn-info" onClick={() => this.resetValue()}>
-                {this.state.selection.getYearMonthLabel()} <span className="glyphicon glyphicon-remove"></span>
-            </button>
-        )
-        return (
-            <div className="col-md-12" selected={this.state.matcher}>
-                <div className="btn-group" role="group" aria-label="...">
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-default btn-filter dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {this.props.label} <span className="caret pull-right"></span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            {values}
-                        </ul>
-                    </div>
-                    {selection}
-                </div>
-            </div>
-        );
-    }
 
+        if (this.props.label == null) {
+            return (
+                <div className="btn-group">
+                    <button type="button" className="btn btn-default btn-filter dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        {this.state.selection.getYearMonthLabel()} <span className="caret pull-right"></span>
+                    </button>
+                    <ul className="dropdown-menu">
+                        {values}
+                    </ul>
+                </div>
+            )
+        } else {
+            let selection = this.state.selection == null ? "" : (
+                <button type="button" className="btn btn-default btn btn-info" onClick={() => this.resetValue()}>
+                    {this.state.selection.getYearMonthLabel()} <span className="glyphicon glyphicon-remove"></span>
+                </button>
+            )
+            return (
+                <div className="col-md-12" selected={this.state.matcher}>
+                    <div className="btn-group" role="group" aria-label="...">
+                        <div className="btn-group">
+                            <button type="button" className="btn btn-default btn-filter dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {this.props.label} <span className="caret pull-right"></span>
+                            </button>
+                            <ul className="dropdown-menu">
+                                {values}
+                            </ul>
+                        </div>
+                        {selection}
+                    </div>
+                </div>
+            );
+        }
+
+    }
 
 
 }
