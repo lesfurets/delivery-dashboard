@@ -41,6 +41,10 @@ class TaskManager extends React.Component {
         this.setState({filterExpr: e.target.value.toLowerCase()});
     }
 
+    openTab(key) {
+        window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
+    }
+
     render() {
         let tasks = this.props.taskList
             .filter((task) => (
@@ -49,11 +53,11 @@ class TaskManager extends React.Component {
             )
             .map((task) => {
                 return (
-                    <tr key={task.key}>
+                    <tr key={task.key} onClick={() => this.openTab(task.key)}>
                         <td>{task.key}</td>
                         <td>{task.summary}</td>
-                        {task.filters.map((filter) => {return (<TaskElement element={filter}/>)})}
                         {task.events.map((event) => {return (<TaskElement element={event} />)})}
+                        {task.filters.map((filter) => {return (<TaskElement element={filter}/>)})}
                     </tr>
                 );
         });
@@ -65,10 +69,10 @@ class TaskManager extends React.Component {
                     <tr>
                         <th>Key</th>
                         <th>Summary</th>
-                        {RAW_DATA_COL.FILTERS.map((element) => {
+                        {RAW_DATA_COL.EVENTS.map((element) => {
                             return <th>{element.label}</th>
                         })}
-                        {RAW_DATA_COL.EVENTS.map((element) => {
+                        {RAW_DATA_COL.FILTERS.map((element) => {
                             return <th>{element.label}</th>
                         })}
                     </tr>
