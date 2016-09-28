@@ -37,9 +37,9 @@ class Duration extends React.Component {
         let filteredTaskList = this.props.taskList.filter(this.taskFilter);
         return (
             <Card cardTitle="Duration">
-                <div className="row"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
-                <div className="row"><DurationStats taskList={filteredTaskList}/></div>
-                <div className="row"><ColumnChart data={computeDurations(filteredTaskList)}/></div>
+                <div className="col-md-12"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
+                <div className="col-md-12"><DurationStats taskList={filteredTaskList}/></div>
+                <div className="col-md-12"><ColumnChart data={computeDurations(filteredTaskList)}/></div>
             </Card>
         );
     }
