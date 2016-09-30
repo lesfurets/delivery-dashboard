@@ -46,21 +46,32 @@ class TaskManager extends React.Component {
     }
 
     render() {
-        let tasks = this.props.taskList
+        var filtered = this.props.taskList
             .filter((task) => (
                 task.key.toLowerCase().indexOf(this.state.filterExpr) != -1)
                 || task.summary.toLowerCase().indexOf(this.state.filterExpr) != -1
+            );
+
+        let tasks = (
+            <tr onClick={() => this.openTab(this.state.filterExpr)}>
+                <td colSpan={RAW_DATA_COL.EVENTS.length + RAW_DATA_COL.FILTERS.length + 2}>Find {this.state.filterExpr} in Jira ...</td>
+            </tr>
             )
-            .map((task) => {
-                return (
-                    <tr key={task.key} onClick={() => this.openTab(task.key)}>
-                        <td>{task.key}</td>
-                        <td>{task.summary}</td>
-                        {task.events.map((event) => {return (<TaskElement element={event} />)})}
-                        {task.filters.map((filter) => {return (<TaskElement element={filter}/>)})}
-                    </tr>
-                );
-        });
+
+
+        if(filtered.length != 0) {
+            tasks = filtered
+                .map((task) => {
+                    return (
+                        <tr key={task.key} onClick={() => this.openTab(task.key)}>
+                            <td>{task.key}</td>
+                            <td>{task.summary}</td>
+                            {task.events.map((event) => {return (<TaskElement element={event} />)})}
+                            {task.filters.map((filter) => {return (<TaskElement element={filter}/>)})}
+                        </tr>
+                    );
+            });
+        }
         return (
             <Card>
                 <input type="text" onChange={this.update} defaultValue=""/>
