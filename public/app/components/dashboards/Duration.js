@@ -35,11 +35,12 @@ class Duration extends React.Component {
 
     render() {
         let filteredTaskList = this.props.taskList.filter(this.taskFilter);
+        var durationData = computeDurations(filteredTaskList);
         return (
-            <Card cardTitle="Duration">
+            <Card cardTitle="Duration" data={filteredTaskList}>
                 <div className="col-md-12"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
                 <div className="col-md-12"><DurationStats taskList={filteredTaskList}/></div>
-                <div className="col-md-12"><ColumnChart data={computeDurations(filteredTaskList)}/></div>
+                <div className="col-md-12"><ColumnChart data={durationData}/></div>
             </Card>
         );
     }
