@@ -17,19 +17,17 @@ export default class Card extends React.Component {
 
     render() {
         let suffix = "";
+        let action = "";
         if (typeof this.props.data !== "undefined") {
             suffix = " - " + this.props.data.length + " task" + (this.props.data.length != 1 ? "s" : "");
+            action = <a href="#" onClick={this.displayList}><span className="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#modal"></span></a>
         }
         return (
             <div>
                 <div className="card">
                     <div className="row card-header">
                         <span className="col-md-6">{this.props.cardTitle}{suffix}</span>
-                        <span className="col-md-6">
-                            <a href="#" onClick={this.displayList}><span
-                                className="glyphicon glyphicon-th-list pull-right" data-toggle="modal"
-                                data-target="#modal"></span></a>
-                        </span>
+                        <span className="col-md-6"> {action} </span>
                     </div>
                     <div className="row">
                         {this.props.children}
