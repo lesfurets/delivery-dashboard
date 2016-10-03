@@ -43,7 +43,7 @@ class Distribution extends React.Component {
                 </div>));
 
         return (
-            <Card cardTitle="Distribution">
+            <Card cardTitle="Distribution" data={filteredTaskList}>
                 <div className="col-md-12"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
                 <div className="col-md-12">{pieCharts}</div>
             </Card>
