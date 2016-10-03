@@ -34,8 +34,8 @@ export default class TaskList extends React.Component {
                     <tr key={task.key} onClick={() => this.openTab(task.key)}>
                         <td>{task.key}</td>
                         <td>{task.summary}</td>
-                        {task.events.map((event) => { return (<TaskElement element={event}/>) })}
-                        {task.filters.map((filter) => { return (<TaskElement element={filter}/>) })}
+                        {this.props.lite ? "" : task.events.map((event) => <TaskElement element={event}/>)}
+                        {this.props.lite ? "" : task.filters.map((filter) => <TaskElement element={filter}/>)}
                     </tr>
                 );
             });
@@ -47,16 +47,20 @@ export default class TaskList extends React.Component {
                 <tr>
                     <th>Key</th>
                     <th>Summary</th>
-                    {RAW_DATA_COL.EVENTS.map((element) => {
-                        return <th>{element.label}</th>
-                    })}
-                    {RAW_DATA_COL.FILTERS.map((element) => {
-                        return <th>{element.label}</th>
-                    })}
+                    {this.props.lite ? "" : RAW_DATA_COL.EVENTS.map((element) => <th>{element.label}</th>)}
+                    {this.props.lite ? "" : RAW_DATA_COL.FILTERS.map((element) => <th>{element.label}</th>)}
                 </tr>
                 </thead>
                 <tbody>{tasks}</tbody>
             </table>
         );
     }
+}
+
+TaskList.propTypes = {
+    lite: React.PropTypes.bool
+}
+
+TaskList.defaultProps = {
+    lite: false
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import TaskList from "./TaskList";
 
-export default class If extends React.Component {
+export default class Card extends React.Component {
     render() {
         return (
             <div>

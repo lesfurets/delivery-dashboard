@@ -20,7 +20,6 @@ export default class Card extends React.Component {
         if (typeof this.props.data !== "undefined") {
             suffix = " - " + this.props.data.length + " task" + (this.props.data.length != 1 ? "s" : "");
         }
-        console.log(this.state.displayList);
         return (
             <div>
                 <div className="card">
@@ -46,7 +45,7 @@ export default class Card extends React.Component {
                             </div>
                             <div className="modal-body">
                                 <If condition={this.state.displayList}>
-                                    <TaskList data={this.props.data}/>
+                                    <TaskList data={this.props.data} lite/>
                                 </If>
                             </div>
                             <div className="modal-footer">
