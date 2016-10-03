@@ -1,20 +1,35 @@
 import React from "react";
 import TaskList from "./TaskList";
+import If from "./If";
 
 export default class Card extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            displayList: false,
+        };
+        this.displayList = this.displayList.bind(this);
+    }
+
+    displayList() {
+        this.setState({displayList: true});
+    }
+
     render() {
         let suffix = "";
         if (typeof this.props.data !== "undefined") {
             suffix = " - " + this.props.data.length + " task" + (this.props.data.length != 1 ? "s" : "");
         }
+        console.log(this.state.displayList);
         return (
             <div>
                 <div className="card">
                     <div className="row card-header">
                         <span className="col-md-6">{this.props.cardTitle}{suffix}</span>
                         <span className="col-md-6">
-                            <a href="#"> <span className="glyphicon glyphicon-th-list pull-right" data-toggle="modal"
-                                               data-target="#modal"></span></a>
+                            <a href="#" onClick={this.displayList}><span
+                                className="glyphicon glyphicon-th-list pull-right" data-toggle="modal"
+                                data-target="#modal"></span></a>
                         </span>
                     </div>
                     <div className="row">
@@ -30,14 +45,14 @@ export default class Card extends React.Component {
                                 <h4 className="modal-title">Modal Header</h4>
                             </div>
                             <div className="modal-body">
-                                <p>Some text in the modal.</p>
-                                <TaskList data={this.props.data}/>
+                                <If condition={this.state.displayList}>
+                                    <TaskList data={this.props.data}/>
+                                </If>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
