@@ -84,11 +84,6 @@ class Report extends React.Component {
                     <h2 className="col-md-12 card-title">
                         <img className="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
                         {timeSelector}
-                        <PeriodFilter ref="filter"
-                                      startDate={new Date(REPORT_CONFIG.first_entry)}
-                                      onChange={this.update}
-                                      defaultSelection={true}
-                                      selector={PeriodFilter.MONTH_SELECTOR}/>
                         <Switch firstValue={REPORT_CONFIG.projection[0]} secondValue={REPORT_CONFIG.projection[1]}
                                 onChange={this.updateType}/>
                         <span id="tab_monthly_report_view_title_suffix"></span>
