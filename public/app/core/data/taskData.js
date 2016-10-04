@@ -82,19 +82,6 @@ export const buildTaskTable = function (taskList) {
     return taskData;
 }
 
-export const filterTaskData = function (inputData, expression) {
-    var filteredData = new google.visualization.DataView(inputData)
-
-    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
-        if (inputData.getValue(index, TASK_INDEX_STATIC_REFERENCE).indexOf(expression) == -1) {
-            console.log(index);
-            filteredData.hideRows([index]);
-        }
-    }
-
-    return filteredData;
-}
-
 export const filterReleasedAfter = function (inputData, fromDate) {
     var view = new google.visualization.DataView(inputData);
     view.setRows(view.getFilteredRows([{
@@ -120,20 +107,4 @@ export const filterCreatedBefore = function (inputData, toDate) {
         maxValue: toDate
     }]));
     return view;
-}
-
-function columnBuilder(type, label, calc) {
-    return {type: type, label: label, calc: calc};
-}
-
-function constantColumnBuilder(type, label, value) {
-    return {
-        type: type, label: label, calc: function () {
-            return value;
-        }
-    };
-}
-
-function aggregatorBuilder(column, type, aggregation) {
-    return {column: column, type: type, aggregation: aggregation};
 }

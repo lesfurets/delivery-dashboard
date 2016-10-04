@@ -4,7 +4,6 @@ function jsonParser(jsonObject, fields, index) {
     if (jsonObject == null) {
         return "";
     }
-    console.log(index + " from " + fields)
     var fieldValue = jsonObject[fields[index]];
     if (index == fields.length - 1) {
         return typeof fieldValue !== 'undefined' ? fieldValue : "";

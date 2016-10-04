@@ -1,12 +1,5 @@
 import React from "react";
 
-Date.prototype.yyyymmdd = function () {
-    var mm = this.getMonth() + 1;
-    var dd = this.getDate();
-
-    return [dd, mm, this.getFullYear()].join('/');
-};
-
 class TaskElement extends React.Component {
     render() {
         if (typeof this.props.element == 'string' && this.props.element == "null") {
@@ -14,7 +7,7 @@ class TaskElement extends React.Component {
         } else if (typeof this.props.element == 'string') {
             return <td>{this.props.element}</td>
         } else if (this.props.element instanceof Date) {
-            return <td>{this.props.element.yyyymmdd()}</td>
+            return <td>{this.props.element.formatDDMMYYYY()}</td>
         } else {
             return <td>&nbsp;</td>
         }

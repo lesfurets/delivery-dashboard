@@ -1,4 +1,3 @@
-import { ID_TASK_LIST } from '../definition'
 import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_FILTER_FIRST } from '../data/taskData'
 
 export const buildDataTable = function(elementId) {
