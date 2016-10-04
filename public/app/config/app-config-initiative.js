@@ -1,8 +1,6 @@
-var RAW_DATA_URL = '14-OdukK3LA9KNa0u-6T0Xl6qgQYmzoFSipIWV0UuEfA';
-
-var RAW_DATA_COL = {
-    PROJECT: 0,
-    REF: 1,
+const RAW_DATA_COL = {
+    KEY: ["key"],
+    SUMMARY: ["fields", "summary"],
     EVENTS: [
         {jiraField: ["fields", "customfield_11729"], label: 'Backlog', correction: -1},
         {jiraField: ["fields", "customfield_11730"], label: 'Analysis', correction: -0.5},
@@ -11,18 +9,14 @@ var RAW_DATA_COL = {
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], label: 'Released', correction: -1}
     ],
     FILTERS: [
-        {columnIndex: 2, dataType: "string" ,filterType: 'CategoryFilter', label: 'Type'},
-        {columnIndex: 3, dataType: "string" ,filterType: 'CategoryFilter', label: 'Effort'},
-        {columnIndex: 4, dataType: "string" ,filterType: 'CategoryFilter', label: 'Value'},
-        {columnIndex: 0, dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
+        {jiraField: ["fields", "issuetype", "name"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Type'},
+        {jiraField: ["fields", "project","key"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
         {jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation'},
         {jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release'},
-        {jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string" , filterType: 'CategoryFilter', label: 'Version'},
-        {jiraField: ["fields", "assignee", "key"], dataType: "string" , filterType: 'CategoryFilter', label: 'Assignee'}
     ]
 };
 
-var REPORT_CONFIG = {
+const REPORT_CONFIG = {
     first_entry: "2015-06",
     projection: [
         {position: 0, filterLabel: "Type"},
@@ -30,7 +24,7 @@ var REPORT_CONFIG = {
     ]
 }
 
-var JIRA_DATA = {
-    jql: "Workstream=Traffic",
+const JIRA_DATA = {
+    jql: "project%20in%20(AMX)%20AND%20issuetype%20in%20(Initiative)",
     fields: "id,key,summary,fixVersions,assignee,custom,customfield_11729,customfield_11730,customfield_11731,customfield_11732"
 }
