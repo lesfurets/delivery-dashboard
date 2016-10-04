@@ -1,6 +1,6 @@
 import React from "react";
 import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../../../core/charts/chartFactory";
-import {CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR} from "../../../core/definition";
+import {FILTER_DATE_RANGE, FILTER_MONTH} from "../../../core/definition";
 import {
     filterCreatedBefore,
     filterReleasedAfter,
@@ -11,7 +11,6 @@ import {
 import {computeEventData} from "../../../core/data/eventData";
 import {computeDurationData, groupDurationDataBy} from "../../../core/data/durationData";
 import MonthSelector from "./MonthSelector";
-import PeriodFilter from "./filtering/PeriodFilter";
 import PeriodSelector from "./PeriodSelector";
 import Switch from "./inputs/Switch";
 
@@ -62,9 +61,11 @@ class Report extends React.Component {
 
     render() {
         let timeSelector;
-        if (this.props.selector == CONFIG_MONTH_SELECTOR) {
+        if (this.props.selector == FILTER_MONTH) {
+            console.log(this.props.selector + " => month")
             timeSelector = <MonthSelector onChange={this.updateDate}/>
         } else {
+            console.log(this.props.selector + " => period")
             timeSelector = <PeriodSelector onChange={this.updateDate}/>
         }
 
@@ -106,7 +107,7 @@ class Report extends React.Component {
 }
 
 Report.propTypes = {
-    selector: React.PropTypes.oneOf([CONFIG_MONTH_SELECTOR, CONFIG_PERIOD_SELECTOR])
+    selector: React.PropTypes.oneOf([FILTER_DATE_RANGE, FILTER_MONTH])
 }
 
 export default Report
