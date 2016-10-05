@@ -26,8 +26,13 @@ export default class Menu extends React.Component {
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Task Data<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
                                         <li><Link to={'/cumulative-flow'} styleName="title">Cumulative Flow</Link></li>
-                                        <li><Link to={'/duration'} styleName="title">Duration</Link></li>
                                         <li><Link to={'/distribution'} styleName="title">Distribution</Link></li>
+                                    </ul>
+                                </li>
+                                <li className="dropdown">
+                                    <a className="dropdown-toggle" data-toggle="dropdown" href="#">Duration<span className="caret"></span></a>
+                                    <ul className="dropdown-menu">
+                                        <li><Link to={'/duration-phases'} styleName="title">Phases</Link></li>
                                     </ul>
                                 </li>
                                 <li className="dropdown">
