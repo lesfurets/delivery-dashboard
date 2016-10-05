@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDom from "react-dom";
 import {taskListConnect} from "../../redux/jiraConnect";
-import {computeDurations} from "../../core/data/durationData";
+import {computeDurationByDate} from "../../core/data/durationData";
 import Card from "./elements/Card";
 import Filters from "./elements/filtering/Filters";
-import DurationStats from "./elements/DurationStats";
-import ColumnChart from "./elements/charts/ColumnChart";
+import ScatterChart from "./elements/charts/ScatterChart";
 
-class DurationPhase extends React.Component {
+class DurationScatter extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -35,15 +34,14 @@ class DurationPhase extends React.Component {
 
     render() {
         let filteredTaskList = this.props.taskList.filter(this.taskFilter);
-        var durationData = computeDurations(filteredTaskList);
+        var durationData = computeDurationByDate(filteredTaskList);
         return (
             <Card cardTitle="Duration" data={filteredTaskList}>
                 <div className="col-md-12"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
-                <div className="col-md-12"><DurationStats taskList={filteredTaskList}/></div>
-                <div className="col-md-12"><ColumnChart data={durationData}/></div>
+                <div className="col-md-12"><ScatterChart data={durationData}/></div>
             </Card>
         );
     }
 }
 
-export default taskListConnect(DurationPhase)
+export default taskListConnect(DurationScatter)

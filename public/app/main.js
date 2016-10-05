@@ -10,6 +10,7 @@ import initApp from './core/tools/initApp';
 import DeliveryDashboard from './components/DeliveryDashboard';
 import CumulativeFlow from './components/dashboards/CumulativeFlow';
 import DurationPhase from './components/dashboards/DurationPhase';
+import DurationScatter from './components/dashboards/DurationScatter';
 import Distribution from './components/dashboards/Distribution';
 import MonthlyReport from './components/dashboards/MonthlyReport';
 import PeriodReport from './components/dashboards/PeriodReport';
@@ -29,6 +30,7 @@ google.setOnLoadCallback(function () {
                     <IndexRedirect to="/monthly-report"/>
                     <Route path="/cumulative-flow" component={CumulativeFlow}/>
                     <Route path="/duration-phases" component={DurationPhase}/>
+                    <Route path="/duration-scatter" component={DurationScatter}/>
                     <Route path="/distribution" component={Distribution}/>
                     <Route path="/monthly-report" component={MonthlyReport}/>
                     <Route path="/period-report" component={PeriodReport}/>

@@ -116,6 +116,35 @@ export const buildDurationScatterChart = function(elementId, columns) {
             'chartArea': {
                 'width': '90%',
                 'height': '80%'
+            }
+        }
+    });
+    setTaskSelectListener(durationChart);
+    return durationChart;
+}
+
+export const buildDurationScatterChart2 = function(elementId, columns) {
+    var durationChart = new google.visualization.ChartWrapper({
+        'chartType': 'ScatterChart',
+        'containerId': elementId,
+        'view': {'columns': columns},
+        'options': {
+            'tooltip': { isHtml: true },
+            'height': 400,
+            'hAxis': {
+                'title': 'Dates',
+                'textPosition': 'out'
+            },
+            'vAxis': {
+                'title': 'Duration (days)',
+                'textPosition': 'in'
+            },
+            'legend': {
+                'position': 'in'
+            },
+            'chartArea': {
+                'width': '90%',
+                'height': '80%'
             },
             series: {
                 0: {labelInLegend: 'Tasks'},

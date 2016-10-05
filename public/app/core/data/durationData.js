@@ -1,9 +1,9 @@
-import { TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, TASK_INDEX_FILTER_LAST } from './taskData'
-import { DATA_NUMBER, DATA_STRING } from '../definition'
-import durationTooltip from '../tools/tooltip'
-import { constantColumnBuilder, columnBuilder, aggregatorBuilder } from './dataUtils'
+import {TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, TASK_INDEX_FILTER_LAST} from "./taskData";
+import {DATA_NUMBER, DATA_STRING} from "../definition";
+import durationTooltip from "../tools/tooltip";
+import {constantColumnBuilder, columnBuilder, aggregatorBuilder} from "./dataUtils";
 
-export const computeDurations = function(taskList) {
+export const computeDurations = function (taskList) {
     let header = ["Key"]
     for (let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
         header.push(RAW_DATA_COL.EVENTS[i].label);
@@ -12,11 +12,27 @@ export const computeDurations = function(taskList) {
     let data = taskList.map((task) => {
         let line = new Array(RAW_DATA_COL.EVENTS.length);
         line[0] = task.key;
-        task.durations.forEach((duration, index) =>  line[index + 1] = duration);
+        task.durations.forEach((duration, index) => line[index + 1] = duration);
         return line;
     })
 
     data.unshift(header);
+
+    return data;
+}
+
+export const computeDurationByDate = function (taskList) {
+    let header = ["Key", "Cycle Time"]
+    let data = taskList.map((task) => {
+        let line = new Array(2);
+        line[0] = task.key;
+        line[1] = task.cycleTime;
+        return line;
+    })
+
+    data.unshift(header);
+
+    console.log(data)
 
     return data;
 }
@@ -36,7 +52,7 @@ export const DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
 export const DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
 export const DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
 
-export const computeDurationData = function(inputData) {
+export const computeDurationData = function (inputData) {
     var durationDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
     durationDataStruct.push(constantColumnBuilder("string", "", "Selection"));
     durationDataStruct.push(constantColumnBuilder("number", "Count", 1));
@@ -63,7 +79,7 @@ function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correctio
     return columnBuilder(DATA_NUMBER, label, function (table, row) {
         var startDate = table.getValue(row, firstEventIndex);
         var endDate = table.getValue(row, lastEventIndex);
-        if(startDate == null){
+        if (startDate == null) {
             return null;
         }
         return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
@@ -78,7 +94,7 @@ function tooltipColumnBuilder() {
 
 }
 
-export const computeDurationStats = function(inputData) {
+export const computeDurationStats = function (inputData) {
     // Using group method to find Avg, 50% and 90% values
     var group = google.visualization.data.group(inputData, [DURATION_INDEX_STATIC_GROUP_ALL], [
         createAggregationColumn(google.visualization.data.avg),
@@ -143,7 +159,7 @@ function getQuartileFunction(ration) {
     }
 }
 
-export const groupDurationDataBy = function(inputData, groupBy) {
+export const groupDurationDataBy = function (inputData, groupBy) {
     var columns = [];
     RAW_DATA_COL.EVENTS.forEach(function (element, index) {
         columns.push(aggregatorBuilder(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
