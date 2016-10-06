@@ -116,6 +116,13 @@ export const buildDurationScatterChart = function(elementId, columns) {
             'chartArea': {
                 'width': '90%',
                 'height': '80%'
+            },
+            series: {
+                0: {labelInLegend: 'Tasks'},
+                1: {pointSize: 0, visibleInLegend: false},
+            },
+            trendlines: {
+                1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
             }
         }
     });

@@ -22,15 +22,22 @@ export const computeDurations = function (taskList) {
 }
 
 export const computeDurationByDate = function (taskList) {
-    let header = ["Creation", "Cycle Time"]
     let data = taskList.map((task) => {
-        let line = new Array(2);
+        let line = new Array(3);
         line[0] = task.events[0];
         line[1] = task.cycleTime;
         return line;
     })
 
-    data.unshift(header);
+    console.log(data)
+
+    if(data.length > 0){
+        let avg = data.reduce((acc, line) => acc + line[1],0) / data.length;
+        data[1][2] = avg;
+        data[data.length-1][2] = avg;
+
+        data.unshift(["Creation", "Cycle Time", "AVG"]);
+    }
 
     console.log(data)
 
