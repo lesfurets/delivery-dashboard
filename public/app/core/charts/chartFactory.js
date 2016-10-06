@@ -120,9 +120,13 @@ export const buildDurationScatterChart = function(elementId, columns) {
             series: {
                 0: {labelInLegend: 'Tasks'},
                 1: {pointSize: 0, visibleInLegend: false},
+                2: {pointSize: 0, visibleInLegend: false},
+                3: {pointSize: 0, visibleInLegend: false}
             },
             trendlines: {
                 1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
+                2: {labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
+                3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
             }
         }
     });
