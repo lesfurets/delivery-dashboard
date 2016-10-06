@@ -22,10 +22,10 @@ export const computeDurations = function (taskList) {
 }
 
 export const computeDurationByDate = function (taskList) {
-    let header = ["Key", "Cycle Time"]
+    let header = ["Creation", "Cycle Time"]
     let data = taskList.map((task) => {
         let line = new Array(2);
-        line[0] = task.key;
+        line[0] = task.events[0];
         line[1] = task.cycleTime;
         return line;
     })
