@@ -1,4 +1,4 @@
-import { TASK_INDEX_STATIC_REFERENCE, TASK_INDEX_FILTER_FIRST } from '../data/taskData'
+import { TASK_INDEX_STATIC_REFERENCE } from '../data/taskData'
 
 export const buildDataTable = function(elementId) {
     return new google.visualization.ChartWrapper({
@@ -134,61 +134,6 @@ export const buildDurationScatterChart = function(elementId, columns) {
     return durationChart;
 }
 
-export const buildDurationScatterChart2 = function(elementId, columns) {
-    var durationChart = new google.visualization.ChartWrapper({
-        'chartType': 'ScatterChart',
-        'containerId': elementId,
-        'view': {'columns': columns},
-        'options': {
-            'tooltip': { isHtml: true },
-            'height': 400,
-            'hAxis': {
-                'title': 'Dates',
-                'textPosition': 'out'
-            },
-            'vAxis': {
-                'title': 'Duration (days)',
-                'textPosition': 'in'
-            },
-            'legend': {
-                'position': 'in'
-            },
-            'chartArea': {
-                'width': '90%',
-                'height': '80%'
-            },
-            series: {
-                0: {labelInLegend: 'Tasks'},
-                1: {pointSize: 0, visibleInLegend: false},
-                2: {pointSize: 0, visibleInLegend: false},
-                3: {pointSize: 0, visibleInLegend: false}
-            },
-            trendlines: {
-                1: {labelInLegend: 'Average', visibleInLegend: true, opacity: 0.4, color: 'green'},
-                2: {labelInLegend: '75%', visibleInLegend: true, opacity: 0.4, color: 'orange'},
-                3: {labelInLegend: '90%', visibleInLegend: true, opacity: 0.4, color: 'red'}
-            }
-        }
-    });
-    setTaskSelectListener(durationChart);
-    return durationChart;
-}
-
-export const buildFilters =  function() {
-    var filters = [];
-    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-        filters.push(buildFilter("filter_" + index, RAW_DATA_COL.FILTERS[index].filterType, TASK_INDEX_FILTER_FIRST + index));
-    }
-    return filters;
-}
-
-export const buildFilteredDashboard = function(elementId, charts, filters, filterListener) {
-    google.visualization.events.addListener(charts, 'ready', filterListener);
-    var dashboard = new google.visualization.Dashboard(document.getElementById(elementId));
-    dashboard.bind(filters, charts);
-    return dashboard;
-}
-
 /***************************
  *     Event Manager
  **************************/
@@ -229,15 +174,4 @@ export const limitDashboardPeriod = function(areaChart, firstDay, lastDay) {
     areaChart.setOption('hAxis.viewWindow.min', firstDay);
     areaChart.setOption('hAxis.viewWindow.max', lastDay);
     return areaChart;
-}
-
-function buildFilter(containerId, controlType, filterColumnIndex) {
-    var filter = new google.visualization.ControlWrapper({
-        'controlType': controlType,
-        'containerId': containerId,
-        'options': {
-            'filterColumnIndex': filterColumnIndex,
-        }
-    });
-    return filter;
 }

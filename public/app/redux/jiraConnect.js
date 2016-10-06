@@ -1,13 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import { fetchDataAction } from './actions'
 import { connect } from 'react-redux'
-import { buildTaskTable } from '../core/data/taskData'
-
-const mapStateToRawDataProps = (state) => {
-    return {
-        rawData: buildTaskTable(state.taskList)
-    }
-};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -19,8 +12,6 @@ const mapDispatchToProps = (dispatch) => {
         }
     }
 };
-
-export const rawDataConnect = (Element) => connect(mapStateToRawDataProps, mapDispatchToProps)(Element);
 
 const mapStateToTaskListProps = (state) => {
     return {

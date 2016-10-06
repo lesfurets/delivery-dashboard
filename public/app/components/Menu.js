@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
-import {rawDataConnect} from "../redux/jiraConnect";
+import {taskListConnect} from "../redux/jiraConnect";
 
 export default class Menu extends React.Component {
     componentDidMount() {
@@ -55,4 +55,4 @@ export default class Menu extends React.Component {
     }
 }
 
-export default rawDataConnect(Menu)
+export default taskListConnect(Menu)
