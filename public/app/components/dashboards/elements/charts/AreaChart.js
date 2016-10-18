@@ -7,34 +7,26 @@ export default class AreaChart extends React.Component {
         super();
         this.state = {
             chartId: randomId(),
-            filterId: randomId(),
-            dashboardId: randomId(),
-            dashboard: null
+            chart: null
         }
     }
 
     componentDidMount() {
-        var areaChart = buildCumulativeFlowChart(this.state.chartId, 400);
-        var chartRangeFilter = buildRangeFilter(this.state.filterId);
-
-        var dashboard = new google.visualization.Dashboard(document.getElementById(this.state.dashboardId));
-        dashboard.bind([chartRangeFilter], [areaChart]);
-
         this.setState({
-            dashboard: dashboard
+            chart: buildCumulativeFlowChart(this.state.chartId, 400)
         });
     }
 
     render() {
-        if (this.state.dashboard != null) {
-           this.state.dashboard.draw(google.visualization.arrayToDataTable(this.props.data));
+        if (this.state.chart != null) {
+            if(this.props.bounds != null){
+                this.state.chart.setOption('hAxis.viewWindow.min', this.props.bounds.start);
+                this.state.chart.setOption('hAxis.viewWindow.max', this.props.bounds.end);
+            }
+            this.state.chart.setDataTable(google.visualization.arrayToDataTable(this.props.data));
+            this.state.chart.draw();
         }
-        return (
-            <div id={this.state.dashboardId}>
-                <div id={this.state.chartId}></div>
-                <div id={this.state.filterId}></div>
-            </div>
-        );
+        return <div id={this.state.chartId}></div>;
     }
 }
 

@@ -13,6 +13,8 @@ import {computeDurationData, groupDurationDataBy} from "../../../core/data/durat
 import MonthSelector from "./MonthSelector";
 import PeriodSelector from "./PeriodSelector";
 import Switch from "./inputs/Switch";
+import AreaChart from "./charts/AreaChart"
+import {computeEvent} from '../../../core/data/eventData'
 
 class Report extends React.Component {
     constructor() {
@@ -62,10 +64,8 @@ class Report extends React.Component {
     render() {
         let timeSelector;
         if (this.props.selector == FILTER_MONTH) {
-            console.log(this.props.selector + " => month")
             timeSelector = <MonthSelector onChange={this.updateDate}/>
         } else {
-            console.log(this.props.selector + " => period")
             timeSelector = <PeriodSelector onChange={this.updateDate}/>
         }
 
@@ -97,6 +97,8 @@ class Report extends React.Component {
                 </div>
                 <div className="row card-relative-chart">
                     <div id="area_chart"></div>
+                    <AreaChart data={computeEvent(this.props.taskList.filter((task) => task.events[task.events.length - 1] >= this.state.startDate))}
+                               light bounds={{start:this.state.startDate , end:this.state.endDate}}/>
                     <div className="card to-print stats">
                         <div id="duration_stats"></div>
                     </div>
