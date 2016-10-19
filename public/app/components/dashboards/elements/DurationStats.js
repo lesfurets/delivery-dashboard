@@ -2,17 +2,17 @@ import React from "react";
 
 export default class DurationStats extends React.Component {
     render() {
-        let stats = this.props.taskList
-            .reduce((collector, task) => collector.add(task), new TaskCollector())
+        let collectors = this.props.taskList
+            .reduce((collector, task) => collector.add(task), new TaskCollector(() => 1))
             .getStatistics();
 
         return (
             <table className="table table-hover">
                 <thead>
-                <tr>{stats.getHeader()}</tr>
+                {collectors.getHeader()}
                 </thead>
                 <tbody>
-                <tr>{stats.getValues()}</tr>
+                {collectors.getValues()}
                 </tbody>
             </table>
         );
@@ -20,26 +20,36 @@ export default class DurationStats extends React.Component {
 }
 
 class TaskCollector {
-    constructor() {
-        this.cycleTimeList = [];
-        this.phasesDurationList = [];
-        this.count = 0;
+    constructor(selector) {
+        this.collectors = [];
+        this.selector = selector;
     }
 
     add(task) {
+        var index = this.selector(task);
+        if (this.collectors[index] == null) {
+            this.collectors[index] = {
+                cycleTimeList: [],
+                phasesDurationList: [],
+                count: 0
+            }
+        }
+
+        let collector = this.collectors[index];
+
         if (task.cycleTime != null) {
-            this.cycleTimeList.push(task.cycleTime);
+            collector.cycleTimeList.push(task.cycleTime);
         }
 
         task.durations.forEach((duration, index) => {
-            if (this.phasesDurationList[index] == null) {
-                this.phasesDurationList[index] = [duration];
+            if (collector.phasesDurationList[index] == null) {
+                collector.phasesDurationList[index] = [duration];
             } else {
-                this.phasesDurationList[index].push(duration);
+                collector.phasesDurationList[index].push(duration);
             }
         });
 
-        this.count++;
+        collector.count++;
 
         return this;
     }
@@ -51,23 +61,29 @@ class TaskCollector {
 
 class TaskStatistic {
     constructor(taskCollector) {
-        this.phasesDuration = taskCollector.phasesDurationList.map((phase) => this.computeAverage(phase));
-        this.cycleTime = this.computeAverage(taskCollector.cycleTimeList);
-        this.count = taskCollector.count;
+        this.stats = taskCollector.collectors.map((collector) => {
+            return {
+                phasesDuration: collector.phasesDurationList.map((phase) => this.computeAverage(phase)),
+                cycleTime: this.computeAverage(collector.cycleTimeList),
+                count: collector.count
+            }
+        });
     }
 
     getHeader() {
         let cells = ["Tasks"];
-        this.phasesDuration.forEach((phase, index) => cells.push(RAW_DATA_COL.EVENTS[index].label))
-        cells.push("Cycle Time")
-        return cells.map((value, index) => (<th key={"header_" + index}>{value}</th>));
+        RAW_DATA_COL.EVENTS.forEach((event) => cells.push(event.label));
+        cells.push("Cycle Time");
+        return <tr>{cells.map((value, index) => (<th key={"header_" + index}>{value}</th>))}</tr>;
     }
 
     getValues() {
-        let cells = [this.count];
-        this.phasesDuration.forEach((phase) => cells.push(phase))
-        cells.push(this.cycleTime)
-        return cells.map((value, index) => (<td key={"header_" + index}>{value}</td>));
+        return this.stats.map((stat, index) => {
+            let cells = [stat.count];
+            stat.phasesDuration.forEach((phase) => cells.push(phase))
+            cells.push(stat.cycleTime)
+            return <tr key={index}>{cells.map((value, index) => (<td key={"header_" + index}>{value}</td>))}</tr>;
+        });
     }
 
     computeAverage(phase) {

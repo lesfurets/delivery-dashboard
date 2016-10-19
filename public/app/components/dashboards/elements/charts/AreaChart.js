@@ -13,7 +13,7 @@ export default class AreaChart extends React.Component {
 
     componentDidMount() {
         this.setState({
-            chart: buildCumulativeFlowChart(this.state.chartId, 400)
+            chart: buildCumulativeFlowChart(this.state.chartId, 600)
         });
     }
 
