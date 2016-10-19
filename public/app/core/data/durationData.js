@@ -1,7 +1,7 @@
-import {TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, TASK_INDEX_FILTER_LAST} from "./taskData";
-import {DATA_NUMBER, DATA_STRING} from "../definition";
+import {TASK_INDEX_FILTER_LAST} from "./taskData";
+import {DATA_STRING} from "../definition";
 import durationTooltip from "../tools/tooltip";
-import {constantColumnBuilder, columnBuilder, aggregatorBuilder} from "./dataUtils";
+import {columnBuilder} from "./dataUtils";
 
 export const computeDurations = function (taskList) {
     let header = ["Key"]
@@ -79,60 +79,10 @@ export const DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
 
 export const DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
 
-export const computeDurationData = function (inputData) {
-    var durationDataStruct = Array.apply(null, {length: inputData.getNumberOfColumns()}).map(Number.call, Number);
-    durationDataStruct.push(constantColumnBuilder("string", "", "Selection"));
-    durationDataStruct.push(constantColumnBuilder("number", "Count", 1));
-    for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
-        var element = RAW_DATA_COL.EVENTS[index];
-        var eventIndex = TASK_INDEX_EVENTS_FIRST + index;
-        durationDataStruct.push(durationColumnBuilder(element.label, eventIndex, eventIndex + 1, element.correction));
-    }
-    durationDataStruct.push(durationColumnBuilder("Cycle Time", TASK_INDEX_EVENTS_FIRST, TASK_INDEX_EVENTS_LAST, 0));
-
-    var durationData = new google.visualization.DataView(inputData);
-    durationData.setColumns(durationDataStruct);
-
-    var dataAndTooltipStruct = Array.apply(null, {length: durationData.getNumberOfColumns()}).map(Number.call, Number);
-    dataAndTooltipStruct.push(tooltipColumnBuilder());
-
-    var dataAndTooltip = new google.visualization.DataView(durationData.toDataTable());
-    dataAndTooltip.setColumns(dataAndTooltipStruct);
-
-    return dataAndTooltip.toDataTable();
-}
-
-function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
-    return columnBuilder(DATA_NUMBER, label, function (table, row) {
-        var startDate = table.getValue(row, firstEventIndex);
-        var endDate = table.getValue(row, lastEventIndex);
-        if (startDate == null) {
-            return null;
-        }
-        return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
-    });
-}
-
 function tooltipColumnBuilder() {
     var tooltipColumn = columnBuilder(DATA_STRING, "Tooltip", durationTooltip);
     tooltipColumn.role = "tooltip";
     tooltipColumn.p = {'html': true};
     return tooltipColumn;
 
-}
-
-export const groupDurationDataBy = function (inputData, groupBy) {
-    var columns = [];
-    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
-        columns.push(aggregatorBuilder(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
-    });
-    columns.unshift(aggregatorBuilder(DURATION_INDEX_STATIC_COUNT, 'number', google.visualization.data.count));
-
-    var data = google.visualization.data.group(inputData, [groupBy], columns);
-
-    var formatter = new google.visualization.NumberFormat({suffix: ' day(s)'});
-    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-        formatter.format(data, 2 + index);
-    }
-    return data
 }

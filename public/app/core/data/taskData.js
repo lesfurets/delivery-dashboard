@@ -6,10 +6,8 @@ export const TASK_INDEX_STATIC_REFERENCE = 0;
 export const TASK_INDEX_STATIC_SYMMARY = 1;
 export const TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
 
-export const TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
 export const TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
 
-export const TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
 export const TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
 function getJiraValue(jiraData, fieldPath, fieldType) {
@@ -52,59 +50,4 @@ export const parseJiraJson = function (jiraData) {
 
 function computeDuration(startDate, endDate, correction) {
     return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
-}
-
-export const buildTaskTable = function (taskList) {
-    var taskData = new google.visualization.DataTable();
-
-    // Defining table structure
-    taskData.addColumn(DATA_STRING, "Key");
-    taskData.addColumn(DATA_STRING, "Summary");
-    RAW_DATA_COL.EVENTS.forEach(function (element) {
-        taskData.addColumn(element.dataType, element.label);
-    });
-    if (RAW_DATA_COL.FILTERS != null) {
-        RAW_DATA_COL.FILTERS.forEach(function (element) {
-            taskData.addColumn(element.dataType, element.label);
-        });
-    }
-
-    // Adding jira data in the table
-    taskList.forEach(function (task) {
-        var row = [];
-        row.push(task.key);
-        row.push(task.summary);
-        task.events.forEach((event) => row.push(event));
-        task.filters.forEach((filter) => row.push(filter));
-        taskData.addRow(row);
-    });
-
-    return taskData;
-}
-
-export const filterReleasedAfter = function (inputData, fromDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: TASK_INDEX_EVENTS_LAST,
-        minValue: fromDate
-    }]));
-    return view;
-}
-
-export const filterReleasedBefore = function (inputData, toDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: TASK_INDEX_EVENTS_LAST,
-        maxValue: toDate
-    }]));
-    return view;
-}
-
-export const filterCreatedBefore = function (inputData, toDate) {
-    var view = new google.visualization.DataView(inputData);
-    view.setRows(view.getFilteredRows([{
-        column: TASK_INDEX_EVENTS_FIRST,
-        maxValue: toDate
-    }]));
-    return view;
 }

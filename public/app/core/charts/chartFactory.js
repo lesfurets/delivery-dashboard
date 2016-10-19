@@ -1,15 +1,5 @@
 import { TASK_INDEX_STATIC_REFERENCE } from '../data/taskData'
 
-export const buildDataTable = function(elementId) {
-    return new google.visualization.ChartWrapper({
-        'chartType': 'Table',
-        'containerId': elementId,
-        'options': {
-            width: '100%'
-        }
-    });
-}
-
 export const buildCumulativeFlowChart = function (elementId, height) {
     return new google.visualization.ChartWrapper({
         'chartType': 'AreaChart',
@@ -134,18 +124,6 @@ export const buildDurationScatterChart = function(elementId, columns) {
     return durationChart;
 }
 
-/***************************
- *     Event Manager
- **************************/
-
-function setTaskSelectListener(element) {
-    google.visualization.events.addListener(element, 'select', function () {
-        var rowNumber = element.getChart().getSelection()[0].row;
-        var data = element.getDataTable();
-        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
-    });
-}
-
 export const buildSimpleChart = function (elementId, chartType, title) {
     return new google.visualization.ChartWrapper({
         'chartType': chartType,
@@ -160,18 +138,10 @@ export const buildSimpleChart = function (elementId, chartType, title) {
     });
 }
 
-/***************************
- * ExtractDashboard
- **************************/
-
-export const buildTimePeriodDashboard = function(elementId, startDate, endDate) {
-    var areaChart = buildCumulativeFlowChart(elementId, 600);
-    limitDashboardPeriod(areaChart, startDate, endDate);
-    return areaChart;
-}
-
-export const limitDashboardPeriod = function(areaChart, firstDay, lastDay) {
-    areaChart.setOption('hAxis.viewWindow.min', firstDay);
-    areaChart.setOption('hAxis.viewWindow.max', lastDay);
-    return areaChart;
+function setTaskSelectListener(element) {
+    google.visualization.events.addListener(element, 'select', function () {
+        var rowNumber = element.getChart().getSelection()[0].row;
+        var data = element.getDataTable();
+        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
+    });
 }

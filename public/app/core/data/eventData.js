@@ -1,23 +1,3 @@
-import {TASK_INDEX_EVENTS_FIRST} from "./taskData";
-
-class EventCounter {
-    constructor(date) {
-        this.date = date;
-        this.counters = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(Number.prototype.valueOf, 0);
-    }
-
-    add(counter) {
-        RAW_DATA_COL.EVENTS.forEach((event, index) => this.counters[index] = this.counters[index] + counter.counters[index]);
-        return this;
-    }
-
-    toArray() {
-        let eventArray = [this.date];
-        this.counters.forEach((counter) => eventArray.push(counter));
-        return eventArray;
-    }
-}
-
 // We want to extract all events from a task
 // Input :
 // ╔═══════╦═════════╦═════════╦═════════╗
@@ -71,40 +51,21 @@ export const computeEvent = function (taskList) {
     return cumulativeArray;
 }
 
-
-export const computeEventData = function (inputData) {
-    // Count the number of events at each day
-    var eventsNb = RAW_DATA_COL.EVENTS.length;
-    var eventsByDateMap = {};
-    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
-        for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
-            var eventDate = inputData.getValue(index, TASK_INDEX_EVENTS_FIRST + eventIndex);
-            if (eventDate != null) {
-                var indexDate = eventDate.formatYYYYMMDD();
-                if (!(indexDate in eventsByDateMap)) {
-                    eventsByDateMap[indexDate] = Array.apply(null, {length: eventsNb}).map(Number.prototype.valueOf, 0);
-                }
-                eventsByDateMap[indexDate][eventIndex]++;
-
-            }
-        }
+class EventCounter {
+    constructor(date) {
+        this.date = date;
+        this.counters = Array.apply(null, {length: RAW_DATA_COL.EVENTS.length}).map(Number.prototype.valueOf, 0);
     }
 
-    // Order by date and add in a table with a cumulative count
-    var cumulativeData = new google.visualization.DataTable();
-    cumulativeData.addColumn('date', "EventDate");
-    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-        cumulativeData.addColumn('number', inputData.getColumnLabel(TASK_INDEX_EVENTS_FIRST + index));
+    add(counter) {
+        RAW_DATA_COL.EVENTS.forEach((event, index) => this.counters[index] = this.counters[index] + counter.counters[index]);
+        return this;
     }
 
-    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
-        var row = [new Date(dateString)];
-        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
-            row.push((dateIndex == 0) ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
-        })
-        cumulativeData.addRow(row);
-    });
-
-    return cumulativeData;
+    toArray() {
+        let eventArray = [this.date];
+        this.counters.forEach((counter) => eventArray.push(counter));
+        return eventArray;
+    }
 }
 
