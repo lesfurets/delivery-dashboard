@@ -3,7 +3,7 @@ import React from "react";
 export default class DurationStats extends React.Component {
     render() {
         let collectors = this.props.taskList
-            .reduce((collector, task) => collector.add(task), new TaskCollector("Type",(task) => task.filters[1]))
+            .reduce((collector, task) => collector.add(task), new TaskCollector())
             .getStatistics();
 
         return (
@@ -23,7 +23,7 @@ class TaskCollector {
     }
 
     add(task) {
-        var index = this.selector(task);
+        var index = this.selector != null ? this.selector(task) : 1;
         if (this.collectors[index] == null) {
             this.collectors[index] = {
                 cycleTimeList: [],
@@ -72,7 +72,8 @@ class TaskStatistic {
     }
 
     getHeader() {
-        let cells = [this.selectorLabel,"Tasks"];
+        let cells = this.stats.length >1 ? [this.selectorLabel] : [];
+        cells.push("Tasks");
         for(let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++){
             cells.push(RAW_DATA_COL.EVENTS[i].label);
         }
@@ -81,9 +82,9 @@ class TaskStatistic {
     }
 
     getValues() {
-        console.log(this.stats);
         return this.stats.map((stat, index) => {
-            let cells = [stat.index,stat.count];
+            let cells = this.stats.length >1 ? [stat.index] : [];
+            cells.push(stat.count);
             for(let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++){
                 cells.push(i < stat.phasesDuration.length ? stat.phasesDuration[i] : "");
             }
