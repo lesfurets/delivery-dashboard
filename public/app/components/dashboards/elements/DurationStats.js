@@ -2,14 +2,17 @@ import React from "react";
 
 export default class DurationStats extends React.Component {
     render() {
+        var taskCollector = this.props.groupBy == null ? new TaskCollector()
+            : new TaskCollector(this.props.groupBy.label, (task)=> task.filters[this.props.groupBy.position]);
+
         let collectors = this.props.taskList
-            .reduce((collector, task) => collector.add(task), new TaskCollector())
+            .reduce((collector, task) => collector.add(task), taskCollector)
             .getStatistics();
 
         return (
             <table className="table table-hover">
-                <thead> {collectors.getHeader()} </thead>
-                <tbody> {collectors.getValues()} </tbody>
+                <thead>{collectors.getHeader()}</thead>
+                <tbody>{collectors.getValues()}</tbody>
             </table>
         );
     }
@@ -60,7 +63,7 @@ class TaskStatistic {
         this.selectorLabel = taskCollector.selectorLabel;
         this.stats = [];
 
-        for(var index in taskCollector.collectors) {
+        for (var index in taskCollector.collectors) {
             var collector = taskCollector.collectors[index];
             this.stats.push({
                 phasesDuration: collector.phasesDurationList.map((phase) => this.computeAverage(phase)),
@@ -72,9 +75,9 @@ class TaskStatistic {
     }
 
     getHeader() {
-        let cells = this.stats.length >1 ? [this.selectorLabel] : [];
+        let cells = this.stats.length > 1 ? [this.selectorLabel] : [];
         cells.push("Tasks");
-        for(let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++){
+        for (let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
             cells.push(RAW_DATA_COL.EVENTS[i].label);
         }
         cells.push("Cycle Time");
@@ -83,9 +86,9 @@ class TaskStatistic {
 
     getValues() {
         return this.stats.map((stat, index) => {
-            let cells = this.stats.length >1 ? [stat.index] : [];
+            let cells = this.stats.length > 1 ? [stat.index] : [];
             cells.push(stat.count);
-            for(let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++){
+            for (let i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
                 cells.push(i < stat.phasesDuration.length ? stat.phasesDuration[i] : "");
             }
             cells.push(stat.cycleTime)

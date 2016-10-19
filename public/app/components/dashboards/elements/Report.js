@@ -14,6 +14,7 @@ import MonthSelector from "./MonthSelector";
 import PeriodSelector from "./PeriodSelector";
 import Switch from "./inputs/Switch";
 import AreaChart from "./charts/AreaChart"
+import DurationStats from "./DurationStats"
 import {computeEvent} from '../../../core/data/eventData'
 
 class Report extends React.Component {
@@ -57,7 +58,7 @@ class Report extends React.Component {
 
     updateType(type) {
         this.setState({
-            groupType: type,
+            groupBy: type,
         })
     }
 
@@ -76,7 +77,7 @@ class Report extends React.Component {
             this.state.cumulative.setDataTable(computeEventData(filteredData));
             this.state.cumulative.draw();
 
-            this.state.stats.setDataTable(groupDurationDataBy(computeDurationData(filterReleasedBefore(filteredData, this.state.endDate)), TASK_INDEX_FILTER_FIRST + this.state.groupType.position));
+            this.state.stats.setDataTable(groupDurationDataBy(computeDurationData(filterReleasedBefore(filteredData, this.state.endDate)), TASK_INDEX_FILTER_FIRST + this.state.groupBy.position));
             this.state.stats.draw();
         }
         return (
@@ -101,6 +102,7 @@ class Report extends React.Component {
                                light bounds={{start:this.state.startDate , end:this.state.endDate}}/>
                     <div className="card to-print stats">
                         <div id="duration_stats"></div>
+                        <DurationStats taskList={this.props.taskList.filter((task) => task.events[task.events.length - 1] >= this.state.startDate).filter((task) => task.events[task.events.length - 1] <= this.state.endDate)} groupBy={this.state.groupBy}/>
                     </div>
                 </div>
             </div>
