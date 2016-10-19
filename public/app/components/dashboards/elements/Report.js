@@ -1,15 +1,5 @@
 import React from "react";
-import {buildTimePeriodDashboard, limitDashboardPeriod, buildDataTable} from "../../../core/charts/chartFactory";
 import {FILTER_DATE_RANGE, FILTER_MONTH} from "../../../core/definition";
-import {
-    filterCreatedBefore,
-    filterReleasedAfter,
-    filterReleasedBefore,
-    TASK_INDEX_FILTER_FIRST,
-    buildTaskTable
-} from "../../../core/data/taskData";
-import {computeEventData} from "../../../core/data/eventData";
-import {computeDurationData, groupDurationDataBy} from "../../../core/data/durationData";
 import MonthSelector from "./MonthSelector";
 import PeriodSelector from "./PeriodSelector";
 import Switch from "./inputs/Switch";
@@ -21,38 +11,18 @@ class Report extends React.Component {
     constructor() {
         super();
         this.state = {
-            taskMatcher: (task) => true,
-            cumulative: null,
-            stats: null,
-            startDate: null,
-            endDate: null,
-            reduceColumn: null,
+            bounds: { start: null, end: null},
         };
         this.updateDate = this.updateDate.bind(this);
         this.updateType = this.updateType.bind(this);
-        this.update = this.update.bind(this);
-    }
-
-    update() {
-        this.setState({
-            taskMatcher: (task) => ReactDom.findDOMNode(this.refs.filters.refs["filter"]).selected
-        });
-    }
-
-    componentDidMount() {
-        let cumulative = buildTimePeriodDashboard("area_chart", this.state.startDate, this.state.endDate);
-        let stats = buildDataTable(duration_stats);
-
-        this.setState({
-            cumulative: cumulative,
-            stats: stats
-        });
     }
 
     updateDate(startDate, endDate) {
         this.setState({
-            startDate: startDate,
-            endDate: endDate,
+            bounds: {
+                start: startDate,
+                end: endDate,
+            }
         })
     }
 
@@ -63,23 +33,15 @@ class Report extends React.Component {
     }
 
     render() {
-        let timeSelector;
+        let timeSelector = <PeriodSelector onChange={this.updateDate} />;
         if (this.props.selector == FILTER_MONTH) {
             timeSelector = <MonthSelector onChange={this.updateDate}/>
         } else {
             timeSelector = <PeriodSelector onChange={this.updateDate}/>
         }
 
-        if (this.state.cumulative != null) {
-            let filteredData = filterCreatedBefore(filterReleasedAfter(buildTaskTable(this.props.taskList), this.state.startDate), this.state.endDate);
-
-            limitDashboardPeriod(this.state.cumulative, this.state.startDate, this.state.endDate);
-            this.state.cumulative.setDataTable(computeEventData(filteredData));
-            this.state.cumulative.draw();
-
-            this.state.stats.setDataTable(groupDurationDataBy(computeDurationData(filterReleasedBefore(filteredData, this.state.endDate)), TASK_INDEX_FILTER_FIRST + this.state.groupBy.position));
-            this.state.stats.draw();
-        }
+        var releasedAfter = this.props.taskList.filter((task) => task.events[task.events.length - 1] >= this.state.bounds.start);
+        var releasedDuring = releasedAfter.filter((task) => task.events[task.events.length - 1] <= this.state.bounds.end);
         return (
             <div className="card to-print graph">
                 <div className="row">
@@ -97,12 +59,9 @@ class Report extends React.Component {
                     </h2>
                 </div>
                 <div className="row card-relative-chart">
-                    <div id="area_chart"></div>
-                    <AreaChart data={computeEvent(this.props.taskList.filter((task) => task.events[task.events.length - 1] >= this.state.startDate))}
-                               light bounds={{start:this.state.startDate , end:this.state.endDate}}/>
+                    <AreaChart data={computeEvent(releasedAfter)} light bounds={this.state.bounds}/>
                     <div className="card to-print stats">
-                        <div id="duration_stats"></div>
-                        <DurationStats taskList={this.props.taskList.filter((task) => task.events[task.events.length - 1] >= this.state.startDate).filter((task) => task.events[task.events.length - 1] <= this.state.endDate)} groupBy={this.state.groupBy}/>
+                        <DurationStats taskList={releasedDuring} groupBy={this.state.groupBy}/>
                     </div>
                 </div>
             </div>
