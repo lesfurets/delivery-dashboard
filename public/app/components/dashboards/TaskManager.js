@@ -68,7 +68,7 @@ class TaskManager extends React.Component {
             });
         }
         return (
-            <Card>
+            <Card cardTitle="Duration" data={tasks} noModal={true}>
                 <input type="text" onChange={this.update} defaultValue=""/>
                 <table className="table table-hover">
                     <thead>

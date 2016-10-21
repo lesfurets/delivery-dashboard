@@ -16,12 +16,14 @@ export default class Card extends React.Component {
     }
 
     render() {
-        let suffix = "";
-        let action = "";
-        if (typeof this.props.data !== "undefined") {
-            suffix = " - " + this.props.data.length + " task" + (this.props.data.length != 1 ? "s" : "");
-            action = <a href="#" onClick={this.displayList}><span className="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#modal"></span></a>
-        }
+        var hastTaskList = typeof this.props.data !== "undefined";
+        let suffix = !hastTaskList ? "" : " - " + this.props.data.length + " task" + (this.props.data.length != 1 ? "s" : "");
+        let action = !hastTaskList || this.props.noModal ? "" :(
+            <a href="#" onClick={this.displayList}>
+                <span className="glyphicon glyphicon-th-list pull-right" data-toggle="modal" data-target="#modal">
+                </span>
+            </a>
+        )
         return (
             <div>
                 <div className="card">
