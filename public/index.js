@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1bfd1583c43b839f05c5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "755a9f8bfcb5a4dece7c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -586,7 +586,7 @@
 	__webpack_require__(5);
 	__webpack_require__(78);
 	__webpack_require__(80);
-	module.exports = __webpack_require__(388);
+	module.exports = __webpack_require__(394);
 
 
 /***/ },
@@ -8219,23 +8219,27 @@
 
 	var _CumulativeFlow2 = _interopRequireDefault(_CumulativeFlow);
 
-	var _Duration = __webpack_require__(366);
+	var _DurationPhase = __webpack_require__(368);
 
-	var _Duration2 = _interopRequireDefault(_Duration);
+	var _DurationPhase2 = _interopRequireDefault(_DurationPhase);
 
-	var _Distribution = __webpack_require__(379);
+	var _DurationScatter = __webpack_require__(383);
+
+	var _DurationScatter2 = _interopRequireDefault(_DurationScatter);
+
+	var _Distribution = __webpack_require__(385);
 
 	var _Distribution2 = _interopRequireDefault(_Distribution);
 
-	var _MonthlyReport = __webpack_require__(382);
+	var _MonthlyReport = __webpack_require__(388);
 
 	var _MonthlyReport2 = _interopRequireDefault(_MonthlyReport);
 
-	var _PeriodReport = __webpack_require__(386);
+	var _PeriodReport = __webpack_require__(392);
 
 	var _PeriodReport2 = _interopRequireDefault(_PeriodReport);
 
-	var _TaskManager = __webpack_require__(387);
+	var _TaskManager = __webpack_require__(393);
 
 	var _TaskManager2 = _interopRequireDefault(_TaskManager);
 
@@ -8258,7 +8262,8 @@
 	                { path: '/', component: _DeliveryDashboard2.default },
 	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/monthly-report' }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/cumulative-flow', component: _CumulativeFlow2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/duration', component: _Duration2.default }),
+	                _react2.default.createElement(_reactRouter.Route, { path: '/duration-phases', component: _DurationPhase2.default }),
+	                _react2.default.createElement(_reactRouter.Route, { path: '/duration-scatter', component: _DurationScatter2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/distribution', component: _Distribution2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/monthly-report', component: _MonthlyReport2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/period-report', component: _PeriodReport2.default }),
@@ -36168,40 +36173,17 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var ID_SEPARATOR = exports.ID_SEPARATOR = "_";
-	var ID_CHART = exports.ID_CHART = ID_SEPARATOR + 'chart';
-	var ID_AREA_CHART = exports.ID_AREA_CHART = ID_SEPARATOR + 'area_chart';
-	var ID_COLUMN_CHART = exports.ID_COLUMN_CHART = ID_SEPARATOR + 'column_chart';
-	var ID_SCATTER_CHART = exports.ID_SCATTER_CHART = ID_SEPARATOR + 'scatter_chart';
-
-	var ID_RANGE_FILTER = exports.ID_RANGE_FILTER = ID_SEPARATOR + 'range_filter';
-	var ID_FILTER = exports.ID_FILTER = ID_SEPARATOR + 'filter';
-	var ID_FILTERS = exports.ID_FILTERS = ID_SEPARATOR + 'filters';
-	var ID_FILTERS_RANGE = exports.ID_FILTERS_RANGE = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'range';
-	var ID_FILTERS_CATEGORY = exports.ID_FILTERS_CATEGORY = ID_SEPARATOR + ID_FILTERS + ID_SEPARATOR + 'category';
-
-	var ID_DASHBOARD = exports.ID_DASHBOARD = ID_SEPARATOR + "dashboard";
-	var ID_TITLE_SUFFIX = exports.ID_TITLE_SUFFIX = ID_SEPARATOR + "title_suffix";
-	var ID_TASK_LIST_MODAL = exports.ID_TASK_LIST_MODAL = ID_SEPARATOR + 'tasks_list_modal';
-	var ID_TASK_LIST = exports.ID_TASK_LIST = ID_SEPARATOR + 'tasks_list';
-	var ID_DURATION_STATS = exports.ID_DURATION_STATS = ID_SEPARATOR + 'duration_stats';
-
-	var ID_SWITCH = exports.ID_SWITCH = ID_SEPARATOR + 'switch';
-	var ID_TIME_SELECTOR = exports.ID_TIME_SELECTOR = ID_SEPARATOR + 'time_selector';
-	var ID_MONTH_SELECTOR_LABEL = exports.ID_MONTH_SELECTOR_LABEL = ID_SEPARATOR + 'month_selector_label';
-	var ID_MONTH_SELECTOR_LIST = exports.ID_MONTH_SELECTOR_LIST = ID_SEPARATOR + 'month_selector_list';
-
 	var DATA_DATE = exports.DATA_DATE = "date";
 	var DATA_STRING = exports.DATA_STRING = "string";
 	var DATA_NUMBER = exports.DATA_NUMBER = "number";
 
-	var FILTER_CATEGORY = exports.FILTER_CATEGORY = "CategoryFilter";
-	var FILTER_DATE = exports.FILTER_DATE = "DateRangeFilter";
+	var FILTER_DATE_RANGE = exports.FILTER_DATE_RANGE = "DateRangeFilter";
+	var FILTER_MONTH = exports.FILTER_MONTH = "MonthFilter";
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "definition.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
@@ -36384,8 +36366,31 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/duration', styleName: "title" },
-	                                            "Duration"
+	                                            { to: '/distribution', styleName: "title" },
+	                                            "Distribution"
+	                                        )
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                "li",
+	                                { className: "dropdown" },
+	                                _react2.default.createElement(
+	                                    "a",
+	                                    { className: "dropdown-toggle", "data-toggle": "dropdown", href: "#" },
+	                                    "Duration",
+	                                    _react2.default.createElement("span", { className: "caret" })
+	                                ),
+	                                _react2.default.createElement(
+	                                    "ul",
+	                                    { className: "dropdown-menu" },
+	                                    _react2.default.createElement(
+	                                        "li",
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            _reactRouter.Link,
+	                                            { to: '/duration-phases', styleName: "title" },
+	                                            "Phases"
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
@@ -36393,8 +36398,8 @@
 	                                        null,
 	                                        _react2.default.createElement(
 	                                            _reactRouter.Link,
-	                                            { to: '/distribution', styleName: "title" },
-	                                            "Distribution"
+	                                            { to: '/duration-scatter', styleName: "title" },
+	                                            "Scatter"
 	                                        )
 	                                    )
 	                                )
@@ -36464,7 +36469,7 @@
 	}(_react2.default.Component);
 
 	exports.default = Menu;
-	exports.default = (0, _jiraConnect.rawDataConnect)(Menu);
+	exports.default = (0, _jiraConnect.taskListConnect)(Menu);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Menu.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
@@ -36480,7 +36485,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.taskListConnect = exports.rawDataConnect = undefined;
+	exports.taskListConnect = undefined;
 
 	var _isomorphicFetch = __webpack_require__(354);
 
@@ -36490,15 +36495,7 @@
 
 	var _reactRedux = __webpack_require__(331);
 
-	var _taskData = __webpack_require__(357);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToRawDataProps = function mapStateToRawDataProps(state) {
-	    return {
-	        rawData: (0, _taskData.buildTaskTable)(state.taskList)
-	    };
-	};
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	    return {
@@ -36511,10 +36508,6 @@
 	            });
 	        }
 	    };
-	};
-
-	var rawDataConnect = exports.rawDataConnect = function rawDataConnect(Element) {
-	    return (0, _reactRedux.connect)(mapStateToRawDataProps, mapDispatchToProps)(Element);
 	};
 
 	var mapStateToTaskListProps = function mapStateToTaskListProps(state) {
@@ -37017,7 +37010,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.filterCreatedBefore = exports.filterReleasedBefore = exports.filterReleasedAfter = exports.filterTaskData = exports.buildTaskTable = exports.parseJiraJson = exports.TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_REFERENCE = undefined;
+	exports.csvExport = exports.parseJiraJson = exports.TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_REFERENCE = undefined;
 
 	var _jsonParser = __webpack_require__(358);
 
@@ -37035,10 +37028,8 @@
 	var TASK_INDEX_STATIC_SYMMARY = exports.TASK_INDEX_STATIC_SYMMARY = 1;
 	var TASK_INDEX_STATIC_LAST = exports.TASK_INDEX_STATIC_LAST = TASK_INDEX_STATIC_SYMMARY;
 
-	var TASK_INDEX_EVENTS_FIRST = exports.TASK_INDEX_EVENTS_FIRST = TASK_INDEX_STATIC_LAST + 1;
 	var TASK_INDEX_EVENTS_LAST = exports.TASK_INDEX_EVENTS_LAST = TASK_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
 
-	var TASK_INDEX_FILTER_FIRST = exports.TASK_INDEX_FILTER_FIRST = TASK_INDEX_EVENTS_LAST + 1;
 	var TASK_INDEX_FILTER_LAST = exports.TASK_INDEX_FILTER_LAST = TASK_INDEX_EVENTS_LAST + (RAW_DATA_COL.FILTERS == null ? 0 : RAW_DATA_COL.FILTERS.length);
 
 	function getJiraValue(jiraData, fieldPath, fieldType) {
@@ -37084,93 +37075,35 @@
 	    return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
 	}
 
-	var buildTaskTable = exports.buildTaskTable = function buildTaskTable(taskList) {
-	    var taskData = new google.visualization.DataTable();
+	var csvExport = exports.csvExport = function csvExport(tasks) {
+	    var csvContent = "data:text/csv;charset=utf-8,%EF%BB%BF,";
 
-	    // Defining table structure
-	    taskData.addColumn(_definition.DATA_STRING, "Key");
-	    taskData.addColumn(_definition.DATA_STRING, "Summary");
-	    RAW_DATA_COL.EVENTS.forEach(function (element) {
-	        taskData.addColumn(element.dataType, element.label);
-	    });
-	    if (RAW_DATA_COL.FILTERS != null) {
-	        RAW_DATA_COL.FILTERS.forEach(function (element) {
-	            taskData.addColumn(element.dataType, element.label);
-	        });
-	    }
+	    var headerCsv = "\"Key\",\"Summary\",\"";
+	    headerCsv += RAW_DATA_COL.EVENTS.map(function (element) {
+	        return element.label;
+	    }).join("\",\"") + "\",\"";
+	    headerCsv += RAW_DATA_COL.FILTERS.map(function (element) {
+	        return element.label;
+	    }).join("\",\"") + "\"\n";
 
-	    // Adding jira data in the table
-	    taskList.forEach(function (task) {
-	        var row = [];
-	        row.push(task.key);
-	        row.push(task.summary);
-	        task.events.forEach(function (event) {
-	            return row.push(event);
-	        });
-	        task.filters.forEach(function (filter) {
-	            return row.push(filter);
-	        });
-	        taskData.addRow(row);
+	    console.log(headerCsv);
+
+	    csvContent += headerCsv;
+
+	    tasks.forEach(function (task, index) {
+	        var taskCsv = "\"" + task.key + "\",\"" + task.summary + "\",\"";
+	        taskCsv += task.events.map(function (event) {
+	            return event instanceof Date ? event.formatYYYYMMDD() : "";
+	        }).join("\",\"") + "\",\"";
+	        taskCsv += task.filters.map(function (filter) {
+	            return filter instanceof Date ? filter.formatYYYYMMDD() : filter;
+	        }).join("\",\"");
+	        csvContent += index < tasks.length ? taskCsv + "\"\n" : taskCsv + "\"";
 	    });
 
-	    return taskData;
+	    var encodedUri = encodeURI(csvContent);
+	    window.open(encodedUri);
 	};
-
-	var filterTaskData = exports.filterTaskData = function filterTaskData(inputData, expression) {
-	    var filteredData = new google.visualization.DataView(inputData);
-
-	    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
-	        if (inputData.getValue(index, TASK_INDEX_STATIC_REFERENCE).indexOf(expression) == -1) {
-	            console.log(index);
-	            filteredData.hideRows([index]);
-	        }
-	    }
-
-	    return filteredData;
-	};
-
-	var filterReleasedAfter = exports.filterReleasedAfter = function filterReleasedAfter(inputData, fromDate) {
-	    var view = new google.visualization.DataView(inputData);
-	    view.setRows(view.getFilteredRows([{
-	        column: TASK_INDEX_EVENTS_LAST,
-	        minValue: fromDate
-	    }]));
-	    return view;
-	};
-
-	var filterReleasedBefore = exports.filterReleasedBefore = function filterReleasedBefore(inputData, toDate) {
-	    var view = new google.visualization.DataView(inputData);
-	    view.setRows(view.getFilteredRows([{
-	        column: TASK_INDEX_EVENTS_LAST,
-	        maxValue: toDate
-	    }]));
-	    return view;
-	};
-
-	var filterCreatedBefore = exports.filterCreatedBefore = function filterCreatedBefore(inputData, toDate) {
-	    var view = new google.visualization.DataView(inputData);
-	    view.setRows(view.getFilteredRows([{
-	        column: TASK_INDEX_EVENTS_FIRST,
-	        maxValue: toDate
-	    }]));
-	    return view;
-	};
-
-	function columnBuilder(type, label, calc) {
-	    return { type: type, label: label, calc: calc };
-	}
-
-	function constantColumnBuilder(type, label, value) {
-	    return {
-	        type: type, label: label, calc: function calc() {
-	            return value;
-	        }
-	    };
-	}
-
-	function aggregatorBuilder(column, type, aggregation) {
-	    return { column: column, type: type, aggregation: aggregation };
-	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "taskData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
@@ -37317,45 +37250,10 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.computeEventData = exports.computeEvent = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _taskData = __webpack_require__(357);
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var EventCounter = function () {
-	    function EventCounter(date) {
-	        _classCallCheck(this, EventCounter);
-
-	        this.date = date;
-	        this.counters = Array.apply(null, { length: RAW_DATA_COL.EVENTS.length }).map(Number.prototype.valueOf, 0);
-	    }
-
-	    _createClass(EventCounter, [{
-	        key: "add",
-	        value: function add(counter) {
-	            var _this = this;
-
-	            RAW_DATA_COL.EVENTS.forEach(function (event, index) {
-	                return _this.counters[index] = _this.counters[index] + counter.counters[index];
-	            });
-	            return this;
-	        }
-	    }, {
-	        key: "toArray",
-	        value: function toArray() {
-	            var eventArray = [this.date];
-	            this.counters.forEach(function (counter) {
-	                return eventArray.push(counter);
-	            });
-	            return eventArray;
-	        }
-	    }]);
-
-	    return EventCounter;
-	}();
 
 	// We want to extract all events from a task
 	// Input :
@@ -37416,40 +37314,37 @@
 	    return cumulativeArray;
 	};
 
-	var computeEventData = exports.computeEventData = function computeEventData(inputData) {
-	    // Count the number of events at each day
-	    var eventsNb = RAW_DATA_COL.EVENTS.length;
-	    var eventsByDateMap = {};
-	    for (var index = 0; index < inputData.getNumberOfRows(); index++) {
-	        for (var eventIndex = 0; eventIndex < eventsNb; eventIndex++) {
-	            var eventDate = inputData.getValue(index, _taskData.TASK_INDEX_EVENTS_FIRST + eventIndex);
-	            if (eventDate != null) {
-	                var indexDate = eventDate.formatYYYYMMDD();
-	                if (!(indexDate in eventsByDateMap)) {
-	                    eventsByDateMap[indexDate] = Array.apply(null, { length: eventsNb }).map(Number.prototype.valueOf, 0);
-	                }
-	                eventsByDateMap[indexDate][eventIndex]++;
-	            }
+	var EventCounter = function () {
+	    function EventCounter(date) {
+	        _classCallCheck(this, EventCounter);
+
+	        this.date = date;
+	        this.counters = Array.apply(null, { length: RAW_DATA_COL.EVENTS.length }).map(Number.prototype.valueOf, 0);
+	    }
+
+	    _createClass(EventCounter, [{
+	        key: "add",
+	        value: function add(counter) {
+	            var _this = this;
+
+	            RAW_DATA_COL.EVENTS.forEach(function (event, index) {
+	                return _this.counters[index] = _this.counters[index] + counter.counters[index];
+	            });
+	            return this;
 	        }
-	    }
+	    }, {
+	        key: "toArray",
+	        value: function toArray() {
+	            var eventArray = [this.date];
+	            this.counters.forEach(function (counter) {
+	                return eventArray.push(counter);
+	            });
+	            return eventArray;
+	        }
+	    }]);
 
-	    // Order by date and add in a table with a cumulative count
-	    var cumulativeData = new google.visualization.DataTable();
-	    cumulativeData.addColumn('date', "EventDate");
-	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-	        cumulativeData.addColumn('number', inputData.getColumnLabel(_taskData.TASK_INDEX_EVENTS_FIRST + index));
-	    }
-
-	    Object.keys(eventsByDateMap).sort().forEach(function (dateString, dateIndex) {
-	        var row = [new Date(dateString)];
-	        eventsByDateMap[dateString].forEach(function (counter, counterIndex) {
-	            row.push(dateIndex == 0 ? counter : counter + cumulativeData.getValue(dateIndex - 1, counterIndex + 1));
-	        });
-	        cumulativeData.addRow(row);
-	    });
-
-	    return cumulativeData;
-	};
+	    return EventCounter;
+	}();
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "eventData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
@@ -37496,9 +37391,7 @@
 
 	        _this.state = {
 	            chartId: (0, _randomId2.default)(),
-	            filterId: (0, _randomId2.default)(),
-	            dashboardId: (0, _randomId2.default)(),
-	            dashboard: null
+	            chart: null
 	        };
 	        return _this;
 	    }
@@ -37506,28 +37399,22 @@
 	    _createClass(AreaChart, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
-	            var areaChart = (0, _chartFactory.buildCumulativeFlowChart)(this.state.chartId, 400);
-	            var chartRangeFilter = (0, _chartFactory.buildRangeFilter)(this.state.filterId);
-
-	            var dashboard = new google.visualization.Dashboard(document.getElementById(this.state.dashboardId));
-	            dashboard.bind([chartRangeFilter], [areaChart]);
-
 	            this.setState({
-	                dashboard: dashboard
+	                chart: (0, _chartFactory.buildCumulativeFlowChart)(this.state.chartId, 600)
 	            });
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            if (this.state.dashboard != null) {
-	                this.state.dashboard.draw(google.visualization.arrayToDataTable(this.props.data));
+	            if (this.state.chart != null) {
+	                if (this.props.bounds != null) {
+	                    this.state.chart.setOption('hAxis.viewWindow.min', this.props.bounds.start);
+	                    this.state.chart.setOption('hAxis.viewWindow.max', this.props.bounds.end);
+	                }
+	                this.state.chart.setDataTable(google.visualization.arrayToDataTable(this.props.data));
+	                this.state.chart.draw();
 	            }
-	            return _react2.default.createElement(
-	                "div",
-	                { id: this.state.dashboardId },
-	                _react2.default.createElement("div", { id: this.state.chartId }),
-	                _react2.default.createElement("div", { id: this.state.filterId })
-	            );
+	            return _react2.default.createElement("div", { id: this.state.chartId });
 	        }
 	    }]);
 
@@ -37579,21 +37466,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.limitDashboardPeriod = exports.buildTimePeriodDashboard = exports.buildSimpleChart = exports.buildFilteredDashboard = exports.buildFilters = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = exports.buildDataTable = undefined;
-
-	var _definition = __webpack_require__(350);
+	exports.buildSimpleChart = exports.buildDurationScatterChart = exports.buildDurationColumnChart = exports.buildRangeFilter = exports.buildCumulativeFlowChart = undefined;
 
 	var _taskData = __webpack_require__(357);
-
-	var buildDataTable = exports.buildDataTable = function buildDataTable(elementId) {
-	    return new google.visualization.ChartWrapper({
-	        'chartType': 'Table',
-	        'containerId': elementId,
-	        'options': {
-	            width: '100%'
-	        }
-	    });
-	};
 
 	var buildCumulativeFlowChart = exports.buildCumulativeFlowChart = function buildCumulativeFlowChart(elementId, height) {
 	    return new google.visualization.ChartWrapper({
@@ -37719,33 +37594,6 @@
 	    return durationChart;
 	};
 
-	var buildFilters = exports.buildFilters = function buildFilters() {
-	    var filters = [];
-	    for (var index = 0; index < RAW_DATA_COL.FILTERS.length; index++) {
-	        filters.push(buildFilter("filter_" + index, RAW_DATA_COL.FILTERS[index].filterType, _taskData.TASK_INDEX_FILTER_FIRST + index));
-	    }
-	    return filters;
-	};
-
-	var buildFilteredDashboard = exports.buildFilteredDashboard = function buildFilteredDashboard(elementId, charts, filters, filterListener) {
-	    google.visualization.events.addListener(charts, 'ready', filterListener);
-	    var dashboard = new google.visualization.Dashboard(document.getElementById(elementId));
-	    dashboard.bind(filters, charts);
-	    return dashboard;
-	};
-
-	/***************************
-	 *     Event Manager
-	 **************************/
-
-	function setTaskSelectListener(element) {
-	    google.visualization.events.addListener(element, 'select', function () {
-	        var rowNumber = element.getChart().getSelection()[0].row;
-	        var data = element.getDataTable();
-	        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, _taskData.TASK_INDEX_STATIC_REFERENCE), '_blank');
-	    });
-	}
-
 	var buildSimpleChart = exports.buildSimpleChart = function buildSimpleChart(elementId, chartType, title) {
 	    return new google.visualization.ChartWrapper({
 	        'chartType': chartType,
@@ -37760,31 +37608,12 @@
 	    });
 	};
 
-	/***************************
-	 * ExtractDashboard
-	 **************************/
-
-	var buildTimePeriodDashboard = exports.buildTimePeriodDashboard = function buildTimePeriodDashboard(elementId, startDate, endDate) {
-	    var areaChart = buildCumulativeFlowChart(elementId, 600);
-	    limitDashboardPeriod(areaChart, startDate, endDate);
-	    return areaChart;
-	};
-
-	var limitDashboardPeriod = exports.limitDashboardPeriod = function limitDashboardPeriod(areaChart, firstDay, lastDay) {
-	    areaChart.setOption('hAxis.viewWindow.min', firstDay);
-	    areaChart.setOption('hAxis.viewWindow.max', lastDay);
-	    return areaChart;
-	};
-
-	function buildFilter(containerId, controlType, filterColumnIndex) {
-	    var filter = new google.visualization.ControlWrapper({
-	        'controlType': controlType,
-	        'containerId': containerId,
-	        'options': {
-	            'filterColumnIndex': filterColumnIndex
-	        }
+	function setTaskSelectListener(element) {
+	    google.visualization.events.addListener(element, 'select', function () {
+	        var rowNumber = element.getChart().getSelection()[0].row;
+	        var data = element.getDataTable();
+	        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, _taskData.TASK_INDEX_STATIC_REFERENCE), '_blank');
 	    });
-	    return filter;
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "chartFactory.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -37808,6 +37637,14 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _TaskList = __webpack_require__(366);
+
+	var _TaskList2 = _interopRequireDefault(_TaskList);
+
+	var _If = __webpack_require__(367);
+
+	var _If2 = _interopRequireDefault(_If);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37822,34 +37659,102 @@
 	    function Card() {
 	        _classCallCheck(this, Card);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Card).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Card).call(this));
+
+	        _this.state = {
+	            displayList: false
+	        };
+	        _this.displayList = _this.displayList.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Card, [{
+	        key: "displayList",
+	        value: function displayList() {
+	            this.setState({ displayList: true });
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
+	            var hastTaskList = typeof this.props.data !== "undefined";
+	            var suffix = !hastTaskList ? "" : " - " + this.props.data.length + " task" + (this.props.data.length != 1 ? "s" : "");
+	            var action = !hastTaskList || this.props.noModal ? "" : _react2.default.createElement(
+	                "a",
+	                { href: "#", onClick: this.displayList },
+	                _react2.default.createElement("span", { className: "glyphicon glyphicon-th-list pull-right", "data-toggle": "modal", "data-target": "#modal" })
+	            );
 	            return _react2.default.createElement(
 	                "div",
-	                { className: "card" },
+	                null,
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
+	                    { className: "card" },
 	                    _react2.default.createElement(
-	                        "h2",
-	                        { className: "col-md-12 card-title" },
-	                        this.props.cardTitle,
+	                        "div",
+	                        { className: "row card-header" },
 	                        _react2.default.createElement(
-	                            "a",
-	                            { href: "#" },
+	                            "span",
+	                            { className: "col-md-6" },
+	                            this.props.cardTitle,
+	                            suffix
+	                        ),
+	                        _react2.default.createElement(
+	                            "span",
+	                            { className: "col-md-6" },
 	                            " ",
-	                            _react2.default.createElement("span", { className: "glyphicon glyphicon-th-list pull-right", "data-toggle": "modal", "data-target": "#tab_cumulative_view_tasks_list_modal" })
+	                            action,
+	                            " "
 	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "row" },
+	                        this.props.children
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
-	                    this.props.children
+	                    { id: "modal", className: "modal fade", role: "dialog" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "modal-dialog" },
+	                        _react2.default.createElement(
+	                            "div",
+	                            { className: "modal-content" },
+	                            _react2.default.createElement(
+	                                "div",
+	                                { className: "modal-header" },
+	                                _react2.default.createElement(
+	                                    "button",
+	                                    { type: "button", className: "close", "data-dismiss": "modal" },
+	                                    "×"
+	                                ),
+	                                _react2.default.createElement(
+	                                    "h4",
+	                                    { className: "modal-title" },
+	                                    "Modal Header"
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                "div",
+	                                { className: "modal-body" },
+	                                _react2.default.createElement(
+	                                    _If2.default,
+	                                    { condition: this.state.displayList },
+	                                    _react2.default.createElement(_TaskList2.default, { data: this.props.data, lite: true })
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                "div",
+	                                { className: "modal-footer" },
+	                                _react2.default.createElement(
+	                                    "button",
+	                                    { type: "button", className: "btn btn-default", "data-dismiss": "modal" },
+	                                    "Close"
+	                                )
+	                            )
+	                        )
+	                    )
 	                )
 	            );
 	        }
@@ -37886,27 +37791,262 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TaskElement = function (_React$Component) {
+	    _inherits(TaskElement, _React$Component);
+
+	    function TaskElement() {
+	        _classCallCheck(this, TaskElement);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(TaskElement).apply(this, arguments));
+	    }
+
+	    _createClass(TaskElement, [{
+	        key: "render",
+	        value: function render() {
+	            if (typeof this.props.element == 'string' && this.props.element == "null") {
+	                return _react2.default.createElement(
+	                    "td",
+	                    null,
+	                    " "
+	                );
+	            } else if (typeof this.props.element == 'string') {
+	                return _react2.default.createElement(
+	                    "td",
+	                    null,
+	                    this.props.element
+	                );
+	            } else if (this.props.element instanceof Date) {
+	                return _react2.default.createElement(
+	                    "td",
+	                    null,
+	                    this.props.element.formatDDMMYYYY()
+	                );
+	            } else {
+	                return _react2.default.createElement(
+	                    "td",
+	                    null,
+	                    " "
+	                );
+	            }
+	        }
+	    }]);
+
+	    return TaskElement;
+	}(_react2.default.Component);
+
+	var TaskList = function (_React$Component2) {
+	    _inherits(TaskList, _React$Component2);
+
+	    function TaskList() {
+	        _classCallCheck(this, TaskList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(TaskList).apply(this, arguments));
+	    }
+
+	    _createClass(TaskList, [{
+	        key: "openTab",
+	        value: function openTab(key) {
+	            window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this3 = this;
+
+	            var tasks = "";
+	            if (typeof this.props.data !== "undefined") {
+	                tasks = this.props.data.map(function (task) {
+	                    return _react2.default.createElement(
+	                        "tr",
+	                        { key: task.key, onClick: function onClick() {
+	                                return _this3.openTab(task.key);
+	                            } },
+	                        _react2.default.createElement(
+	                            "td",
+	                            null,
+	                            task.key
+	                        ),
+	                        _react2.default.createElement(
+	                            "td",
+	                            null,
+	                            task.summary
+	                        ),
+	                        _this3.props.lite ? "" : task.events.map(function (event) {
+	                            return _react2.default.createElement(TaskElement, { element: event });
+	                        }),
+	                        _this3.props.lite ? "" : task.filters.map(function (filter) {
+	                            return _react2.default.createElement(TaskElement, { element: filter });
+	                        })
+	                    );
+	                });
+	            }
+
+	            return _react2.default.createElement(
+	                "table",
+	                { className: "table table-hover" },
+	                _react2.default.createElement(
+	                    "thead",
+	                    null,
+	                    _react2.default.createElement(
+	                        "tr",
+	                        null,
+	                        _react2.default.createElement(
+	                            "th",
+	                            null,
+	                            "Key"
+	                        ),
+	                        _react2.default.createElement(
+	                            "th",
+	                            null,
+	                            "Summary"
+	                        ),
+	                        this.props.lite ? "" : RAW_DATA_COL.EVENTS.map(function (element) {
+	                            return _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                element.label
+	                            );
+	                        }),
+	                        this.props.lite ? "" : RAW_DATA_COL.FILTERS.map(function (element) {
+	                            return _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                element.label
+	                            );
+	                        })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    "tbody",
+	                    null,
+	                    tasks
+	                )
+	            );
+	        }
+	    }]);
+
+	    return TaskList;
+	}(_react2.default.Component);
+
+	exports.default = TaskList;
+
+
+	TaskList.propTypes = {
+	    lite: _react2.default.PropTypes.bool
+	};
+
+	TaskList.defaultProps = {
+	    lite: false
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "TaskList.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 367 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TaskList = __webpack_require__(366);
+
+	var _TaskList2 = _interopRequireDefault(_TaskList);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Card = function (_React$Component) {
+	    _inherits(Card, _React$Component);
+
+	    function Card() {
+	        _classCallCheck(this, Card);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Card).apply(this, arguments));
+	    }
+
+	    _createClass(Card, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                this.props.condition ? this.props.children : ""
+	            );
+	        }
+	    }]);
+
+	    return Card;
+	}(_react2.default.Component);
+
+	exports.default = Card;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "If.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 368 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _reactDom = __webpack_require__(165);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	var _jiraConnect = __webpack_require__(353);
 
-	var _durationData = __webpack_require__(367);
+	var _durationData = __webpack_require__(369);
 
 	var _Card = __webpack_require__(365);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
-	var _Filters = __webpack_require__(370);
+	var _Filters = __webpack_require__(372);
 
 	var _Filters2 = _interopRequireDefault(_Filters);
 
-	var _DurationStats = __webpack_require__(377);
+	var _DurationStats = __webpack_require__(381);
 
 	var _DurationStats2 = _interopRequireDefault(_DurationStats);
 
-	var _ColumnChart = __webpack_require__(378);
+	var _ColumnChart = __webpack_require__(382);
 
 	var _ColumnChart2 = _interopRequireDefault(_ColumnChart);
 
@@ -37918,13 +38058,13 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Duration = function (_React$Component) {
-	    _inherits(Duration, _React$Component);
+	var DurationPhase = function (_React$Component) {
+	    _inherits(DurationPhase, _React$Component);
 
-	    function Duration() {
-	        _classCallCheck(this, Duration);
+	    function DurationPhase() {
+	        _classCallCheck(this, DurationPhase);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Duration).call(this));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DurationPhase).call(this));
 
 	        _this.state = {
 	            matcherList: []
@@ -37934,7 +38074,7 @@
 	        return _this;
 	    }
 
-	    _createClass(Duration, [{
+	    _createClass(DurationPhase, [{
 	        key: "update",
 	        value: function update() {
 	            var _this2 = this;
@@ -37959,58 +38099,59 @@
 	        key: "render",
 	        value: function render() {
 	            var filteredTaskList = this.props.taskList.filter(this.taskFilter);
+	            var durationData = (0, _durationData.computeDurations)(filteredTaskList);
 	            return _react2.default.createElement(
 	                _Card2.default,
-	                { cardTitle: "Duration" },
+	                { cardTitle: "Duration", data: filteredTaskList },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
+	                    { className: "col-md-12" },
 	                    _react2.default.createElement(_Filters2.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update })
 	                ),
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
+	                    { className: "col-md-12" },
 	                    _react2.default.createElement(_DurationStats2.default, { taskList: filteredTaskList })
 	                ),
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
-	                    _react2.default.createElement(_ColumnChart2.default, { data: (0, _durationData.computeDurations)(filteredTaskList) })
+	                    { className: "col-md-12" },
+	                    _react2.default.createElement(_ColumnChart2.default, { data: durationData })
 	                )
 	            );
 	        }
 	    }]);
 
-	    return Duration;
+	    return DurationPhase;
 	}(_react2.default.Component);
 
-	exports.default = (0, _jiraConnect.taskListConnect)(Duration);
+	exports.default = (0, _jiraConnect.taskListConnect)(DurationPhase);
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Duration.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DurationPhase.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 367 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.groupDurationDataBy = exports.computeDurationStats = exports.computeDurationData = exports.DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = exports.computeDurations = undefined;
+	exports.DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_FIRST = exports.computeDurationByDate = exports.computeDurations = undefined;
 
 	var _taskData = __webpack_require__(357);
 
 	var _definition = __webpack_require__(350);
 
-	var _tooltip = __webpack_require__(368);
+	var _tooltip = __webpack_require__(370);
 
 	var _tooltip2 = _interopRequireDefault(_tooltip);
 
-	var _dataUtils = __webpack_require__(369);
+	var _dataUtils = __webpack_require__(371);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38034,54 +38175,67 @@
 	    return data;
 	};
 
+	// Adding statistics
+	// To have tendlines to show specific values (average, 50% and 90% lines), we only need to display 2 points
+	// in a new serie and to draw a trendline between them.
+	// That's why we are addind 3 columns at the end of the DataView.
+	// We feel these columns with the required value only if date is min date or max date (to have our points at
+	// the edge of the chart).
+	// ╔═══════╦═════════╦═════╦════════════╦═════════╗
+	// ║ Date  ║ Project ║ Ref ║ Cycle Time ║ Average ║
+	// ╠═══════╬═════════╬═════╬════════════╬═════════╣
+	// ║ 01/01 ║ TEST    ║   1 ║         16 ║      19 ║
+	// ║ 01/02 ║ TEST    ║   2 ║         18 ║         ║ ╗
+	// ║ 01/03 ║ TEST    ║   2 ║         18 ║         ║ ║> We Don't need to fill the value as we need 2 points
+	// ║ 01/04 ║ TEST    ║   3 ║         20 ║         ║ ╝
+	// ║ 01/05 ║ TEST    ║   4 ║         22 ║      19 ║
+	// ╚════════════════════════════════════╩═════════╝
+	//                    V                      V
+	//               Actual Data             Statistics
+	// We will then add new data series with these columns defining point size to 2 and adding a linear trend line.
+
+	var computeDurationByDate = exports.computeDurationByDate = function computeDurationByDate(taskList) {
+	    var data = taskList.map(function (task) {
+	        var line = new Array(5);
+	        line[0] = task.events[0];
+	        line[1] = task.cycleTime;
+	        return line;
+	    });
+
+	    if (data.length > 0) {
+
+	        var avg = data.reduce(function (acc, line) {
+	            return acc + line[1];
+	        }, 0) / data.length;
+
+	        var sortedData = data.map(function (line) {
+	            return line[1];
+	        }).sort(function (a, b) {
+	            return a - b;
+	        });
+	        var pct90 = sortedData[Math.floor(data.length * 0.9)];
+	        var pct75 = sortedData[Math.floor(data.length * 0.75)];
+
+	        data[1][2] = avg;
+	        data[1][3] = pct75;
+	        data[1][4] = pct90;
+	        var lastLine = data.length - 1;
+	        data[lastLine][2] = avg;
+	        data[lastLine][3] = pct75;
+	        data[lastLine][4] = pct90;
+	    }
+
+	    data.unshift(["Creation", "Cycle Time", "AVG", "75%", "90%"]);
+
+	    return data;
+	};
+
 	var DURATION_INDEX_STATIC_FIRST = exports.DURATION_INDEX_STATIC_FIRST = _taskData.TASK_INDEX_FILTER_LAST + 1;
 	var DURATION_INDEX_STATIC_GROUP_ALL = exports.DURATION_INDEX_STATIC_GROUP_ALL = DURATION_INDEX_STATIC_FIRST;
 	var DURATION_INDEX_STATIC_COUNT = exports.DURATION_INDEX_STATIC_COUNT = DURATION_INDEX_STATIC_GROUP_ALL + 1;
 	var DURATION_INDEX_STATIC_LAST = exports.DURATION_INDEX_STATIC_LAST = DURATION_INDEX_STATIC_COUNT;
 
 	var DURATION_INDEX_DURATION_FIRST = exports.DURATION_INDEX_DURATION_FIRST = DURATION_INDEX_STATIC_LAST + 1;
-	var DURATION_INDEX_DURATION_CYCLE_TIME = exports.DURATION_INDEX_DURATION_CYCLE_TIME = DURATION_INDEX_STATIC_LAST + RAW_DATA_COL.EVENTS.length;
-	var DURATION_INDEX_DURATION_LAST = exports.DURATION_INDEX_DURATION_LAST = DURATION_INDEX_DURATION_CYCLE_TIME;
-	var DURATION_INDEX_TOOLTIP = exports.DURATION_INDEX_TOOLTIP = DURATION_INDEX_DURATION_LAST + 1;
-
-	var DURATION_INDEX_STATITICS_FIRST = exports.DURATION_INDEX_STATITICS_FIRST = DURATION_INDEX_TOOLTIP + 1;
-	var DURATION_INDEX_STATITICS_AVERAGE = exports.DURATION_INDEX_STATITICS_AVERAGE = DURATION_INDEX_STATITICS_FIRST;
-	var DURATION_INDEX_STATITICS_50PCT = exports.DURATION_INDEX_STATITICS_50PCT = DURATION_INDEX_STATITICS_FIRST + 1;
-	var DURATION_INDEX_STATITICS_90PCT = exports.DURATION_INDEX_STATITICS_90PCT = DURATION_INDEX_STATITICS_FIRST + 2;
-
-	var computeDurationData = exports.computeDurationData = function computeDurationData(inputData) {
-	    var durationDataStruct = Array.apply(null, { length: inputData.getNumberOfColumns() }).map(Number.call, Number);
-	    durationDataStruct.push((0, _dataUtils.constantColumnBuilder)("string", "", "Selection"));
-	    durationDataStruct.push((0, _dataUtils.constantColumnBuilder)("number", "Count", 1));
-	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length - 1; index++) {
-	        var element = RAW_DATA_COL.EVENTS[index];
-	        var eventIndex = _taskData.TASK_INDEX_EVENTS_FIRST + index;
-	        durationDataStruct.push(durationColumnBuilder(element.label, eventIndex, eventIndex + 1, element.correction));
-	    }
-	    durationDataStruct.push(durationColumnBuilder("Cycle Time", _taskData.TASK_INDEX_EVENTS_FIRST, _taskData.TASK_INDEX_EVENTS_LAST, 0));
-
-	    var durationData = new google.visualization.DataView(inputData);
-	    durationData.setColumns(durationDataStruct);
-
-	    var dataAndTooltipStruct = Array.apply(null, { length: durationData.getNumberOfColumns() }).map(Number.call, Number);
-	    dataAndTooltipStruct.push(tooltipColumnBuilder());
-
-	    var dataAndTooltip = new google.visualization.DataView(durationData.toDataTable());
-	    dataAndTooltip.setColumns(dataAndTooltipStruct);
-
-	    return dataAndTooltip.toDataTable();
-	};
-
-	function durationColumnBuilder(label, firstEventIndex, lastEventIndex, correction) {
-	    return (0, _dataUtils.columnBuilder)(_definition.DATA_NUMBER, label, function (table, row) {
-	        var startDate = table.getValue(row, firstEventIndex);
-	        var endDate = table.getValue(row, lastEventIndex);
-	        if (startDate == null) {
-	            return null;
-	        }
-	        return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
-	    });
-	}
 
 	function tooltipColumnBuilder() {
 	    var tooltipColumn = (0, _dataUtils.columnBuilder)(_definition.DATA_STRING, "Tooltip", _tooltip2.default);
@@ -38090,88 +38244,11 @@
 	    return tooltipColumn;
 	}
 
-	var computeDurationStats = exports.computeDurationStats = function computeDurationStats(inputData) {
-	    // Using group method to find Avg, 50% and 90% values
-	    var group = google.visualization.data.group(inputData, [DURATION_INDEX_STATIC_GROUP_ALL], [createAggregationColumn(google.visualization.data.avg), createAggregationColumn(getQuartileFunction(0.75)), createAggregationColumn(getQuartileFunction(0.9))]);
-
-	    // Adding statistics
-	    // To have tendlines to show specific values (average, 50% and 90% lines), we only need to display 2 points
-	    // in a new serie and to draw a trendline between them.
-	    // That's why we are addind 3 columns at the end of the DataView.
-	    // We feel these columns with the required value only if date is min date or max date (to have our points at
-	    // the edge of the chart).
-	    // ╔═══════╦═════════╦═════╦════════════╦═════════╗
-	    // ║ Date  ║ Project ║ Ref ║ Cycle Time ║ Average ║
-	    // ╠═══════╬═════════╬═════╬════════════╬═════════╣
-	    // ║ 01/01 ║ TEST    ║   1 ║         16 ║      19 ║
-	    // ║ 01/02 ║ TEST    ║   2 ║         18 ║         ║ ╗
-	    // ║ 01/03 ║ TEST    ║   2 ║         18 ║         ║ ║> We Don't need to fill the value as we need 2 points
-	    // ║ 01/04 ║ TEST    ║   3 ║         20 ║         ║ ╝
-	    // ║ 01/05 ║ TEST    ║   4 ║         22 ║      19 ║
-	    // ╚════════════════════════════════════╩═════════╝
-	    //                    V                      V
-	    //               Actual Data             Statistics
-	    // We will then add new data series with these columns defining point size to 2 and adding a linear trend line.
-
-	    var minDate = inputData.getColumnRange(_taskData.TASK_INDEX_EVENTS_FIRST).min;
-	    var maxDate = inputData.getColumnRange(_taskData.TASK_INDEX_EVENTS_LAST).max;
-
-	    // Creating a structure [0, 1, 2 ... inputData.size] to keep all original columns
-	    var dataStatisticsStruct = Array.apply(null, { length: inputData.getNumberOfColumns() }).map(Number.call, Number);
-	    // Adding new columns, setting satistics data only on edge dates
-	    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, 'Average', group.getValue(0, 1)));
-	    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, '75%', group.getValue(0, 2)));
-	    dataStatisticsStruct.push(statColumnBuilder(minDate, maxDate, '90%', group.getValue(0, 3)));
-
-	    var dataWithStatistics = new google.visualization.DataView(inputData);
-	    dataWithStatistics.setColumns(dataStatisticsStruct);
-
-	    return dataWithStatistics;
-	};
-
-	function statColumnBuilder(minDate, maxDate, label, value) {
-	    return (0, _dataUtils.columnBuilder)('number', label, function (table, row) {
-	        return table.getValue(row, _taskData.TASK_INDEX_EVENTS_FIRST) == minDate || table.getValue(row, _taskData.TASK_INDEX_EVENTS_LAST) == maxDate ? value : null;
-	    });
-	}
-
-	function createAggregationColumn(aggregationFunction) {
-	    return {
-	        column: DURATION_INDEX_DURATION_CYCLE_TIME,
-	        aggregation: aggregationFunction,
-	        'type': 'number'
-	    };
-	}
-
-	function getQuartileFunction(ration) {
-	    return function getQuartile(values) {
-	        return values.sort(function (a, b) {
-	            return a - b;
-	        })[Math.floor(values.length * ration)];
-	    };
-	}
-
-	var groupDurationDataBy = exports.groupDurationDataBy = function groupDurationDataBy(inputData, groupBy) {
-	    var columns = [];
-	    RAW_DATA_COL.EVENTS.forEach(function (element, index) {
-	        columns.push((0, _dataUtils.aggregatorBuilder)(DURATION_INDEX_DURATION_FIRST + index, 'number', google.visualization.data.avg));
-	    });
-	    columns.unshift((0, _dataUtils.aggregatorBuilder)(DURATION_INDEX_STATIC_COUNT, 'number', google.visualization.data.count));
-
-	    var data = google.visualization.data.group(inputData, [groupBy], columns);
-
-	    var formatter = new google.visualization.NumberFormat({ suffix: ' day(s)' });
-	    for (var index = 0; index < RAW_DATA_COL.EVENTS.length; index++) {
-	        formatter.format(data, 2 + index);
-	    }
-	    return data;
-	};
-
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "durationData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 368 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38198,7 +38275,7 @@
 
 	var _taskData = __webpack_require__(357);
 
-	var _durationData = __webpack_require__(367);
+	var _durationData = __webpack_require__(369);
 
 	;
 
@@ -38206,7 +38283,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 369 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38220,23 +38297,11 @@
 	    return { type: type, label: label, calc: calc };
 	};
 
-	var constantColumnBuilder = exports.constantColumnBuilder = function constantColumnBuilder(type, label, value) {
-	    return {
-	        type: type, label: label, calc: function calc() {
-	            return value;
-	        }
-	    };
-	};
-
-	var aggregatorBuilder = exports.aggregatorBuilder = function aggregatorBuilder(column, type, aggregation) {
-	    return { column: column, type: type, aggregation: aggregation };
-	};
-
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "dataUtils.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 370 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38253,15 +38318,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _CategoryFilter = __webpack_require__(371);
+	var _CategoryFilter = __webpack_require__(373);
 
 	var _CategoryFilter2 = _interopRequireDefault(_CategoryFilter);
 
-	var _PeriodFilter = __webpack_require__(373);
+	var _PeriodFilter = __webpack_require__(375);
 
 	var _PeriodFilter2 = _interopRequireDefault(_PeriodFilter);
 
-	var _Switch = __webpack_require__(376);
+	var _Switch = __webpack_require__(380);
 
 	var _Switch2 = _interopRequireDefault(_Switch);
 
@@ -38362,7 +38427,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 371 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38379,7 +38444,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _DataMatcher = __webpack_require__(372);
+	var _DataMatcher = __webpack_require__(374);
 
 	var _DataMatcher2 = _interopRequireDefault(_DataMatcher);
 
@@ -38507,7 +38572,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 372 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38532,7 +38597,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 373 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38549,11 +38614,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _DateRangeFilter = __webpack_require__(374);
+	var _DateRangeFilter = __webpack_require__(376);
 
 	var _DateRangeFilter2 = _interopRequireDefault(_DateRangeFilter);
 
-	var _MonthFilter = __webpack_require__(375);
+	var _MonthFilter = __webpack_require__(377);
 
 	var _MonthFilter2 = _interopRequireDefault(_MonthFilter);
 
@@ -38606,7 +38671,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 374 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38627,7 +38692,7 @@
 
 	var _randomId2 = _interopRequireDefault(_randomId);
 
-	var _DataMatcher = __webpack_require__(372);
+	var _DataMatcher = __webpack_require__(374);
 
 	var _DataMatcher2 = _interopRequireDefault(_DataMatcher);
 
@@ -38718,7 +38783,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 375 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38735,9 +38800,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _DataMatcher = __webpack_require__(372);
+	var _DataMatcher = __webpack_require__(374);
 
 	var _DataMatcher2 = _interopRequireDefault(_DataMatcher);
+
+	var _InputElement = __webpack_require__(378);
+
+	var _InputElement2 = _interopRequireDefault(_InputElement);
+
+	var _DropDown = __webpack_require__(379);
+
+	var _DropDown2 = _interopRequireDefault(_DropDown);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38768,7 +38841,7 @@
 
 	        _this.state = {
 	            dateList: dateList,
-	            selection: null,
+	            selection: props.defaultSelection ? dateList[0] : null,
 	            matcher: new _DataMatcher2.default(function (date) {
 	                return true;
 	            })
@@ -38781,8 +38854,8 @@
 
 	    _createClass(MonthFilter, [{
 	        key: "changeValue",
-	        value: function changeValue(value) {
-	            this.setNewSelection(value);
+	        value: function changeValue(selection) {
+	            this.setNewSelection(selection.value);
 	        }
 	    }, {
 	        key: "resetValue",
@@ -38805,52 +38878,32 @@
 	            var _this2 = this;
 
 	            var values = this.state.dateList.map(function (date) {
-	                return _react2.default.createElement(
-	                    "li",
-	                    { key: date.formatDDMMYYYY() },
-	                    _react2.default.createElement(
-	                        "a",
-	                        { href: "#", onClick: function onClick() {
-	                                return _this2.changeValue(date);
-	                            } },
-	                        date.getYearMonthLabel()
-	                    )
-	                );
+	                return new _InputElement2.default(date, date.getYearMonthLabel());
 	            });
-	            var selection = this.state.selection == null ? "" : _react2.default.createElement(
-	                "button",
-	                { type: "button", className: "btn btn-default btn btn-info", onClick: function onClick() {
-	                        return _this2.resetValue();
-	                    } },
-	                this.state.selection.getYearMonthLabel(),
-	                " ",
-	                _react2.default.createElement("span", { className: "glyphicon glyphicon-remove" })
-	            );
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "col-md-12", selected: this.state.matcher },
-	                _react2.default.createElement(
+
+	            if (this.props.label == null) {
+	                return _react2.default.createElement(_DropDown2.default, { values: values, defaultSelection: "true", onChange: this.changeValue });
+	            } else {
+	                var selection = this.state.selection == null ? "" : _react2.default.createElement(
+	                    "button",
+	                    { type: "button", className: "btn btn-default btn btn-info", onClick: function onClick() {
+	                            return _this2.resetValue();
+	                        } },
+	                    this.state.selection.getYearMonthLabel(),
+	                    " ",
+	                    _react2.default.createElement("span", { className: "glyphicon glyphicon-remove" })
+	                );
+	                return _react2.default.createElement(
 	                    "div",
-	                    { className: "btn-group", role: "group", "aria-label": "..." },
+	                    { className: "col-md-12", selected: this.state.matcher },
 	                    _react2.default.createElement(
 	                        "div",
-	                        { className: "btn-group" },
-	                        _react2.default.createElement(
-	                            "button",
-	                            { type: "button", className: "btn btn-default btn-filter dropdown-toggle", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false" },
-	                            this.props.label,
-	                            " ",
-	                            _react2.default.createElement("span", { className: "caret pull-right" })
-	                        ),
-	                        _react2.default.createElement(
-	                            "ul",
-	                            { className: "dropdown-menu" },
-	                            values
-	                        )
-	                    ),
-	                    selection
-	                )
-	            );
+	                        { className: "btn-group", role: "group", "aria-label": "..." },
+	                        _react2.default.createElement(_DropDown2.default, { values: values, onChange: this.changeValue, label: this.props.label }),
+	                        selection
+	                    )
+	                );
+	            }
 	        }
 	    }]);
 
@@ -38867,7 +38920,142 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 376 */
+/* 378 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var InputElement = function InputElement(value, label) {
+	    _classCallCheck(this, InputElement);
+
+	    this.value = value;
+	    this.label = label;
+	};
+
+	exports.default = InputElement;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "InputElement.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 379 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DropDown = function (_React$Component) {
+	    _inherits(DropDown, _React$Component);
+
+	    function DropDown(props) {
+	        _classCallCheck(this, DropDown);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DropDown).call(this, props));
+
+	        _this.state = {
+	            selectedValue: props.defaultSelection ? props.values[0] : null
+	        };
+
+	        if (_this.state.selectedValue != null) {
+	            _this.props.onChange(_this.state.selectedValue);
+	        }
+
+	        _this.update = _this.update.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(DropDown, [{
+	        key: "update",
+	        value: function update(value) {
+	            this.props.onChange(value ? this.props.firstValue : this.props.secondValue);
+	            this.setState({ selectedValue: value });
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+
+	            var selectedLabel = this.state.selectedValue != null ? this.state.selectedValue.label : "";
+	            var label = this.props.label != null ? this.props.label : selectedLabel;
+	            var values = this.props.values.map(function (value) {
+	                return _react2.default.createElement(
+	                    "li",
+	                    { key: value.label },
+	                    _react2.default.createElement(
+	                        "a",
+	                        { href: "#", onClick: function onClick() {
+	                                return _this2.props.onChange(value);
+	                            } },
+	                        value.label
+	                    )
+	                );
+	            });
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "btn-group", value: this.selectedValue },
+	                _react2.default.createElement(
+	                    "button",
+	                    { type: "button", className: "btn btn-default btn-filter dropdown-toggle", "data-toggle": "dropdown",
+	                        "aria-haspopup": "true", "aria-expanded": "false" },
+	                    " ",
+	                    label,
+	                    " ",
+	                    _react2.default.createElement("span", { className: "caret pull-right" })
+	                ),
+	                _react2.default.createElement(
+	                    "ul",
+	                    { className: "dropdown-menu" },
+	                    values
+	                )
+	            );
+	        }
+	    }]);
+
+	    return DropDown;
+	}(_react2.default.Component);
+
+	exports.default = DropDown;
+
+
+	DropDown.protoTypes = {
+	    values: _react2.default.PropTypes.array.isRequired,
+	    onChange: _react2.default.PropTypes.func.isRequired,
+	    defaultSelection: _react2.default.PropTypes.bool,
+	    label: _react2.default.PropTypes.string
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DropDown.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38951,19 +39139,20 @@
 	    return Switch;
 	}(_react2.default.Component);
 
+	exports.default = Switch;
+
+
 	Switch.protoTypes = {
 	    firstValue: _react2.default.PropTypes.object.isRequired,
 	    secondValue: _react2.default.PropTypes.object.isRequired,
 	    onChange: _react2.default.PropTypes.func.isRequired
 	};
 
-	exports.default = Switch;
-
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Switch.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 377 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39000,9 +39189,15 @@
 	    _createClass(DurationStats, [{
 	        key: "render",
 	        value: function render() {
-	            var stats = this.props.taskList.reduce(function (collector, task) {
+	            var _this2 = this;
+
+	            var taskCollector = this.props.groupBy == null ? new TaskCollector() : new TaskCollector(this.props.groupBy.label, function (task) {
+	                return task.filters[_this2.props.groupBy.position];
+	            });
+
+	            var collectors = this.props.taskList.reduce(function (collector, task) {
 	                return collector.add(task);
-	            }, new TaskCollector()).getStatistics();
+	            }, taskCollector).getStatistics();
 
 	            return _react2.default.createElement(
 	                "table",
@@ -39010,20 +39205,12 @@
 	                _react2.default.createElement(
 	                    "thead",
 	                    null,
-	                    _react2.default.createElement(
-	                        "tr",
-	                        null,
-	                        stats.getHeader()
-	                    )
+	                    collectors.getHeader()
 	                ),
 	                _react2.default.createElement(
 	                    "tbody",
 	                    null,
-	                    _react2.default.createElement(
-	                        "tr",
-	                        null,
-	                        stats.getValues()
-	                    )
+	                    collectors.getValues()
 	                )
 	            );
 	        }
@@ -39035,32 +39222,40 @@
 	exports.default = DurationStats;
 
 	var TaskCollector = function () {
-	    function TaskCollector() {
+	    function TaskCollector(selectorLabel, selector) {
 	        _classCallCheck(this, TaskCollector);
 
-	        this.cycleTimeList = [];
-	        this.phasesDurationList = [];
-	        this.count = 0;
+	        this.collectors = {};
+	        this.selectorLabel = selectorLabel;
+	        this.selector = selector;
 	    }
 
 	    _createClass(TaskCollector, [{
 	        key: "add",
 	        value: function add(task) {
-	            var _this2 = this;
+	            var index = this.selector != null ? this.selector(task) : 1;
+	            if (this.collectors[index] == null) {
+	                this.collectors[index] = {
+	                    cycleTimeList: [],
+	                    phasesDurationList: [],
+	                    count: 0
+	                };
+	            }
+
+	            var collector = this.collectors[index];
 
 	            if (task.cycleTime != null) {
-	                this.cycleTimeList.push(task.cycleTime);
+	                collector.cycleTimeList.push(task.cycleTime);
 	            }
 
 	            task.durations.forEach(function (duration, index) {
-	                if (_this2.phasesDurationList[index] == null) {
-	                    _this2.phasesDurationList[index] = [duration];
-	                } else {
-	                    _this2.phasesDurationList[index].push(duration);
+	                if (collector.phasesDurationList[index] == null) {
+	                    collector.phasesDurationList[index] = [];
 	                }
+	                collector.phasesDurationList[index].push(duration);
 	            });
 
-	            this.count++;
+	            collector.count++;
 
 	            return this;
 	        }
@@ -39080,42 +39275,65 @@
 
 	        _classCallCheck(this, TaskStatistic);
 
-	        this.phasesDuration = taskCollector.phasesDurationList.map(function (phase) {
-	            return _this3.computeAverage(phase);
-	        });
-	        this.cycleTime = this.computeAverage(taskCollector.cycleTimeList);
-	        this.count = taskCollector.count;
+	        this.selectorLabel = taskCollector.selectorLabel;
+	        this.stats = [];
+
+	        for (var index in taskCollector.collectors) {
+	            var collector = taskCollector.collectors[index];
+	            this.stats.push({
+	                phasesDuration: collector.phasesDurationList.map(function (phase) {
+	                    return _this3.computeAverage(phase);
+	                }),
+	                cycleTime: this.computeAverage(collector.cycleTimeList),
+	                count: collector.count,
+	                index: index
+	            });
+	        }
 	    }
 
 	    _createClass(TaskStatistic, [{
 	        key: "getHeader",
 	        value: function getHeader() {
-	            var cells = ["Tasks"];
-	            this.phasesDuration.forEach(function (phase, index) {
-	                return cells.push(RAW_DATA_COL.EVENTS[index].label);
-	            });
+	            var cells = this.stats.length > 1 ? [this.selectorLabel] : [];
+	            cells.push("Tasks");
+	            for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+	                cells.push(RAW_DATA_COL.EVENTS[i].label);
+	            }
 	            cells.push("Cycle Time");
-	            return cells.map(function (value, index) {
-	                return _react2.default.createElement(
-	                    "th",
-	                    { key: "header_" + index },
-	                    value
-	                );
-	            });
+	            return _react2.default.createElement(
+	                "tr",
+	                null,
+	                cells.map(function (value, index) {
+	                    return _react2.default.createElement(
+	                        "th",
+	                        { key: "header_" + index },
+	                        value
+	                    );
+	                })
+	            );
 	        }
 	    }, {
 	        key: "getValues",
 	        value: function getValues() {
-	            var cells = [this.count];
-	            this.phasesDuration.forEach(function (phase) {
-	                return cells.push(phase);
-	            });
-	            cells.push(this.cycleTime);
-	            return cells.map(function (value, index) {
+	            var _this4 = this;
+
+	            return this.stats.map(function (stat, index) {
+	                var cells = _this4.stats.length > 1 ? [stat.index] : [];
+	                cells.push(stat.count);
+	                for (var i = 0; i < RAW_DATA_COL.EVENTS.length - 1; i++) {
+	                    cells.push(i < stat.phasesDuration.length ? stat.phasesDuration[i] : "");
+	                }
+	                cells.push(stat.cycleTime);
 	                return _react2.default.createElement(
-	                    "td",
-	                    { key: "header_" + index },
-	                    value
+	                    "tr",
+	                    { key: index },
+	                    cells.map(function (value, index) {
+	                        return _react2.default.createElement(
+	                            "td",
+	                            { key: "header_" + index },
+	                            value
+	                        );
+	                    })
 	                );
 	            });
 	        }
@@ -39135,7 +39353,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 378 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39213,7 +39431,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 379 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39236,17 +39454,208 @@
 
 	var _jiraConnect = __webpack_require__(353);
 
-	var _distributionData = __webpack_require__(380);
+	var _durationData = __webpack_require__(369);
 
 	var _Card = __webpack_require__(365);
 
 	var _Card2 = _interopRequireDefault(_Card);
 
-	var _Filters = __webpack_require__(370);
+	var _Filters = __webpack_require__(372);
 
 	var _Filters2 = _interopRequireDefault(_Filters);
 
-	var _PieChart = __webpack_require__(381);
+	var _ScatterChart = __webpack_require__(384);
+
+	var _ScatterChart2 = _interopRequireDefault(_ScatterChart);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DurationScatter = function (_React$Component) {
+	    _inherits(DurationScatter, _React$Component);
+
+	    function DurationScatter() {
+	        _classCallCheck(this, DurationScatter);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DurationScatter).call(this));
+
+	        _this.state = {
+	            matcherList: []
+	        };
+	        _this.update = _this.update.bind(_this);
+	        _this.taskFilter = _this.taskFilter.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(DurationScatter, [{
+	        key: "update",
+	        value: function update() {
+	            var _this2 = this;
+
+	            this.setState({
+	                matcherList: RAW_DATA_COL.FILTERS.map(function (filter, index) {
+	                    return _reactDom2.default.findDOMNode(_this2.refs.filters.refs["filter_" + index]).selected;
+	                })
+	            });
+	        }
+	    }, {
+	        key: "taskFilter",
+	        value: function taskFilter(task) {
+	            for (var index = 0; index < this.state.matcherList.length; index++) {
+	                if (!this.state.matcherList[index].match(task.filters[index])) {
+	                    return false;
+	                }
+	            }
+	            return true;
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var filteredTaskList = this.props.taskList.filter(this.taskFilter);
+	            var durationData = (0, _durationData.computeDurationByDate)(filteredTaskList);
+	            return _react2.default.createElement(
+	                _Card2.default,
+	                { cardTitle: "Duration", data: filteredTaskList },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "col-md-12" },
+	                    _react2.default.createElement(_Filters2.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update })
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "col-md-12" },
+	                    _react2.default.createElement(_ScatterChart2.default, { data: durationData })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return DurationScatter;
+	}(_react2.default.Component);
+
+	exports.default = (0, _jiraConnect.taskListConnect)(DurationScatter);
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DurationScatter.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 384 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _randomId = __webpack_require__(363);
+
+	var _randomId2 = _interopRequireDefault(_randomId);
+
+	var _chartFactory = __webpack_require__(364);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ColumnChart = function (_React$Component) {
+	    _inherits(ColumnChart, _React$Component);
+
+	    function ColumnChart() {
+	        _classCallCheck(this, ColumnChart);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnChart).call(this));
+
+	        _this.state = {
+	            chartId: (0, _randomId2.default)(),
+	            chart: null
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ColumnChart, [{
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            this.setState({
+	                chart: (0, _chartFactory.buildDurationScatterChart)(this.state.chartId)
+	            });
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            if (this.state.chart != null) {
+	                this.state.chart.setDataTable(google.visualization.arrayToDataTable(this.props.data));
+	                this.state.chart.draw();
+	            }
+	            return _react2.default.createElement("div", { id: this.state.chartId });
+	        }
+	    }]);
+
+	    return ColumnChart;
+	}(_react2.default.Component);
+
+	exports.default = ColumnChart;
+
+
+	ColumnChart.defaultProps = {
+	    title: "Scatter Chart"
+	};
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "ScatterChart.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+
+/***/ },
+/* 385 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(150);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(165);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _jiraConnect = __webpack_require__(353);
+
+	var _distributionData = __webpack_require__(386);
+
+	var _Card = __webpack_require__(365);
+
+	var _Card2 = _interopRequireDefault(_Card);
+
+	var _Filters = __webpack_require__(372);
+
+	var _Filters2 = _interopRequireDefault(_Filters);
+
+	var _PieChart = __webpack_require__(387);
 
 	var _PieChart2 = _interopRequireDefault(_PieChart);
 
@@ -39312,15 +39721,15 @@
 
 	            return _react2.default.createElement(
 	                _Card2.default,
-	                { cardTitle: "Distribution" },
+	                { cardTitle: "Distribution", data: filteredTaskList },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
+	                    { className: "col-md-12" },
 	                    _react2.default.createElement(_Filters2.default, { ref: "filters", taskList: this.props.taskList, onChange: this.update })
 	                ),
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
+	                    { className: "col-md-12" },
 	                    pieCharts
 	                )
 	            );
@@ -39336,7 +39745,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 380 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39366,7 +39775,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 381 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39444,7 +39853,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 382 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39467,7 +39876,7 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _Report = __webpack_require__(383);
+	var _Report = __webpack_require__(389);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -39491,20 +39900,20 @@
 	    _createClass(MonthlyReport, [{
 	        key: "render",
 	        value: function render() {
-	            return _react2.default.createElement(_Report2.default, _extends({}, this.props, { selector: _definition.CONFIG_MONTH_SELECTOR }));
+	            return _react2.default.createElement(_Report2.default, _extends({}, this.props, { selector: _definition.FILTER_MONTH }));
 	        }
 	    }]);
 
 	    return MonthlyReport;
 	}(_react2.default.Component);
 
-	exports.default = (0, _jiraConnect.rawDataConnect)(MonthlyReport);
+	exports.default = (0, _jiraConnect.taskListConnect)(MonthlyReport);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "MonthlyReport.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 383 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39521,27 +39930,29 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _chartFactory = __webpack_require__(364);
-
 	var _definition = __webpack_require__(350);
 
-	var _taskData = __webpack_require__(357);
-
-	var _eventData = __webpack_require__(361);
-
-	var _durationData = __webpack_require__(367);
-
-	var _MonthSelector = __webpack_require__(384);
+	var _MonthSelector = __webpack_require__(390);
 
 	var _MonthSelector2 = _interopRequireDefault(_MonthSelector);
 
-	var _PeriodSelector = __webpack_require__(385);
+	var _PeriodSelector = __webpack_require__(391);
 
 	var _PeriodSelector2 = _interopRequireDefault(_PeriodSelector);
 
-	var _Switch = __webpack_require__(376);
+	var _Switch = __webpack_require__(380);
 
 	var _Switch2 = _interopRequireDefault(_Switch);
+
+	var _AreaChart = __webpack_require__(362);
+
+	var _AreaChart2 = _interopRequireDefault(_AreaChart);
+
+	var _DurationStats = __webpack_require__(381);
+
+	var _DurationStats2 = _interopRequireDefault(_DurationStats);
+
+	var _eventData = __webpack_require__(361);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39560,11 +39971,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Report).call(this));
 
 	        _this.state = {
-	            cumulative: null,
-	            stats: null,
-	            startDate: null,
-	            endDate: null,
-	            reduceColumn: null
+	            bounds: { start: null, end: null }
 	        };
 	        _this.updateDate = _this.updateDate.bind(_this);
 	        _this.updateType = _this.updateType.bind(_this);
@@ -39572,51 +39979,40 @@
 	    }
 
 	    _createClass(Report, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            var cumulative = (0, _chartFactory.buildTimePeriodDashboard)("area_chart", this.state.startDate, this.state.endDate);
-	            var stats = (0, _chartFactory.buildDataTable)(duration_stats);
-
-	            this.setState({
-	                cumulative: cumulative,
-	                stats: stats
-	            });
-	        }
-	    }, {
 	        key: "updateDate",
 	        value: function updateDate(startDate, endDate) {
 	            this.setState({
-	                startDate: startDate,
-	                endDate: endDate
+	                bounds: {
+	                    start: startDate,
+	                    end: endDate
+	                }
 	            });
 	        }
 	    }, {
 	        key: "updateType",
 	        value: function updateType(type) {
 	            this.setState({
-	                groupType: type
+	                groupBy: type
 	            });
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var timeSelector = void 0;
-	            if (this.props.selector == _definition.CONFIG_MONTH_SELECTOR) {
+	            var _this2 = this;
+
+	            var timeSelector = _react2.default.createElement(_PeriodSelector2.default, { onChange: this.updateDate });
+	            if (this.props.selector == _definition.FILTER_MONTH) {
 	                timeSelector = _react2.default.createElement(_MonthSelector2.default, { onChange: this.updateDate });
 	            } else {
 	                timeSelector = _react2.default.createElement(_PeriodSelector2.default, { onChange: this.updateDate });
 	            }
 
-	            if (this.state.cumulative != null) {
-	                var filteredData = (0, _taskData.filterCreatedBefore)((0, _taskData.filterReleasedAfter)(this.props.rawData, this.state.startDate), this.state.endDate);
-
-	                (0, _chartFactory.limitDashboardPeriod)(this.state.cumulative, this.state.startDate, this.state.endDate);
-	                this.state.cumulative.setDataTable((0, _eventData.computeEventData)(filteredData));
-	                this.state.cumulative.draw();
-
-	                this.state.stats.setDataTable((0, _durationData.groupDurationDataBy)((0, _durationData.computeDurationData)((0, _taskData.filterReleasedBefore)(filteredData, this.state.endDate)), _taskData.TASK_INDEX_FILTER_FIRST + this.state.groupType.position));
-	                this.state.stats.draw();
-	            }
+	            var releasedAfter = this.props.taskList.filter(function (task) {
+	                return task.events[task.events.length - 1] >= _this2.state.bounds.start;
+	            });
+	            var releasedDuring = releasedAfter.filter(function (task) {
+	                return task.events[task.events.length - 1] <= _this2.state.bounds.end;
+	            });
 	            return _react2.default.createElement(
 	                "div",
 	                { className: "card to-print graph" },
@@ -39648,11 +40044,11 @@
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "row card-relative-chart" },
-	                    _react2.default.createElement("div", { id: "area_chart" }),
+	                    _react2.default.createElement(_AreaChart2.default, { data: (0, _eventData.computeEvent)(releasedAfter), light: true, bounds: this.state.bounds }),
 	                    _react2.default.createElement(
 	                        "div",
 	                        { className: "card to-print stats" },
-	                        _react2.default.createElement("div", { id: "duration_stats" })
+	                        _react2.default.createElement(_DurationStats2.default, { taskList: releasedDuring, groupBy: this.state.groupBy })
 	                    )
 	                )
 	            );
@@ -39663,7 +40059,7 @@
 	}(_react2.default.Component);
 
 	Report.propTypes = {
-	    selector: _react2.default.PropTypes.oneOf([_definition.CONFIG_MONTH_SELECTOR, _definition.CONFIG_PERIOD_SELECTOR])
+	    selector: _react2.default.PropTypes.oneOf([_definition.FILTER_DATE_RANGE, _definition.FILTER_MONTH])
 	};
 
 	exports.default = Report;
@@ -39672,7 +40068,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 384 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39786,7 +40182,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 385 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39869,7 +40265,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 386 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39892,7 +40288,7 @@
 
 	var _definition = __webpack_require__(350);
 
-	var _Report = __webpack_require__(383);
+	var _Report = __webpack_require__(389);
 
 	var _Report2 = _interopRequireDefault(_Report);
 
@@ -39916,20 +40312,20 @@
 	    _createClass(MonthlyReport, [{
 	        key: "render",
 	        value: function render() {
-	            return _react2.default.createElement(_Report2.default, _extends({}, this.props, { selector: _definition.CONFIG_PERIOD_SELECTOR }));
+	            return _react2.default.createElement(_Report2.default, _extends({}, this.props, { selector: _definition.FILTER_DATE_RANGE }));
 	        }
 	    }]);
 
 	    return MonthlyReport;
 	}(_react2.default.Component);
 
-	exports.default = (0, _jiraConnect.rawDataConnect)(MonthlyReport);
+	exports.default = (0, _jiraConnect.taskListConnect)(MonthlyReport);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "PeriodReport.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 387 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39937,7 +40333,7 @@
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -39947,6 +40343,8 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _jiraConnect = __webpack_require__(353);
+
+	var _taskData = __webpack_require__(357);
 
 	var _Card = __webpack_require__(365);
 
@@ -39960,91 +40358,185 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TaskManager = function (_React$Component) {
-	    _inherits(TaskManager, _React$Component);
+	var TaskElement = function (_React$Component) {
+	  _inherits(TaskElement, _React$Component);
 
-	    function TaskManager() {
-	        _classCallCheck(this, TaskManager);
+	  function TaskElement() {
+	    _classCallCheck(this, TaskElement);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TaskElement).apply(this, arguments));
+	  }
 
-	        _this.state = {
-	            filterExpr: ""
-	        };
-	        _this.update = _this.update.bind(_this);
-	        return _this;
+	  _createClass(TaskElement, [{
+	    key: "render",
+	    value: function render() {
+	      if (typeof this.props.element == 'string' && this.props.element == "null") {
+	        return _react2.default.createElement(
+	          "td",
+	          null,
+	          " "
+	        );
+	      } else if (typeof this.props.element == 'string') {
+	        return _react2.default.createElement(
+	          "td",
+	          null,
+	          this.props.element
+	        );
+	      } else if (this.props.element instanceof Date) {
+	        return _react2.default.createElement(
+	          "td",
+	          null,
+	          this.props.element.formatDDMMYYYY()
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          "td",
+	          null,
+	          " "
+	        );
+	      }
 	    }
+	  }]);
 
-	    _createClass(TaskManager, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            this.props.fetchData();
-	            this.setState({});
-	        }
-	    }, {
-	        key: "update",
-	        value: function update(e) {
-	            this.setState({ filterExpr: e.target.value.toLowerCase() });
-	        }
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            var _this2 = this;
+	  return TaskElement;
+	}(_react2.default.Component);
 
-	            var tasks = this.props.taskList.filter(function (task) {
-	                return task.key.toLowerCase().indexOf(_this2.state.filterExpr) != -1 || task.summary.toLowerCase().indexOf(_this2.state.filterExpr) != -1;
-	            }).map(function (task) {
-	                return _react2.default.createElement(
-	                    "tr",
-	                    { key: task.key },
-	                    _react2.default.createElement(
-	                        "td",
-	                        null,
-	                        task.key
-	                    ),
-	                    _react2.default.createElement(
-	                        "td",
-	                        null,
-	                        task.summary
-	                    )
-	                );
-	            });
-	            return _react2.default.createElement(
-	                _Card2.default,
+	var TaskManager = function (_React$Component2) {
+	  _inherits(TaskManager, _React$Component2);
+
+	  function TaskManager() {
+	    _classCallCheck(this, TaskManager);
+
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+
+	    _this2.state = {
+	      filterExpr: ""
+	    };
+	    _this2.update = _this2.update.bind(_this2);
+	    return _this2;
+	  }
+
+	  _createClass(TaskManager, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      this.props.fetchData();
+	      this.setState({});
+	    }
+	  }, {
+	    key: "update",
+	    value: function update(e) {
+	      this.setState({ filterExpr: e.target.value.toLowerCase() });
+	    }
+	  }, {
+	    key: "openTab",
+	    value: function openTab(key) {
+	      window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this3 = this;
+
+	      var filtered = this.props.taskList.filter(function (task) {
+	        return task.key.toLowerCase().indexOf(_this3.state.filterExpr) != -1 || task.summary.toLowerCase().indexOf(_this3.state.filterExpr) != -1;
+	      });
+
+	      var tasks = _react2.default.createElement(
+	        "tr",
+	        { onClick: function onClick() {
+	            return _this3.openTab(_this3.state.filterExpr);
+	          } },
+	        _react2.default.createElement(
+	          "td",
+	          { colSpan: RAW_DATA_COL.EVENTS.length + RAW_DATA_COL.FILTERS.length + 2 },
+	          " Searching "
+	        )
+	      );
+
+	      if (filtered.length != 0) {
+	        tasks = filtered.map(function (task) {
+	          return _react2.default.createElement(
+	            "tr",
+	            { key: task.key, onClick: function onClick() {
+	                return _this3.openTab(task.key);
+	              } },
+	            _react2.default.createElement(
+	              "td",
+	              null,
+	              task.key
+	            ),
+	            _react2.default.createElement(
+	              "td",
+	              null,
+	              task.summary
+	            ),
+	            task.events.map(function (event) {
+	              return _react2.default.createElement(TaskElement, { element: event });
+	            }),
+	            task.filters.map(function (filter) {
+	              return _react2.default.createElement(TaskElement, { element: filter });
+	            })
+	          );
+	        });
+	      }
+
+	      return _react2.default.createElement(
+	        _Card2.default,
+	        { cardTitle: "Duration", data: tasks, noModal: true },
+	        _react2.default.createElement("input", { type: "text", onChange: this.update, defaultValue: "" }),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: function onClick() {
+	              return (0, _taskData.csvExport)(filtered);
+	            } },
+	          "Download csv"
+	        ),
+	        _react2.default.createElement(
+	          "table",
+	          { className: "table table-hover" },
+	          _react2.default.createElement(
+	            "thead",
+	            null,
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "th",
 	                null,
-	                _react2.default.createElement("input", { type: "text", onChange: this.update, defaultValue: "" }),
-	                _react2.default.createElement(
-	                    "table",
-	                    { className: "table table-hover" },
-	                    _react2.default.createElement(
-	                        "thead",
-	                        null,
-	                        _react2.default.createElement(
-	                            "tr",
-	                            null,
-	                            _react2.default.createElement(
-	                                "th",
-	                                null,
-	                                "Key"
-	                            ),
-	                            _react2.default.createElement(
-	                                "th",
-	                                null,
-	                                "Summary"
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "tbody",
-	                        null,
-	                        tasks
-	                    )
-	                )
-	            );
-	        }
-	    }]);
+	                "Key"
+	              ),
+	              _react2.default.createElement(
+	                "th",
+	                null,
+	                "Summary"
+	              ),
+	              RAW_DATA_COL.EVENTS.map(function (element) {
+	                return _react2.default.createElement(
+	                  "th",
+	                  null,
+	                  element.label
+	                );
+	              }),
+	              RAW_DATA_COL.FILTERS.map(function (element) {
+	                return _react2.default.createElement(
+	                  "th",
+	                  null,
+	                  element.label
+	                );
+	              })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "tbody",
+	            null,
+	            tasks
+	          )
+	        )
+	      );
+	    }
+	  }]);
 
-	    return TaskManager;
+	  return TaskManager;
 	}(_react2.default.Component);
 
 	exports.default = (0, _jiraConnect.taskListConnect)(TaskManager);
@@ -40053,23 +40545,23 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
 
 /***/ },
-/* 388 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(389);
+	var content = __webpack_require__(395);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(391)(content, {});
+	var update = __webpack_require__(397)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(389, function() {
-				var newContent = __webpack_require__(389);
+			module.hot.accept(395, function() {
+				var newContent = __webpack_require__(395);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -40079,21 +40571,21 @@
 	}
 
 /***/ },
-/* 389 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(390)();
+	exports = module.exports = __webpack_require__(396)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "body {\n  background: #eeeeee !important;\n}\n.navbar-inverse .navbar-brand {\n  color: #eeeeee!important;\n}\n.navbar-inverse .navbar-brand:hover {\n  background-color: transparent !important;\n  color: #eeeeee!important;\n}\n.navbar .navbar-header .navbar-brand-logo {\n  height: 50px;\n  padding: 2px 2px;\n  margin-right: 10px;\n  background-color: #FFFFFF;\n  border-radius: 0 0 50% 50%;\n  float: left;\n}\n.tab-content {\n  padding-top: 50px;\n}\n.content-wrapper {\n  margin-top: 50px;\n}\n.card {\n  overflow: hidden;\n  margin: 20px 30px;\n  padding: 20px;\n  background-color: #ffffff  !important;\n  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);\n  border-radius: 2px;\n  color: #000000;\n  text-align: left;\n  font-size: 10pt;\n  position: relative;\n}\n.card.to-print {\n  margin: auto;\n}\n.card.to-print.graph {\n  width: 1024px;\n}\n.card-title {\n  padding-bottom: 20px;\n  margin: 10px 0 20px;\n  border-bottom: 1px solid #eee;\n}\n.card-block {\n  margin: 10px 0;\n}\n.print-only {\n  display: none;\n}\n.card-relative-chart {\n  position: relative;\n}\n.modal.ticket-list .modal-dialog {\n  min-width: 95%;\n}\n.modal.ticket-list .modal-dialog .modal-body {\n  height: 70%;\n}\n@media screen and (max-width: 1024px) {\n  .card.to-print.graph {\n    width: 100%;\n  }\n  .card.to-print.stats {\n    position: initial;\n    width: 100%;\n    height: 130px;\n  }\n}\n#month_form {\n  display: inline;\n}\n.card-relative-chart .card.to-print.stats {\n  position: absolute;\n  width: 610px;\n  top: 35px;\n  left: 65px;\n  background: rgba(255, 255, 255, 0.5) !important;\n}\ninput[name=daterange] {\n  font-size: 18px;\n}\n#tab_distribution_view_scatter_chart {\n  display: none;\n}\n#scatter_chart {\n  display: none;\n}\n.chart-tooltip {\n  padding: 0 10px;\n}\n.switch {\n  display: inline-block;\n  vertical-align: top;\n  margin-right: 2px;\n}\n.switch .switch-label {\n  display: inline-block;\n  font-size: 20px;\n  cursor: pointer;\n  padding: 0 5px;\n}\n.switch .switch-label:first-child {\n  color: #000;\n}\n.switch .switch-label:last-child {\n  color: #aaa;\n}\n.switch .switch-widget {\n  vertical-align: middle;\n  cursor: pointer;\n  display: inline-block;\n  width: 50px;\n  height: 30px;\n  background-color: #dddddd;\n  border-radius: 15px;\n}\n.switch .switch-widget:before {\n  content: \" \";\n  height: 26px;\n  width: 26px;\n  background-color: white;\n  border-radius: 50%;\n  display: block;\n  margin: 2px 0 2px 2px;\n  -webkit-transition: margin 0.3s ease-in;\n  transition: margin 0.3s ease-in;\n}\n.switch.switched .switch-widget:before {\n  margin-left: 22px;\n}\n.switch.switched .switch-label:first-child {\n  color: #aaa;\n}\n.switch.switched .switch-label:last-child {\n  color: #000;\n}\n.btn-filter {\n  min-width: 100px;\n  text-align: left;\n}\n.btn-filter .caret {\n  margin-top: 9px;\n}\n.addon-filter {\n  min-width: 80px;\n  text-align: left;\n}\n", ""]);
+	exports.push([module.id, "body {\n  background: #eeeeee !important;\n}\n.navbar-inverse .navbar-brand {\n  color: #eeeeee!important;\n}\n.navbar-inverse .navbar-brand:hover {\n  background-color: transparent !important;\n  color: #eeeeee!important;\n}\n.navbar .navbar-header .navbar-brand-logo {\n  height: 50px;\n  padding: 2px 2px;\n  margin-right: 10px;\n  background-color: #FFFFFF;\n  border-radius: 0 0 50% 50%;\n  float: left;\n}\n.tab-content {\n  padding-top: 50px;\n}\n.content-wrapper {\n  margin-top: 50px;\n}\n.card {\n  overflow: hidden;\n  margin: 20px 30px;\n  padding: 20px;\n  background-color: #ffffff  !important;\n  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);\n  border-radius: 2px;\n  color: #000000;\n  text-align: left;\n  font-size: 10pt;\n  position: relative;\n}\n.card.to-print {\n  margin: auto;\n}\n.card.to-print.graph {\n  width: 1024px;\n}\n.card-header {\n  font-size: 32px;\n  padding: 0 10px;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #eee;\n}\n.card-block {\n  margin: 10px 0;\n}\n.print-only {\n  display: none;\n}\n.card-relative-chart {\n  position: relative;\n}\n.modal.ticket-list .modal-dialog {\n  min-width: 95%;\n}\n.modal.ticket-list .modal-dialog .modal-body {\n  height: 70%;\n}\n@media screen and (max-width: 1024px) {\n  .card.to-print.graph {\n    width: 100%;\n  }\n  .card.to-print.stats {\n    position: initial;\n    width: 100%;\n    height: 130px;\n  }\n}\n#month_form {\n  display: inline;\n}\n.card-relative-chart .card.to-print.stats {\n  position: absolute;\n  width: 610px;\n  top: 35px;\n  left: 65px;\n  background: rgba(255, 255, 255, 0.5) !important;\n}\ninput[name=daterange] {\n  font-size: 18px;\n}\n#tab_distribution_view_scatter_chart {\n  display: none;\n}\n#scatter_chart {\n  display: none;\n}\n.chart-tooltip {\n  padding: 0 10px;\n}\n.switch {\n  display: inline-block;\n  vertical-align: top;\n  margin-right: 2px;\n}\n.switch .switch-label {\n  display: inline-block;\n  font-size: 20px;\n  cursor: pointer;\n  padding: 0 5px;\n}\n.switch .switch-label:first-child {\n  color: #000;\n}\n.switch .switch-label:last-child {\n  color: #aaa;\n}\n.switch .switch-widget {\n  vertical-align: middle;\n  cursor: pointer;\n  display: inline-block;\n  width: 50px;\n  height: 30px;\n  background-color: #dddddd;\n  border-radius: 15px;\n}\n.switch .switch-widget:before {\n  content: \" \";\n  height: 26px;\n  width: 26px;\n  background-color: white;\n  border-radius: 50%;\n  display: block;\n  margin: 2px 0 2px 2px;\n  -webkit-transition: margin 0.3s ease-in;\n  transition: margin 0.3s ease-in;\n}\n.switch.switched .switch-widget:before {\n  margin-left: 22px;\n}\n.switch.switched .switch-label:first-child {\n  color: #aaa;\n}\n.switch.switched .switch-label:last-child {\n  color: #000;\n}\n.btn-filter {\n  min-width: 100px;\n  text-align: left;\n}\n.btn-filter .caret {\n  margin-top: 9px;\n}\n.addon-filter {\n  min-width: 80px;\n  text-align: left;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 390 */
+/* 396 */
 /***/ function(module, exports) {
 
 	/*
@@ -40149,7 +40641,7 @@
 
 
 /***/ },
-/* 391 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

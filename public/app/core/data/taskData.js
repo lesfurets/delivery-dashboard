@@ -51,3 +51,25 @@ export const parseJiraJson = function (jiraData) {
 function computeDuration(startDate, endDate, correction) {
     return startDate.getWorkDaysUntil(endDate == null ? new Date() : endDate) + correction;
 }
+
+export const csvExport = (tasks) => {
+  var csvContent = "data:text/csv;charset=utf-8,";
+
+  let headerCsv = "\"Key\",\"Summary\",\"";
+  headerCsv += RAW_DATA_COL.EVENTS.map((element) => element.label).join("\",\"") + "\",\"";
+  headerCsv += RAW_DATA_COL.FILTERS.map((element) => element.label).join("\",\"") + "\"\n";
+
+  console.log(headerCsv);
+
+  csvContent += headerCsv;
+
+  tasks.forEach(function (task, index) {
+    let taskCsv = "\"" + task.key + "\",\"" + task.summary + "\",\"";
+    taskCsv += task.events.map(event => event instanceof Date ? event.formatYYYYMMDD() : "").join("\",\"") + "\",\"";
+    taskCsv += task.filters.map(filter => filter instanceof Date ? filter.formatYYYYMMDD() : filter).join("\",\"");
+    csvContent += index < tasks.length ? taskCsv + "\"\n" : taskCsv + "\"";
+  });
+
+  var encodedUri = encodeURI(csvContent);
+  window.open(encodedUri);
+}
