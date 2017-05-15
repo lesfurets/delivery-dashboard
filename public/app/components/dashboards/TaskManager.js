@@ -3,20 +3,28 @@ import {taskListConnect} from "../../redux/jiraConnect";
 import {csvExport} from "../../core/data/taskData";
 import Card from "./elements/Card";
 
+var openTab = (key) => window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
 
-class TaskElement extends React.Component {
-  render() {
-    if (typeof this.props.element == 'string' && this.props.element == "null") {
-      return <td>&nbsp;</td>
-    } else if (typeof this.props.element == 'string') {
-      return <td>{this.props.element}</td>
-    } else if (this.props.element instanceof Date) {
-      return <td>{this.props.element.formatDDMMYYYY()}</td>
-    } else {
-      return <td>&nbsp;</td>
-    }
+let TaskElement = (props) => {
+  if (typeof props.element == 'string' && props.element == "null") {
+    return <td>&nbsp;</td>
+  } else if (typeof props.element == 'string') {
+    return <td>{props.element}</td>
+  } else if (props.element instanceof Date) {
+    return <td>{props.element.formatDDMMYYYY()}</td>
+  } else {
+    return <td>&nbsp;</td>
   }
 }
+
+let Task = (props) => (
+  <tr key={props.task.key} onClick={() => openTab(props.task.key)}>
+    <td>{props.task.key}</td>
+    <td>{props.task.summary}</td>
+    {props.task.events.map((event, id) => <TaskElement key={props.task.key + "-event-" + id} element={event}/>)}
+    {props.task.filters.map((filter, id) => <TaskElement key={props.task.key + "-filter-" + id} element={filter}/>)}
+  </tr>
+)
 
 class TaskManager extends React.Component {
   constructor() {
@@ -27,53 +35,16 @@ class TaskManager extends React.Component {
     this.update = this.update.bind(this);
   }
 
-  componentDidMount() {
-    this.props.fetchData();
-    this.setState({});
-  }
-
   update(e) {
     this.setState({filterExpr: e.target.value.toLowerCase()});
   }
 
-  openTab(key) {
-    window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
-  }
-
   render() {
-
-    var filtered = this.props.taskList
-      .filter((task) => (
-        task.key.toLowerCase().indexOf(this.state.filterExpr) != -1)
-        || task.summary.toLowerCase().indexOf(this.state.filterExpr) != -1
-      );
-
-    let tasks = (
-      <tr onClick={() => this.openTab(this.state.filterExpr)}>
-        <td colSpan={RAW_DATA_COL.EVENTS.length + RAW_DATA_COL.FILTERS.length + 2}> Searching </td>
-      </tr>
-    )
-
-    if (filtered.length != 0) {
-      tasks = filtered
-        .map((task) => {
-          return (
-            <tr key={task.key} onClick={() => this.openTab(task.key)}>
-              <td>{task.key}</td>
-              <td>{task.summary}</td>
-              {task.events.map((event) => {
-                return (<TaskElement element={event}/>)
-              })}
-              {task.filters.map((filter) => {
-                return (<TaskElement element={filter}/>)
-              })}
-            </tr>
-          );
-        });
-    }
+    var filtered = this.props.taskList.filter((task) => ( task.key.toLowerCase().indexOf(this.state.filterExpr) != -1)
+    || task.summary.toLowerCase().indexOf(this.state.filterExpr) != -1);
 
     return (
-      <Card cardTitle="Duration" data={tasks} noModal={true}>
+      <Card cardTitle="Duration" data={filtered} noModal={true}>
         <input type="text" onChange={this.update} defaultValue=""/>
         <button onClick={() => csvExport(filtered)}>Download csv</button>
         <table className="table table-hover">
@@ -81,15 +52,11 @@ class TaskManager extends React.Component {
           <tr>
             <th>Key</th>
             <th>Summary</th>
-            {RAW_DATA_COL.EVENTS.map((element) => {
-              return <th>{element.label}</th>
-            })}
-            {RAW_DATA_COL.FILTERS.map((element) => {
-              return <th>{element.label}</th>
-            })}
+            {RAW_DATA_COL.EVENTS.map((element, id) => <th key={"event-" + id}>{element.label}</th>)}
+            {RAW_DATA_COL.FILTERS.map((element, id) => <th key={"filter-" + id}>{element.label}</th>)}
           </tr>
           </thead>
-          <tbody>{tasks}</tbody>
+          <tbody>{filtered.length != 0 ? filtered.map((task) => <Task key={task.key} task={task}/>) : ""}</tbody>
         </table>
       </Card>
     );

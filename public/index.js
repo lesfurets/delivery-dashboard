@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "755a9f8bfcb5a4dece7c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3b1645feffab757cedfd"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -37076,7 +37076,7 @@
 	}
 
 	var csvExport = exports.csvExport = function csvExport(tasks) {
-	    var csvContent = "data:text/csv;charset=utf-8,%EF%BB%BF,";
+	    var csvContent = "data:text/csv;charset=utf-8,";
 
 	    var headerCsv = "\"Key\",\"Summary\",\"";
 	    headerCsv += RAW_DATA_COL.EVENTS.map(function (element) {
@@ -40358,131 +40358,95 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TaskElement = function (_React$Component) {
-	  _inherits(TaskElement, _React$Component);
+	var openTab = function openTab(key) {
+	  return window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
+	};
 
-	  function TaskElement() {
-	    _classCallCheck(this, TaskElement);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TaskElement).apply(this, arguments));
+	var TaskElement = function TaskElement(props) {
+	  if (typeof props.element == 'string' && props.element == "null") {
+	    return _react2.default.createElement(
+	      "td",
+	      null,
+	      " "
+	    );
+	  } else if (typeof props.element == 'string') {
+	    return _react2.default.createElement(
+	      "td",
+	      null,
+	      props.element
+	    );
+	  } else if (props.element instanceof Date) {
+	    return _react2.default.createElement(
+	      "td",
+	      null,
+	      props.element.formatDDMMYYYY()
+	    );
+	  } else {
+	    return _react2.default.createElement(
+	      "td",
+	      null,
+	      " "
+	    );
 	  }
+	};
 
-	  _createClass(TaskElement, [{
-	    key: "render",
-	    value: function render() {
-	      if (typeof this.props.element == 'string' && this.props.element == "null") {
-	        return _react2.default.createElement(
-	          "td",
-	          null,
-	          " "
-	        );
-	      } else if (typeof this.props.element == 'string') {
-	        return _react2.default.createElement(
-	          "td",
-	          null,
-	          this.props.element
-	        );
-	      } else if (this.props.element instanceof Date) {
-	        return _react2.default.createElement(
-	          "td",
-	          null,
-	          this.props.element.formatDDMMYYYY()
-	        );
-	      } else {
-	        return _react2.default.createElement(
-	          "td",
-	          null,
-	          " "
-	        );
-	      }
-	    }
-	  }]);
+	var Task = function Task(props) {
+	  return _react2.default.createElement(
+	    "tr",
+	    { key: props.task.key, onClick: function onClick() {
+	        return openTab(props.task.key);
+	      } },
+	    _react2.default.createElement(
+	      "td",
+	      null,
+	      props.task.key
+	    ),
+	    _react2.default.createElement(
+	      "td",
+	      null,
+	      props.task.summary
+	    ),
+	    props.task.events.map(function (event, id) {
+	      return _react2.default.createElement(TaskElement, { key: props.task.key + "-event-" + id, element: event });
+	    }),
+	    props.task.filters.map(function (filter, id) {
+	      return _react2.default.createElement(TaskElement, { key: props.task.key + "-filter-" + id, element: filter });
+	    })
+	  );
+	};
 
-	  return TaskElement;
-	}(_react2.default.Component);
-
-	var TaskManager = function (_React$Component2) {
-	  _inherits(TaskManager, _React$Component2);
+	var TaskManager = function (_React$Component) {
+	  _inherits(TaskManager, _React$Component);
 
 	  function TaskManager() {
 	    _classCallCheck(this, TaskManager);
 
-	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskManager).call(this));
 
-	    _this2.state = {
+	    _this.state = {
 	      filterExpr: ""
 	    };
-	    _this2.update = _this2.update.bind(_this2);
-	    return _this2;
+	    _this.update = _this.update.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(TaskManager, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      this.props.fetchData();
-	      this.setState({});
-	    }
-	  }, {
 	    key: "update",
 	    value: function update(e) {
 	      this.setState({ filterExpr: e.target.value.toLowerCase() });
 	    }
 	  }, {
-	    key: "openTab",
-	    value: function openTab(key) {
-	      window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
-	    }
-	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      var filtered = this.props.taskList.filter(function (task) {
-	        return task.key.toLowerCase().indexOf(_this3.state.filterExpr) != -1 || task.summary.toLowerCase().indexOf(_this3.state.filterExpr) != -1;
+	        return task.key.toLowerCase().indexOf(_this2.state.filterExpr) != -1 || task.summary.toLowerCase().indexOf(_this2.state.filterExpr) != -1;
 	      });
-
-	      var tasks = _react2.default.createElement(
-	        "tr",
-	        { onClick: function onClick() {
-	            return _this3.openTab(_this3.state.filterExpr);
-	          } },
-	        _react2.default.createElement(
-	          "td",
-	          { colSpan: RAW_DATA_COL.EVENTS.length + RAW_DATA_COL.FILTERS.length + 2 },
-	          " Searching "
-	        )
-	      );
-
-	      if (filtered.length != 0) {
-	        tasks = filtered.map(function (task) {
-	          return _react2.default.createElement(
-	            "tr",
-	            { key: task.key, onClick: function onClick() {
-	                return _this3.openTab(task.key);
-	              } },
-	            _react2.default.createElement(
-	              "td",
-	              null,
-	              task.key
-	            ),
-	            _react2.default.createElement(
-	              "td",
-	              null,
-	              task.summary
-	            ),
-	            task.events.map(function (event) {
-	              return _react2.default.createElement(TaskElement, { element: event });
-	            }),
-	            task.filters.map(function (filter) {
-	              return _react2.default.createElement(TaskElement, { element: filter });
-	            })
-	          );
-	        });
-	      }
 
 	      return _react2.default.createElement(
 	        _Card2.default,
-	        { cardTitle: "Duration", data: tasks, noModal: true },
+	        { cardTitle: "Duration", data: filtered, noModal: true },
 	        _react2.default.createElement("input", { type: "text", onChange: this.update, defaultValue: "" }),
 	        _react2.default.createElement(
 	          "button",
@@ -40510,17 +40474,17 @@
 	                null,
 	                "Summary"
 	              ),
-	              RAW_DATA_COL.EVENTS.map(function (element) {
+	              RAW_DATA_COL.EVENTS.map(function (element, id) {
 	                return _react2.default.createElement(
 	                  "th",
-	                  null,
+	                  { key: "event-" + id },
 	                  element.label
 	                );
 	              }),
-	              RAW_DATA_COL.FILTERS.map(function (element) {
+	              RAW_DATA_COL.FILTERS.map(function (element, id) {
 	                return _react2.default.createElement(
 	                  "th",
-	                  null,
+	                  { key: "filter-" + id },
 	                  element.label
 	                );
 	              })
@@ -40529,7 +40493,9 @@
 	          _react2.default.createElement(
 	            "tbody",
 	            null,
-	            tasks
+	            filtered.length != 0 ? filtered.map(function (task) {
+	              return _react2.default.createElement(Task, { key: task.key, task: task });
+	            }) : ""
 	          )
 	        )
 	      );
