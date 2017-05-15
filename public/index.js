@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bff634435594be40eb17"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "18e15eb152220369d5d7"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -38195,10 +38195,11 @@
 	// We will then add new data series with these columns defining point size to 2 and adding a linear trend line.
 
 	var computeDurationByDate = exports.computeDurationByDate = function computeDurationByDate(taskList) {
-	    var data = taskList.map(function (task) {
-	        var line = new Array(5);
-	        line[0] = task.events[0];
+	    var data = taskList.map(function (task, index) {
+	        var line = new Array(6);
+	        line[0] = index;
 	        line[1] = task.cycleTime;
+	        line[2] = typeof MAP_SCATTER_DOT != "undefined" ? MAP_SCATTER_DOT(task) : 'point { size: 3; shape-type: circle; fill-color: #a52714; }';
 	        return line;
 	    });
 
@@ -38216,16 +38217,16 @@
 	        var pct90 = sortedData[Math.floor(data.length * 0.9)];
 	        var pct75 = sortedData[Math.floor(data.length * 0.75)];
 
-	        data[1][2] = avg;
-	        data[1][3] = pct75;
-	        data[1][4] = pct90;
+	        data[1][3] = avg;
+	        data[1][4] = pct75;
+	        data[1][5] = pct90;
 	        var lastLine = data.length - 1;
-	        data[lastLine][2] = avg;
-	        data[lastLine][3] = pct75;
-	        data[lastLine][4] = pct90;
+	        data[lastLine][3] = avg;
+	        data[lastLine][4] = pct75;
+	        data[lastLine][5] = pct90;
 	    }
 
-	    data.unshift(["Creation", "Cycle Time", "AVG", "75%", "90%"]);
+	    data.unshift(["Creation", "Cycle Time", { 'type': 'string', 'role': 'style' }, "AVG", "75%", "90%"]);
 
 	    return data;
 	};
@@ -40453,7 +40454,7 @@
 	          { onClick: function onClick() {
 	              return (0, _taskData.csvExport)(filtered);
 	            } },
-	          "Download csv ..."
+	          "Download csv"
 	        ),
 	        _react2.default.createElement(
 	          "table",
