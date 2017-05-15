@@ -17,9 +17,10 @@ class DurationScatter extends React.Component {
     }
 
     update() {
-        this.setState({
-            matcherList: RAW_DATA_COL.FILTERS
-                .map((filter, index) => ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected)
+      let matcherList = RAW_DATA_COL.FILTERS.map((filter, index) => ReactDom.findDOMNode(this.refs.filters.refs["filter_" + index]).selected);
+      // matcherList.push(ReactDom.findDOMNode(this.refs.filters.refs.filter_date).selected)
+      this.setState({
+            matcherList: matcherList
         });
     }
 
@@ -33,7 +34,7 @@ class DurationScatter extends React.Component {
     }
 
     render() {
-        let filteredTaskList = this.props.taskList.filter(this.taskFilter);
+        let filteredTaskList = this.props.taskList.filter(task => task.events[task.events.length - 1] != null).filter(this.taskFilter);
         var durationData = computeDurationByDate(filteredTaskList);
         return (
             <Card cardTitle="Duration" data={filteredTaskList}>

@@ -37,7 +37,7 @@ export const parseJiraJson = function (jiraData) {
         }
 
         var firstEventDate = task.events[0];
-        var lastEventDate = task.events[task.events.length - 1];
+        var lastEventDate = task.events[task.events.length - 1]
         if (firstEventDate != null && lastEventDate != null) {
             task.cycleTime = computeDuration(firstEventDate, lastEventDate, 0);
         }

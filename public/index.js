@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "18e15eb152220369d5d7"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c54c53b692371bc43832"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -38388,12 +38388,12 @@
 	                            onChange: _this2.props.onChange,
 	                            values: listValues(_this2.props.taskList, index) }));
 	                    } else {
-	                        rangeFilters.push(_react2.default.createElement(_PeriodFilter2.default, { key: index,
-	                            ref: "filter_" + index,
-	                            label: filter.label,
-	                            startDate: startDate,
-	                            onChange: _this2.props.onChange,
-	                            selector: _this2.state.periodType }));
+	                        {/*rangeFilters.push(<PeriodFilter key={index}*/}
+	                        {/*ref={"filter_" + index}*/}
+	                        {/*label={filter.label}*/}
+	                        {/*startDate={startDate}*/}
+	                        {/*onChange={this.props.onChange}*/}
+	                        {/*selector={this.state.periodType}/>)*/}
 	                    }
 	                });
 	            }
@@ -39517,7 +39517,9 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            var filteredTaskList = this.props.taskList.filter(this.taskFilter);
+	            var filteredTaskList = this.props.taskList.filter(function (task) {
+	                return typeof task.events[task.events.length - 1] != "undefined";
+	            }).filter(this.taskFilter);
 	            var durationData = (0, _durationData.computeDurationByDate)(filteredTaskList);
 	            return _react2.default.createElement(
 	                _Card2.default,

@@ -13,8 +13,6 @@ const RAW_DATA_COL = {
         {jiraField: ["fields", "customfield_10621","value"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Effort'},
         {jiraField: ["fields", "customfield_11010","value"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Value'},
         {jiraField: ["fields", "project","key"], dataType: "string" ,filterType: 'CategoryFilter', label: 'Project'},
-        {jiraField: ["fields", "customfield_11729"], dataType: "date", filterType: 'DateRangeFilter', label: 'Creation'},
-        {jiraField: ["fields", "fixVersions", 0, "releaseDate"], dataType: "date", filterType: 'DateRangeFilter', label: 'Release'},
         {jiraField: ["fields", "fixVersions", 0, "name"], dataType: "string" , filterType: 'CategoryFilter', label: 'Version'},
         {jiraField: ["fields", "assignee", "key"], dataType: "string" , filterType: 'CategoryFilter', label: 'Assignee'}
     ]
