@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "3b1645feffab757cedfd"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "bff634435594be40eb17"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -8187,7 +8187,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	'use strict';
+	"use strict";
 
 	var _react = __webpack_require__(150);
 
@@ -8245,33 +8245,29 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	google.load('visualization', '1.0', { 'packages': ['controls', 'corechart', 'table'] });
+	var store = (0, _redux.createStore)(_reducers2.default);
+	(0, _initApp2.default)();
 
-	google.setOnLoadCallback(function () {
-	    var store = (0, _redux.createStore)(_reducers2.default);
-	    (0, _initApp2.default)();
-
-	    _reactDom2.default.render(_react2.default.createElement(
-	        _reactRedux.Provider,
-	        { store: store },
+	_reactDom2.default.render(_react2.default.createElement(
+	    _reactRedux.Provider,
+	    { store: store },
+	    _react2.default.createElement(
+	        _reactRouter.Router,
+	        { history: _reactRouter.browserHistory },
 	        _react2.default.createElement(
-	            _reactRouter.Router,
-	            { history: _reactRouter.browserHistory },
-	            _react2.default.createElement(
-	                _reactRouter.Route,
-	                { path: '/', component: _DeliveryDashboard2.default },
-	                _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/monthly-report' }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/cumulative-flow', component: _CumulativeFlow2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/duration-phases', component: _DurationPhase2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/duration-scatter', component: _DurationScatter2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/distribution', component: _Distribution2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/monthly-report', component: _MonthlyReport2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/period-report', component: _PeriodReport2.default }),
-	                _react2.default.createElement(_reactRouter.Route, { path: '/task-manager', component: _TaskManager2.default })
-	            )
+	            _reactRouter.Route,
+	            { path: "/", component: _DeliveryDashboard2.default },
+	            _react2.default.createElement(_reactRouter.IndexRedirect, { to: "/monthly-report" }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/cumulative-flow", component: _CumulativeFlow2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/duration-phases", component: _DurationPhase2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/duration-scatter", component: _DurationScatter2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/distribution", component: _Distribution2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/monthly-report", component: _MonthlyReport2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/period-report", component: _PeriodReport2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: "/task-manager", component: _TaskManager2.default })
 	        )
-	    ), document.getElementById('app'));
-	});
+	    )
+	), document.getElementById('app'));
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(345); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "main.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
@@ -36194,10 +36190,10 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(81), RootInstanceProvider = __webpack_require__(89), ReactMount = __webpack_require__(91), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -36219,44 +36215,48 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Application = function (_React$Component) {
-	    _inherits(Application, _React$Component);
+	  _inherits(Application, _React$Component);
 
-	    function Application() {
-	        _classCallCheck(this, Application);
+	  function Application() {
+	    _classCallCheck(this, Application);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Application).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Application).call(this));
+
+	    _this.state = { chartApiLoaded: false };
+	    return _this;
+	  }
+
+	  _createClass(Application, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      google.load('visualization', '1.0', { 'packages': ['controls', 'corechart', 'table'] });
+
+	      var component = this;
+	      google.setOnLoadCallback(function () {
+	        component.setState({ chartApiLoaded: true });
+	      });
 	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(_Menu2.default, null),
+	        _react2.default.createElement(
+	          "div",
+	          { id: "content-wrapper", className: "content-wrapper container-fluid" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "container-fluid row" },
+	            this.state.chartApiLoaded ? this.props.children : ""
+	          )
+	        )
+	      );
+	    }
+	  }]);
 
-	    _createClass(Application, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(_Menu2.default, null),
-	                _react2.default.createElement(
-	                    'div',
-	                    { id: 'content-wrapper', className: 'content-wrapper container-fluid' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'container-fluid row' },
-	                        this.props.children
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'footer',
-	                    { className: 'main-footer' },
-	                    _react2.default.createElement(
-	                        'strong',
-	                        null,
-	                        'Copyright rien du tout test'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Application;
+	  return Application;
 	}(_react2.default.Component);
 
 	exports.default = Application;
@@ -40453,7 +40453,7 @@
 	          { onClick: function onClick() {
 	              return (0, _taskData.csvExport)(filtered);
 	            } },
-	          "Download csv"
+	          "Download csv ..."
 	        ),
 	        _react2.default.createElement(
 	          "table",
