@@ -11,15 +11,36 @@ export default class Filters extends React.Component {
   constructor() {
     super();
     this.state = {
-      periodType: PeriodFilter.DATE_RANGE_SELECTOR
+      periodType: PeriodFilter.DATE_RANGE_SELECTOR,
+      matchers: {}
     }
     this.updateType = this.updateType.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
   }
 
   updateType(type) {
     this.setState({
       periodType: type,
     })
+  }
+
+  onChange(key, matcher) {
+    let matchers = this.state.matchers;
+    matchers[key] = matcher;
+    this.setState({matchers: matchers}, this.updateFilter);
+  }
+
+  updateFilter() {
+    let matchers = this.state.matchers;
+    this.props.onChange((task) => {
+      for (var key in matchers) {
+        if (matchers.hasOwnProperty(key) && !matchers[key](task)) {
+          return false;
+        }
+      }
+      return true;
+    });
   }
 
   render() {
@@ -29,9 +50,9 @@ export default class Filters extends React.Component {
     let categoryFilters = [];
     if (RAW_DATA_COL.FILTERS != null) {
       RAW_DATA_COL.FILTERS.forEach((filter, index) => categoryFilters.push(<CategoryFilter key={index}
-                                                                                           ref={"filter_" + index}
                                                                                            label={filter.label}
-                                                                                           onChange={this.props.onChange}
+                                                                                           onChange={this.onChange}
+                                                                                           categoryIndex={index}
                                                                                            values={listValues(this.props.taskList, index)}/>));
     }
     return (
@@ -43,7 +64,7 @@ export default class Filters extends React.Component {
               <div className="col-md-12" selected={this.state.matcher}>
                   <Switch firstValue={PeriodFilter.DATE_RANGE_SELECTOR} secondValue={PeriodFilter.MONTH_SELECTOR} onChange={this.updateType}/>
               </div>
-              <PeriodFilter ref="filter_date" label="Period" startDate={startDate} endDate={endDate} onChange={this.props.onChange} selector={this.state.periodType}/>
+              {/*<PeriodFilter ref="filter_date" label="Period" startDate={startDate} endDate={endDate} onChange={this.onChange} selector={this.state.periodType}/>*/}
           </div>
       </div>
     );

@@ -6,7 +6,6 @@ export default class CategoryFilter extends React.Component {
         super();
         this.state = {
             selection: [],
-            matcher: new DataMatcher((date) => true)
         }
         this.addValue = this.addValue.bind(this);
         this.removeValue = this.removeValue.bind(this);
@@ -27,10 +26,12 @@ export default class CategoryFilter extends React.Component {
     }
 
     setNewSelection(selection) {
-        this.setState({
-            selection: selection,
-            matcher: new DataMatcher((category) => selection.length == 0 || selection.indexOf(category) != -1)
-        }, this.props.onChange);
+      let index = this.props.categoryIndex;
+      let matcher = new DataMatcher((category) => selection.length == 0 || selection.indexOf(category) != -1);
+      this.setState({ selection: selection});
+      this.props.onChange(index, (task) => {
+          return matcher.match(task.filters[index]);
+      })
     }
 
     render() {
@@ -42,7 +43,7 @@ export default class CategoryFilter extends React.Component {
             </button>
         )
         return (
-            <div className="col-md-6" selected={this.state.matcher}>
+            <div className="col-md-6">
                 <div className="btn-group" role="group" aria-label="...">
                     <div className="btn-group">
                         <button type="button" className="btn btn-default btn-filter dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
