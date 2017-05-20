@@ -1,5 +1,4 @@
 import React from "react";
-import DataMatcher from "./DataMatcher";
 
 export default class CategoryFilter extends React.Component {
     constructor() {
@@ -26,12 +25,8 @@ export default class CategoryFilter extends React.Component {
     }
 
     setNewSelection(selection) {
-      let index = this.props.categoryIndex;
-      let matcher = new DataMatcher((category) => selection.length == 0 || selection.indexOf(category) != -1);
       this.setState({ selection: selection});
-      this.props.onChange(index, (value) => {
-          return matcher.match(value);
-      })
+      this.props.onChange(this.props.categoryIndex, (category) => selection.length == 0 || selection.indexOf(category) != -1);
     }
 
     render() {

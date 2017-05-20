@@ -1,5 +1,4 @@
 import React from "react";
-import DataMatcher from "./DataMatcher";
 import InputElement from "../inputs/InputElement";
 import DropDown from "../inputs/DropDown";
 
@@ -20,8 +19,7 @@ class MonthFilter extends React.Component {
 
     this.state = {
       dateList: dateList,
-      selection: props.defaultSelection ? dateList[0] : null,
-      matcher: new DataMatcher((date) => true)
+      selection: props.defaultSelection ? dateList[0] : null
     };
 
     this.changeValue = this.changeValue.bind(this);
@@ -37,9 +35,8 @@ class MonthFilter extends React.Component {
   }
 
   setNewSelection(selection) {
-    let matcher = new DataMatcher((date) => selection == null || (date != null && selection.getYear() == date.getYear() && selection.getMonth() == date.getMonth()));
     this.setState({selection: selection});
-    this.props.onChange(this.categoryIndex, (value) => matcher.match(value));
+    this.props.onChange(this.categoryIndex, (date) => selection == null || (date != null && selection.getYear() == date.getYear() && selection.getMonth() == date.getMonth()));
   }
 
   render() {

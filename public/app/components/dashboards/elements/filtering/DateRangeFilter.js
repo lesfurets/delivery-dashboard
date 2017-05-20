@@ -1,6 +1,5 @@
 import React from "react";
 import randomId from "../../../../core/tools/randomId";
-import DataMatcher from "./DataMatcher";
 
 export default class DateRangeFilter extends React.Component {
   constructor() {
@@ -21,6 +20,7 @@ export default class DateRangeFilter extends React.Component {
         startDate: rangeStart.formatDDMMYYYY(),
         endDate: rangeEnd.formatDDMMYYYY(),
         minDate: startDate.formatDDMMYYYY(),
+        maxDate: rangeEnd.formatDDMMYYYY(),
         locale: {
           format: 'DD/MM/YYYY'
         }
@@ -31,12 +31,7 @@ export default class DateRangeFilter extends React.Component {
   }
 
   update(startDate, endDate) {
-    let matcher = new DataMatcher((date) => {
-      debugger
-      return date != null && date >= startDate && date <= endDate
-    });
-    this.setState({matcher: matcher});
-    this.props.onChange(this.props.categoryIndex, (value) => matcher.match(value))
+    this.props.onChange(this.props.categoryIndex, (date) => date != null && date >= startDate && date <= endDate)
   }
 
   render() {
