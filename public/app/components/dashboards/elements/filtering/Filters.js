@@ -12,10 +12,12 @@ export default class Filters extends React.Component {
     super();
     this.state = {
       periodType: PeriodFilter.DATE_RANGE_SELECTOR,
-      matchers: {}
+      matchers: {},
+      dateMatcher: (task) => true
     }
     this.updateType = this.updateType.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.filterChange = this.filterChange.bind(this);
+    this.dateChange = this.dateChange.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
   }
 
@@ -25,7 +27,11 @@ export default class Filters extends React.Component {
     })
   }
 
-  onChange(key, matcher) {
+  dateChange(key, matcher) {
+    this.setState({dateMatcher: matcher}, this.updateFilter);
+  }
+
+  filterChange(key, matcher) {
     let matchers = this.state.matchers;
     matchers[key] = matcher;
     this.setState({matchers: matchers}, this.updateFilter);
@@ -33,27 +39,25 @@ export default class Filters extends React.Component {
 
   updateFilter() {
     let matchers = this.state.matchers;
+    let dateMatcher = this.state.dateMatcher;
     this.props.onChange((task) => {
       for (var key in matchers) {
-        if (matchers.hasOwnProperty(key) && !matchers[key](task)) {
+        if (matchers.hasOwnProperty(key) && !matchers[key](task.filters[key])) {
           return false;
         }
       }
-      return true;
+      return task.events.map(date => dateMatcher(date)).reduce((result, val) => result || val);
     });
   }
 
   render() {
     let startDate = new Date(REPORT_CONFIG.first_entry);
-    let endDate = new Date();
 
     let categoryFilters = [];
     if (RAW_DATA_COL.FILTERS != null) {
-      RAW_DATA_COL.FILTERS.forEach((filter, index) => categoryFilters.push(<CategoryFilter key={index}
-                                                                                           label={filter.label}
-                                                                                           onChange={this.onChange}
-                                                                                           categoryIndex={index}
-                                                                                           values={listValues(this.props.taskList, index)}/>));
+      RAW_DATA_COL.FILTERS.forEach((filter, index) =>
+        categoryFilters.push(<CategoryFilter key={index} label={filter.label} onChange={this.filterChange}
+                                             categoryIndex={index} values={listValues(this.props.taskList, index)}/>));
     }
     return (
       <div id="filters_block">
@@ -62,9 +66,9 @@ export default class Filters extends React.Component {
           </div>
           <div className="col-md-6">
               <div className="col-md-12" selected={this.state.matcher}>
-                  <Switch firstValue={PeriodFilter.DATE_RANGE_SELECTOR} secondValue={PeriodFilter.MONTH_SELECTOR} onChange={this.updateType}/>
+                  <Switch firstValue={PeriodFilter.MONTH_SELECTOR} secondValue={PeriodFilter.DATE_RANGE_SELECTOR} onChange={this.updateType}/>
               </div>
-              {/*<PeriodFilter ref="filter_date" label="Period" startDate={startDate} endDate={endDate} onChange={this.onChange} selector={this.state.periodType}/>*/}
+              <PeriodFilter key="filter_date" categoryIndex={"filter_date"}  label="Period" startDate={startDate} onChange={this.dateChange} selector={this.state.periodType}/>
           </div>
       </div>
     );

@@ -29,8 +29,8 @@ export default class CategoryFilter extends React.Component {
       let index = this.props.categoryIndex;
       let matcher = new DataMatcher((category) => selection.length == 0 || selection.indexOf(category) != -1);
       this.setState({ selection: selection});
-      this.props.onChange(index, (task) => {
-          return matcher.match(task.filters[index]);
+      this.props.onChange(index, (value) => {
+          return matcher.match(value);
       })
     }
 

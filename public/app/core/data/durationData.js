@@ -58,9 +58,9 @@ export const computeDurationByDate = function (taskList) {
         let pct90 = sortedData[Math.floor(data.length * 0.9)];
         let pct75 = sortedData[Math.floor(data.length * 0.75)];
 
-        data[1][3] = avg;
-        data[1][4] = pct75;
-        data[1][5] = pct90;
+        data[0][3] = avg;
+        data[0][4] = pct75;
+        data[0][5] = pct90;
         var lastLine = data.length-1;
         data[lastLine][3] = avg;
         data[lastLine][4] = pct75;
