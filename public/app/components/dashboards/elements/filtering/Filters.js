@@ -2,6 +2,7 @@ import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import PeriodFilter from "./PeriodFilter";
 import Switch from "../inputs/Switch";
+import "../../../../../styles/less/filters.less"
 
 function listValues(taskList, index) {
   return taskList.map((task) => task.filters[index]).filter((task, index, array) => index == array.indexOf(task)).sort();
@@ -13,7 +14,8 @@ export default class Filters extends React.Component {
     this.state = {
       periodType: PeriodFilter.DATE_RANGE_SELECTOR,
       matchers: {},
-      dateMatcher: (task) => true
+      dateMatcher: (task) => true,
+      advanced: false
     }
     this.updateType = this.updateType.bind(this);
     this.filterChange = this.filterChange.bind(this);
@@ -61,14 +63,13 @@ export default class Filters extends React.Component {
     }
     return (
       <div id="filters_block">
-          <div className="col-md-6">
+        <div>
+          <Switch firstValue={PeriodFilter.MONTH_SELECTOR} secondValue={PeriodFilter.DATE_RANGE_SELECTOR} onChange={this.updateType}/>
+          <PeriodFilter key="filter_date" categoryIndex={"filter_date"} label="Period" startDate={startDate} onChange={this.dateChange} selector={this.state.periodType}/>
+        </div>
+        <div onClick={() => this.setState({advanced: !this.state.advanced})}>{!this.state.advanced ? "Show more" : "Show less"}</div>
+          <div className="row" hidden={this.state.advanced}>
             {categoryFilters}
-          </div>
-          <div className="col-md-6">
-              <div className="col-md-12" selected={this.state.matcher}>
-                  <Switch firstValue={PeriodFilter.MONTH_SELECTOR} secondValue={PeriodFilter.DATE_RANGE_SELECTOR} onChange={this.updateType}/>
-              </div>
-              <PeriodFilter key="filter_date" categoryIndex={"filter_date"}  label="Period" startDate={startDate} onChange={this.dateChange} selector={this.state.periodType}/>
           </div>
       </div>
     );

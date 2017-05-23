@@ -38,7 +38,7 @@ export default class CategoryFilter extends React.Component {
             </button>
         )
         return (
-            <div className="col-md-6">
+            <div className="col-xs-12 col-sm-6 col-md-4">
                 <div className="btn-group" role="group" aria-label="...">
                     <div className="btn-group">
                         <button type="button" className="btn btn-default btn-filter dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

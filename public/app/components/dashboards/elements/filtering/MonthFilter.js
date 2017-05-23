@@ -53,11 +53,9 @@ class MonthFilter extends React.Component {
           </button>
         )
       return (
-        <div className="col-md-12">
-          <div className="btn-group" role="group" aria-label="...">
-            <DropDown values={values} onChange={this.changeValue} label={this.props.label}/>
-            {selection}
-          </div>
+        <div className="btn-group filter-wrapper" role="group" aria-label="...">
+          <DropDown values={values} onChange={this.changeValue} label={this.props.label}/>
+          {selection}
         </div>
       );
     }
