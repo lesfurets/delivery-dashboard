@@ -68,7 +68,7 @@ export default class Filters extends React.Component {
           <PeriodFilter key="filter_date" categoryIndex={"filter_date"} label="Period" startDate={startDate} onChange={this.dateChange} selector={this.state.periodType}/>
         </div>
         <div onClick={() => this.setState({advanced: !this.state.advanced})}>{!this.state.advanced ? "Show more" : "Show less"}</div>
-          <div className="row" hidden={this.state.advanced}>
+          <div className="row" hidden={!this.state.advanced}>
             {categoryFilters}
           </div>
       </div>

@@ -23,6 +23,12 @@ export default class Menu extends React.Component {
                         <div className="collapse navbar-collapse" id="myNavbar">
                             <ul className="nav navbar-nav">
                                 <li className="dropdown active">
+                                    <a className="dropdown-toggle" data-toggle="dropdown" href="#">Kanban Metrics<span className="caret"></span></a>
+                                    <ul className="dropdown-menu">
+                                        <li><Link to={'/control-chart'} styleName="title">Control Chart</Link></li>
+                                    </ul>
+                                </li>
+                                <li className="dropdown active">
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Task Data<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
                                         <li><Link to={'/cumulative-flow'} styleName="title">Cumulative Flow</Link></li>
@@ -33,7 +39,7 @@ export default class Menu extends React.Component {
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Duration<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
                                         <li><Link to={'/duration-phases'} styleName="title">Phases</Link></li>
-                                        <li><Link to={'/duration-scatter'} styleName="title">Scatter</Link></li>
+                                        <li><Link to={'/control-chart'} styleName="title">Control Chart</Link></li>
                                     </ul>
                                 </li>
                                 <li className="dropdown">

@@ -43,7 +43,7 @@ export const computeDurations = function (taskList) {
 export const computeDurationByDate = function (taskList) {
     let data = taskList.map((task, index) => {
         let line = new Array(6);
-        line[0] = index;
+        line[0] = task.key;
         line[1] = task.cycleTime;
         line[2] = typeof MAP_SCATTER_DOT != "undefined" ? MAP_SCATTER_DOT(task) : 'point { size: 3; shape-type: circle; fill-color: #a52714; }';
         return line;
