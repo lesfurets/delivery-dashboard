@@ -23,8 +23,8 @@ class ControlChart extends React.Component {
     var durationData = computeDurationByDate(filteredTaskList);
     return (
       <Card cardTitle="Control Chart" data={filteredTaskList}>
-        <div className="col-md-12"><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
-        <div className="col-md-12"><ScatterChart data={durationData}/></div>
+        <div><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
+        <div><ScatterChart data={durationData}/></div>
       </Card>
     );
   }

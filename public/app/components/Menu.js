@@ -26,12 +26,12 @@ export default class Menu extends React.Component {
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Kanban Metrics<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
                                         <li><Link to={'/control-chart'} styleName="title">Control Chart</Link></li>
+                                        <li><Link to={'/cumulative-flow'} styleName="title">Cumulative Flow</Link></li>
                                     </ul>
                                 </li>
                                 <li className="dropdown active">
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Task Data<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
-                                        <li><Link to={'/cumulative-flow'} styleName="title">Cumulative Flow</Link></li>
                                         <li><Link to={'/distribution'} styleName="title">Distribution</Link></li>
                                     </ul>
                                 </li>

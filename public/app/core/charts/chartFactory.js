@@ -92,10 +92,7 @@ export const buildDurationScatterChart = function(elementId, columns) {
         'options': {
             'tooltip': { isHtml: true },
             'height': 400,
-            'hAxis': {
-                'title': 'Dates',
-                'textPosition': 'out'
-            },
+            'hAxis': { textPosition: 'none' },
             'vAxis': {
                 'title': 'Duration (days)',
                 'textPosition': 'in'
