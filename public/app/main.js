@@ -7,7 +7,7 @@ import reducer from "./redux/reducers";
 import initApp from "./core/tools/initApp";
 import DeliveryDashboard from "./components/DeliveryDashboard";
 import CumulativeFlow from "./components/dashboards/CumulativeFlow";
-import DurationPhase from "./components/dashboards/DurationPhase";
+import PhaseDuration from "./components/dashboards/PhaseDuration";
 import ControlChart from "./components/dashboards/ControlChart";
 import Distribution from "./components/dashboards/Distribution";
 import MonthlyReport from "./components/dashboards/MonthlyReport";
@@ -25,7 +25,7 @@ ReactDom.render(
               <IndexRedirect to="/monthly-report"/>
               <Route path="/control-chart" component={ControlChart}/>
               <Route path="/cumulative-flow" component={CumulativeFlow}/>
-              <Route path="/duration-phases" component={DurationPhase}/>
+              <Route path="/phase-duration" component={PhaseDuration}/>
               <Route path="/distribution" component={Distribution}/>
               <Route path="/monthly-report" component={MonthlyReport}/>
               <Route path="/period-report" component={PeriodReport}/>
