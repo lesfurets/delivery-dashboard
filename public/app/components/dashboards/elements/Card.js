@@ -1,6 +1,7 @@
 import React from "react";
 import TaskList from "./TaskList";
 import If from "./If";
+import "../../../../styles/less/card.less"
 
 export default class Card extends React.Component {
     constructor() {
@@ -29,11 +30,9 @@ export default class Card extends React.Component {
                 <div className="card">
                     <div className="row card-header">
                         <span className="col-md-6">{this.props.cardTitle}{suffix}</span>
-                        <span className="col-md-6"> {action} </span>
+                        <span className="pull-right"> {action} </span>
                     </div>
-                    <div className="row">
-                        {this.props.children}
-                    </div>
+                    {this.props.children}
                 </div>
                 <div id="modal" className="modal fade" role="dialog">
                     <div className="modal-dialog">

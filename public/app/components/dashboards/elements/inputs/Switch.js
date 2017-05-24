@@ -23,7 +23,7 @@ export default class Switch extends React.Component {
 
     render() {
         return (
-            <div className={"switch " + (this.state.selectedValue ? "" : "switched")}>
+            <div className={"filter-wrapper switch " + (this.state.selectedValue ? "" : "switched")}>
                 <div className="switch-label" onClick={() => this.update(true)}>{this.props.firstValue.label}</div>
                 <div className={"switch-widget"} onClick={() => this.update(!this.state.selectedValue)}></div>
                 <div className="switch-label" onClick={() => this.update(false)}>{this.props.secondValue.label}</div>

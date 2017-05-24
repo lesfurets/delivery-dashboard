@@ -44,7 +44,7 @@ class TaskList extends React.Component {
     var filtered = this.props.taskList.filter(this.state.taskFilter);
     return (
       <Card cardTitle="Duration" data={filtered} noModal={true}>
-        <button onClick={() => csvExport(filtered)}>Download csv</button>
+        <button className="pull-right" onClick={() => csvExport(filtered)}>Download csv</button>
         <div><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
         <table className="table table-hover">
           <thead>

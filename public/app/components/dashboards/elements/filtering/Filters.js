@@ -2,7 +2,7 @@ import React from "react";
 import CategoryFilter from "./CategoryFilter";
 import PeriodFilter from "./PeriodFilter";
 import Switch from "../inputs/Switch";
-import "../../../../../styles/less/filters.less"
+import "../../../../../styles/less/filters.less";
 
 function listValues(taskList, index) {
   return taskList.map((task) => task.filters[index]).filter((task, index, array) => index == array.indexOf(task)).sort();
@@ -62,15 +62,19 @@ export default class Filters extends React.Component {
                                              categoryIndex={index} values={listValues(this.props.taskList, index)}/>));
     }
     return (
-      <div id="filters_block">
+      <div id="filters_block" className="filter-block">
         <div>
-          <Switch firstValue={PeriodFilter.MONTH_SELECTOR} secondValue={PeriodFilter.DATE_RANGE_SELECTOR} onChange={this.updateType}/>
-          <PeriodFilter key="filter_date" categoryIndex={"filter_date"} label="Period" startDate={startDate} onChange={this.dateChange} selector={this.state.periodType}/>
+          <Switch firstValue={PeriodFilter.MONTH_SELECTOR} secondValue={PeriodFilter.DATE_RANGE_SELECTOR}
+                  onChange={this.updateType}/>
+          <PeriodFilter key="filter_date" categoryIndex={"filter_date"} label="Period" startDate={startDate}
+                        onChange={this.dateChange} selector={this.state.periodType}/>
         </div>
-        <div onClick={() => this.setState({advanced: !this.state.advanced})}>{!this.state.advanced ? "Show more" : "Show less"}</div>
+        <div className="data-filter">
+          <div><span className="toggle-advanced" onClick={() => this.setState({advanced: !this.state.advanced})}>{!this.state.advanced ? "Show more" : "Show less"} <div className={"glyphicon" + (this.state.advanced ? " glyphicon-chevron-up" : " glyphicon-chevron-down")}></div></span></div>
           <div className="row" hidden={!this.state.advanced}>
             {categoryFilters}
           </div>
+        </div>
       </div>
     );
   }
