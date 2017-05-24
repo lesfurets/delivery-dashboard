@@ -9,7 +9,7 @@ import DeliveryDashboard from "./components/DeliveryDashboard";
 import CumulativeFlow from "./components/dashboards/CumulativeFlow";
 import PhaseDuration from "./components/dashboards/PhaseDuration";
 import ControlChart from "./components/dashboards/ControlChart";
-import Distribution from "./components/dashboards/Distribution";
+import DataDistribution from "./components/dashboards/DataDistribution";
 import MonthlyReport from "./components/dashboards/MonthlyReport";
 import PeriodReport from "./components/dashboards/PeriodReport";
 import TaskManager from "./components/dashboards/TaskManager";
@@ -26,7 +26,7 @@ ReactDom.render(
               <Route path="/control-chart" component={ControlChart}/>
               <Route path="/cumulative-flow" component={CumulativeFlow}/>
               <Route path="/phase-duration" component={PhaseDuration}/>
-              <Route path="/distribution" component={Distribution}/>
+              <Route path="/distribution" component={DataDistribution}/>
               <Route path="/monthly-report" component={MonthlyReport}/>
               <Route path="/period-report" component={PeriodReport}/>
               <Route path="/task-manager" component={TaskManager}/>

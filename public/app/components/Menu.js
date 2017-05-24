@@ -29,13 +29,6 @@ export default class Menu extends React.Component {
                                         <li><Link to={'/cumulative-flow'} styleName="title">Cumulative Flow</Link></li>
                                     </ul>
                                 </li>
-                                <li className="dropdown active">
-                                    <a className="dropdown-toggle" data-toggle="dropdown" href="#">Task Data<span className="caret"></span></a>
-                                    <ul className="dropdown-menu">
-                                        <li><Link to={'/phase-duration'} styleName="title">Phase Duration</Link></li>
-                                        <li><Link to={'/distribution'} styleName="title">Distribution</Link></li>
-                                    </ul>
-                                </li>
                                 <li className="dropdown">
                                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">Reports<span className="caret"></span></a>
                                     <ul className="dropdown-menu">
@@ -43,7 +36,14 @@ export default class Menu extends React.Component {
                                         <li><Link to={'/monthly-report'} styleName="title">Monthly Report</Link></li>
                                     </ul>
                                 </li>
-                                <li><Link to={'/task-manager'} styleName="title"> Manage Tasks </Link></li>
+                                <li className="dropdown active">
+                                    <a className="dropdown-toggle" data-toggle="dropdown" href="#">Tasks<span className="caret"></span></a>
+                                    <ul className="dropdown-menu">
+                                        <li><Link to={'/task-manager'} styleName="title">Tasks list</Link></li>
+                                        <li><Link to={'/phase-duration'} styleName="title">Phase Duration</Link></li>
+                                        <li><Link to={'/distribution'} styleName="title">Data Distribution</Link></li>
+                                    </ul>
+                                </li>
                             </ul>
                             <ul className="nav navbar-nav navbar-right">
                                 <li><a href="#"><span className="glyphicon glyphicon-refresh" onClick={this.props.fetchData}></span></a></li>
