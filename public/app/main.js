@@ -12,7 +12,7 @@ import ControlChart from "./components/dashboards/ControlChart";
 import DataDistribution from "./components/dashboards/DataDistribution";
 import MonthlyReport from "./components/dashboards/MonthlyReport";
 import PeriodReport from "./components/dashboards/PeriodReport";
-import TaskManager from "./components/dashboards/TaskManager";
+import TaskList from "./components/dashboards/TaskList";
 
 
 const store = createStore(reducer);
@@ -29,7 +29,7 @@ ReactDom.render(
               <Route path="/distribution" component={DataDistribution}/>
               <Route path="/monthly-report" component={MonthlyReport}/>
               <Route path="/period-report" component={PeriodReport}/>
-              <Route path="/task-manager" component={TaskManager}/>
+              <Route path="/task-manager" component={TaskList}/>
           </Route>
       </Router>
   </Provider>, document.getElementById('app'))

@@ -1,6 +1,7 @@
 import React from "react";
 import {taskListConnect} from "../../redux/jiraConnect";
 import {csvExport} from "../../core/data/taskData";
+import Filters from "./elements/filtering/Filters";
 import Card from "./elements/Card";
 
 var openTab = (key) => window.open("http://jira.lan.courtanet.net/browse/" + key, '_blank');
@@ -26,27 +27,25 @@ let Task = (props) => (
   </tr>
 )
 
-class TaskManager extends React.Component {
+class TaskList extends React.Component {
   constructor() {
     super();
     this.state = {
-      filterExpr: "",
+      taskFilter: (task) => true,
     };
     this.update = this.update.bind(this);
   }
 
-  update(e) {
-    this.setState({filterExpr: e.target.value.toLowerCase()});
+  update(filter) {
+    this.setState({taskFilter: filter});
   }
 
   render() {
-    var filtered = this.props.taskList.filter((task) => ( task.key.toLowerCase().indexOf(this.state.filterExpr) != -1)
-    || task.summary.toLowerCase().indexOf(this.state.filterExpr) != -1);
-
+    var filtered = this.props.taskList.filter(this.state.taskFilter);
     return (
       <Card cardTitle="Duration" data={filtered} noModal={true}>
-        <input type="text" onChange={this.update} defaultValue=""/>
         <button onClick={() => csvExport(filtered)}>Download csv</button>
+        <div><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
         <table className="table table-hover">
           <thead>
           <tr>
@@ -63,4 +62,4 @@ class TaskManager extends React.Component {
   }
 }
 
-export default taskListConnect(TaskManager)
+export default taskListConnect(TaskList)
