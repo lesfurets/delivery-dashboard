@@ -38,4 +38,3 @@ Switch.protoTypes = {
     onChange: React.PropTypes.func.isRequired
 }
 
-

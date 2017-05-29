@@ -61,7 +61,7 @@ class Report extends React.Component {
                 <div className="row card-relative-chart">
                     <AreaChart data={computeEvent(releasedAfter)} light bounds={this.state.bounds}/>
                     <div className="card to-print stats">
-                        <DurationStats taskList={releasedDuring} groupBy={this.state.groupBy}/>
+                        <DurationStats taskList={releasedDuring} groupBy={this.state.groupBy} lite/>
                     </div>
                 </div>
             </div>
