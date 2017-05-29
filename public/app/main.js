@@ -8,6 +8,7 @@ import initApp from "./core/tools/initApp";
 import DeliveryDashboard from "./components/DeliveryDashboard";
 import CumulativeFlow from "./components/dashboards/CumulativeFlow";
 import PhaseDuration from "./components/dashboards/PhaseDuration";
+import ProjectionDuration from "./components/dashboards/ProjectionDuration";
 import ControlChart from "./components/dashboards/ControlChart";
 import DataDistribution from "./components/dashboards/DataDistribution";
 import MonthlyReport from "./components/dashboards/MonthlyReport";
@@ -26,6 +27,7 @@ ReactDom.render(
               <Route path="/control-chart" component={ControlChart}/>
               <Route path="/cumulative-flow" component={CumulativeFlow}/>
               <Route path="/phase-duration" component={PhaseDuration}/>
+              <Route path="/projection-duration" component={ProjectionDuration}/>
               <Route path="/distribution" component={DataDistribution}/>
               <Route path="/monthly-report" component={MonthlyReport}/>
               <Route path="/period-report" component={PeriodReport}/>

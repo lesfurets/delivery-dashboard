@@ -41,6 +41,7 @@ export default class Menu extends React.Component {
                                     <ul className="dropdown-menu">
                                         <li><Link to={'/task-manager'} styleName="title">Tasks list</Link></li>
                                         <li><Link to={'/phase-duration'} styleName="title">Phase Duration</Link></li>
+                                        <li><Link to={'/projection-duration'} styleName="title">Estimation Duration</Link></li>
                                         <li><Link to={'/distribution'} styleName="title">Data Distribution</Link></li>
                                     </ul>
                                 </li>
