@@ -51,7 +51,7 @@ export const buildRangeFilter = function(elementId) {
  * TasksDurationDashboard
  **************************/
 
-export const buildDurationColumnChart = function(elementId, columns) {
+export const buildDurationColumnChart = function(elementId,duration, columns) {
     var options = {
         'chartType': 'ColumnChart',
         'containerId': elementId,
@@ -60,8 +60,8 @@ export const buildDurationColumnChart = function(elementId, columns) {
             'height': 400,
             'isStacked': true,
             'hAxis': {
-                'title': 'Jira Tickets',
-                'textPosition': 'none'
+                'title': duration ? "Cycle Time" : 'Jira Tickets',
+                'textPosition': duration ?  'out' :'none'
             },
             'vAxis': {
                 'title': 'Duration (days)',
@@ -72,7 +72,7 @@ export const buildDurationColumnChart = function(elementId, columns) {
             },
             'chartArea': {
                 'width': '90%',
-                'height': '100%'
+                'height': '80%'
             },
         }
     };

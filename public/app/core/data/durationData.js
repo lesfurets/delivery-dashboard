@@ -101,7 +101,7 @@ export const computeCycleTimeDistribution = function (taskList) {
 
   var distribution = [];
   for(var x in accumulator){
-    distribution.push([x, accumulator[x]]);
+    distribution.push([parseInt(x), accumulator[x]]);
   }
 
   distribution.unshift(["Cycle Time","Count"]);

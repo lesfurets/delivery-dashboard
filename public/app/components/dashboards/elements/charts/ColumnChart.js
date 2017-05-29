@@ -13,7 +13,7 @@ export default class ColumnChart extends React.Component {
 
     componentDidMount() {
         this.setState({
-            chart: buildDurationColumnChart(this.state.chartId)
+            chart: buildDurationColumnChart(this.state.chartId, this.props.linearH)
         });
     }
 
@@ -27,5 +27,6 @@ export default class ColumnChart extends React.Component {
 }
 
 ColumnChart.defaultProps = {
-    title: "Column Chart"
+    title: "Column Chart",
+    linearH: true
 }
