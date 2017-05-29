@@ -14,7 +14,6 @@ class Report extends React.Component {
             bounds: { start: null, end: null},
         };
         this.updateDate = this.updateDate.bind(this);
-        this.updateType = this.updateType.bind(this);
     }
 
     updateDate(startDate, endDate) {
@@ -23,12 +22,6 @@ class Report extends React.Component {
                 start: startDate,
                 end: endDate,
             }
-        })
-    }
-
-    updateType(type) {
-        this.setState({
-            groupBy: type,
         })
     }
 
@@ -48,8 +41,6 @@ class Report extends React.Component {
                     <h2 className="col-md-12 card-title">
                         <img className="print-only" src="../../img/team-traffic.png"/> Team Traffic - Cycle time -
                         {timeSelector}
-                        <Switch firstValue={REPORT_CONFIG.projection[0]} secondValue={REPORT_CONFIG.projection[1]}
-                                onChange={this.updateType}/>
                         <span id="tab_monthly_report_view_title_suffix"></span>
                         <div className="not-to-print pull-right">
                             <div id="tab_monthly_report_view_switch" className="switch"></div>
@@ -61,7 +52,7 @@ class Report extends React.Component {
                 <div className="row card-relative-chart">
                     <AreaChart data={computeEvent(releasedAfter)} light bounds={this.state.bounds}/>
                     <div className="card to-print stats">
-                        <DurationStats taskList={releasedDuring} groupBy={this.state.groupBy} lite/>
+                        <DurationStats taskList={releasedDuring} groupBy={REPORT_CONFIG.projection} lite/>
                     </div>
                 </div>
             </div>

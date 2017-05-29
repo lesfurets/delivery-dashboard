@@ -18,10 +18,7 @@ const RAW_DATA_COL = {
 
 const REPORT_CONFIG = {
     first_entry: "2015-06",
-    projection: [
-        {position: 0, filterLabel: "Type"},
-        {position: 1, filterLabel: "Effort"}
-    ]
+    projection: {position: 0, filterLabel: "Type"}
 }
 
 const JIRA_DATA = {

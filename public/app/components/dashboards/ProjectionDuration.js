@@ -22,7 +22,7 @@ class ProjectionDuration extends React.Component {
     return (
       <Card cardTitle="Projected Durations" data={filteredTaskList}>
           <div><Filters ref="filters" taskList={this.props.taskList} onChange={this.update}/></div>
-          <div><DurationStats taskList={filteredTaskList} groupBy={REPORT_CONFIG.projection[0]}/></div>
+          <div><DurationStats taskList={filteredTaskList} groupBy={REPORT_CONFIG.projection}/></div>
       </Card>
     );
   }

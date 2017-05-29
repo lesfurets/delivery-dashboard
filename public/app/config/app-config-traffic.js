@@ -20,10 +20,7 @@ const RAW_DATA_COL = {
 
 const REPORT_CONFIG = {
     first_entry: "2015-04",
-    projection: [
-        {position: 1, label: "Effort", filterLabel: "Effort"},
-        {position: 0, label: "Type", filterLabel: "Type"}
-    ]
+    projection: {position: 1, label: "Effort", filterLabel: "Effort"}
 }
 
 const JIRA_DATA = {
