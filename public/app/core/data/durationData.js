@@ -87,3 +87,24 @@ function tooltipColumnBuilder() {
     return tooltipColumn;
 
 }
+
+export const computeCycleTimeDistribution = function (taskList) {
+  let accumulator = taskList.reduce((accumulator, task) => {
+      if(typeof accumulator[task.cycleTime] !== "undefined"){
+        accumulator[task.cycleTime]++;
+        return accumulator;
+      } else {
+        accumulator[task.cycleTime]=1;
+        return accumulator;
+      }
+    },{});
+
+  var distribution = [];
+  for(var x in accumulator){
+    distribution.push([x, accumulator[x]]);
+  }
+
+  distribution.unshift(["Cycle Time","Count"]);
+
+  return distribution;
+}

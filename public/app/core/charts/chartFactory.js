@@ -117,7 +117,7 @@ export const buildDurationScatterChart = function(elementId, columns) {
             }
         }
     });
-    setTaskSelectListener(durationChart);
+    setTaskSelectListener(durationChart,1);
     return durationChart;
 }
 
@@ -135,10 +135,10 @@ export const buildSimpleChart = function (elementId, chartType, title) {
     });
 }
 
-function setTaskSelectListener(element) {
+function setTaskSelectListener(element, index) {
     google.visualization.events.addListener(element, 'select', function () {
         var rowNumber = element.getChart().getSelection()[0].row;
         var data = element.getDataTable();
-        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, TASK_INDEX_STATIC_REFERENCE), '_blank');
+        window.open('http://jira.lan.courtanet.net/browse/' + data.getValue(rowNumber, typeof index !== 'undefined' ? index :TASK_INDEX_STATIC_REFERENCE), '_blank');
     });
 }
