@@ -36,7 +36,9 @@ new WebpackDevServer(webpack(config), {
     stats: 'normal',
     proxy: {
       "*": "http://localhost:8080"
-    }
+    },
+    publicPath: "http://0.0.0.0:8081",
+    host: "http://0.0.0.0"
 }).listen(8081, 'localhost', function (err, result) {
     if (err) {
         return console.log(err);
