@@ -6,7 +6,7 @@ var app = express();
 
 app.use(express.static('public'));
 
-var JIRA_URL = "http://jira.lan.courtanet.net";
+var JIRA_URL = "https://jira.lan.courtanet.net";
 
 app.get('/rest/api/2/search', function (req, res) {
     request(JIRA_URL + req.url, function (error, response, body) {
